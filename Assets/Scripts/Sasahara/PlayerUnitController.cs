@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
 
-public abstract class CharactorBase : MonoBehaviour
+public class PlayerUnitController : CharactorBase
 {
     #region property
-    // プロパティを入れる。
-    public int _hp;
-    public int _power;
-
+    // プロパティを入れる
+    public int Hp => _hp = 10;
+    public int Power => _power = 5;
     #endregion
 
     #region serialize
     // unity inpectorに表示したいものを記述。
+    [Tooltip("攻撃判定をする子オブジェクト")]
+    [SerializeField]
+    private Collider _attackCollider;
     #endregion
 
     #region private
@@ -37,7 +38,7 @@ public abstract class CharactorBase : MonoBehaviour
 
     private void Start()
     {
-
+        
     }
 
     private void Update()
@@ -48,14 +49,9 @@ public abstract class CharactorBase : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public virtual void Attack(GameObject target)
+    public override void Attack(GameObject go)
     {
-        
-    }
-
-    public virtual void Damaged(int power)
-    {
-        Debug.Log("Damaged");
+        base.Attack(go);
     }
     #endregion
 
