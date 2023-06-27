@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UIManager : BaseManager
+public class BaseManager : MonoBehaviour
 {
     #region property
+    protected static BaseManager _instance;
     // プロパティを入れる。
-    public Text testScoreText;
     #endregion
 
     #region serialize
@@ -16,7 +15,6 @@ public class UIManager : BaseManager
 
     #region private
     // プライベートなメンバー変数。
-    private int testScore;
     #endregion
 
     #region Constant
@@ -31,7 +29,7 @@ public class UIManager : BaseManager
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-        base.Initialize();
+        Initialize();
     }
 
     private void Start()
@@ -46,25 +44,18 @@ public class UIManager : BaseManager
     #endregion
 
     #region public method
-
     //　自身で作成したPublicな関数を入れる。
-    /*AddTestScore(int points)使用する場合:
-    public class PlayerController : MonoBehaviour
+    protected virtual void Initialize()
     {
-        void OnCollisionEnter(Collision collision)
+        //共通初期化処理
+        if (_instance == null)
         {
-            if (collision.gameObject.CompareTag("Enemy"))
-            {
-                UIManager.Instance.AddTestScore(100);
-                Destroy(collision.gameObject);
-            }
+            _instance = this;
         }
-    }
-     */
-    public void AddTestScore(int points)
-    {
-        testScore += points;
-        testScoreText.text = "Score: " + testScore;
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     #endregion
 
