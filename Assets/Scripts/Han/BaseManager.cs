@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseManager : MonoBehaviour
+public abstract class BaseManager : MonoBehaviour
 {
     #region property
     protected static BaseManager _instance;
