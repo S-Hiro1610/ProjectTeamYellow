@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class PlayerUnitController : CharactorBase
 {
@@ -40,7 +42,9 @@ public class PlayerUnitController : CharactorBase
     {
         if (_isCanAttack && _attackCollider.IsTarget)
         {
+            _isCanAttack = false;
             Attack(_attackCollider.Target);
+            AttackDelay();
         }
     }
     #endregion
@@ -50,6 +54,12 @@ public class PlayerUnitController : CharactorBase
     public override void Attack(CharactorBase target)
     {
         base.Attack(target);
+    }
+
+    public async UniTaskVoid AttackDelay()
+    {
+        await UniTask.Delay(_attackCoolTime);
+        _isCanAttack = true;
     }
     #endregion
 

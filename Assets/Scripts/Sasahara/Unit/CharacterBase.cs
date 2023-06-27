@@ -4,23 +4,33 @@ using UnityEngine;
 using UniRx;
 using System;
 
+
 public abstract class CharactorBase : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
     public int Hp => _hp;
     public int Power => _power;
+    public int AttackCoolTime => _attackCoolTime;
     public bool IsCanAttack => _isCanAttack;
     public IObservable<CharactorBase> OnAttack => _attackSubject;
+
     #endregion
 
     #region serialize
     // unity inpectorに表示したいものを記述。
-    public int _hp;
-    public int _power;
-    public bool _isCanAttack;
+    [SerializeField]
+    protected int _hp;
+    [SerializeField]
+    protected int _power;
+    [Tooltip("攻撃間隔(ミリ秒) 1000=1s")]
+    [SerializeField]
+    protected int _attackCoolTime;
+    [SerializeField]
+    protected bool _isCanAttack;
     [Tooltip("攻撃判定をする子オブジェクト")]
-    public AttackCollider _attackCollider;
+    [SerializeField]
+    protected AttackCollider _attackCollider;
     #endregion
 
     #region private
@@ -58,7 +68,7 @@ public abstract class CharactorBase : MonoBehaviour
     //　自身で作成したPublicな関数を入れる。
     public virtual void Attack(CharactorBase target)
     {
-        target.Damaged(target);
+        target.Damaged(this);
     }
 
     public virtual void Damaged(CharactorBase target)
