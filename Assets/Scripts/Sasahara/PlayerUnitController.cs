@@ -6,15 +6,10 @@ public class PlayerUnitController : CharactorBase
 {
     #region property
     // プロパティを入れる
-    public int Hp => _hp = 10;
-    public int Power => _power = 5;
     #endregion
 
     #region serialize
-    // unity inpectorに表示したいものを記述。
-    [Tooltip("攻撃判定をする子オブジェクト")]
-    [SerializeField]
-    private Collider _attackCollider;
+    // unity inpectorに表示したいものを記述。   
     #endregion
 
     #region private
@@ -43,15 +38,18 @@ public class PlayerUnitController : CharactorBase
 
     private void Update()
     {
-
+        if (_isCanAttack && _attackCollider.IsTarget)
+        {
+            Attack(_attackCollider.Target);
+        }
     }
     #endregion
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public override void Attack(GameObject go)
+    public override void Attack(CharactorBase target)
     {
-        base.Attack(go);
+        base.Attack(target);
     }
     #endregion
 
