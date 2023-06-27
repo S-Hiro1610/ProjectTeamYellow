@@ -2,21 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class InputManager : BaseManager
 {
     #region property
     // プロパティを入れる。
     public enum ControlType { MouseAndKeyboard, TouchScreen }
-
-    public static InputManager Instanace
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = FindObjectOfType<InputManager>();
-            return _instance;
-        }
-    }
 
     /*動的入力モードを入り変え：
      * {
@@ -26,7 +16,7 @@ public class InputManager : MonoBehaviour
             }
         }
      */
-    public ControlType NowControlType = ControlType.MouseAndKeyboard;
+    public ControlType nowControlType = ControlType.MouseAndKeyboard;
 
     /*Click()使用する場合:
      * {
@@ -45,7 +35,6 @@ public class InputManager : MonoBehaviour
 
     #region private
     // プライベートなメンバー変数。
-    private static InputManager _instance;
     #endregion
 
     #region Constant
@@ -60,7 +49,7 @@ public class InputManager : MonoBehaviour
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-
+        base.Initialize();
     }
 
     private void Start()
@@ -76,10 +65,10 @@ public class InputManager : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    
+
     public bool Click()
     {
-        switch(NowControlType)
+        switch(nowControlType)
         {
             case ControlType.MouseAndKeyboard:
                 return Input.GetMouseButtonDown(0);
