@@ -526,7 +526,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
   m_SizeDelta: {x: 1599, y: 128}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1380853992
@@ -762,7 +762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0.00012207031, y: 0}
   m_SizeDelta: {x: 256, y: 128}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1507098922
@@ -1004,7 +1004,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
   m_SizeDelta: {x: 1344, y: 256}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1577103047
@@ -1272,7 +1272,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 986bd46b383d6ae4292451dce61d53ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testScoreText: {fileID: 0}
+  PauseMenuUIText: {fileID: 599268955}
+  WaveUIText: {fileID: 1462540531}
+  EnemyCntUIText: {fileID: 1664466140}
+  PowerUIText: {fileID: 2123198103}
+  PauseMenuUIString: "\u25B6"
+  WaveCnt: 0/8
+  EnemyCntUICnt: 24
+  PowerUICnt: 80
 --- !u!1 &1998680075
 GameObject:
   m_ObjectHideFlags: 0

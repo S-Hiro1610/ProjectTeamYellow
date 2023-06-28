@@ -7,7 +7,20 @@ public class UIManager : BaseManager
 {
     #region property
     // プロパティを入れる。
-    public Text testScoreText;
+    //TopPanelText
+    public Text PauseMenuUIText;
+    public Text WaveUIText;
+    public Text EnemyCntUIText;
+    //BottomPlaneText
+    public Text PowerUIText;
+    //Unit_Cards_PanelText(TODO)
+
+    //TopPanelText
+    public string PauseMenuUIString;
+    public string WaveCnt;
+    public string EnemyCntUICnt;
+    //BottomPlaneText
+    public string PowerUICnt;
     #endregion
 
     #region serialize
@@ -16,7 +29,12 @@ public class UIManager : BaseManager
 
     #region private
     // プライベートなメンバー変数。
-    private int testScore;
+    //TopPanelText
+    private string _currentPauseMenuUIString;
+    private string _currentWaveString;
+    private string _currentEnemyCntUIString;
+    //BottomPlaneText
+    private string _currentPowerUIString;
     #endregion
 
     #region Constant
@@ -36,7 +54,19 @@ public class UIManager : BaseManager
 
     private void Start()
     {
+        _currentPauseMenuUIString = PauseMenuUIText.text;
+        UpdateText(PauseMenuUIText, PauseMenuUIString);
 
+        _currentWaveString = WaveUIText.text;
+        UpdateText(WaveUIText, WaveCnt);
+
+        _currentEnemyCntUIString = EnemyCntUIText.text;
+        UpdateText(EnemyCntUIText, EnemyCntUICnt);
+
+        _currentPowerUIString = PowerUIText.text;
+        UpdateText(PowerUIText, PowerUICnt);
+
+        StartCoroutine(CheckValuesChanged());
     }
 
     private void Update()
@@ -46,29 +76,51 @@ public class UIManager : BaseManager
     #endregion
 
     #region public method
-
-    //　自身で作成したPublicな関数を入れる。
-    /*AddTestScore(int points)使用する場合:
-    public class PlayerController : MonoBehaviour
-    {
-        void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.CompareTag("Enemy"))
-            {
-                UIManager.Instance.AddTestScore(100);
-                Destroy(collision.gameObject);
-            }
-        }
-    }
-     */
-    public void AddTestScore(int points)
-    {
-        testScore += points;
-        testScoreText.text = "Score: " + testScore;
-    }
+    // 自身で作成したPublicな関数を入れる。
     #endregion
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+
+    private IEnumerator CheckValuesChanged()
+    {
+        while(true)
+        {
+            string newPauseMenuUIString = PauseMenuUIString;
+            if (newPauseMenuUIString != _currentPauseMenuUIString)
+            {
+                _currentPauseMenuUIString = newPauseMenuUIString;
+                UpdateText(PauseMenuUIText, _currentPauseMenuUIString);
+            }
+
+            string newWaveString = WaveCnt;
+            if (newWaveString != _currentWaveString)
+            {
+                _currentWaveString = newWaveString;
+                UpdateText(WaveUIText, _currentWaveString);
+            }
+
+            string newEnemyCntUIString = EnemyCntUICnt;
+            if (newEnemyCntUIString != _currentEnemyCntUIString)
+            {
+                _currentEnemyCntUIString = newEnemyCntUIString;
+                UpdateText(EnemyCntUIText, _currentEnemyCntUIString);
+            }
+
+            string newPowerUIString = PowerUICnt;
+            if (newPowerUIString != _currentPowerUIString)
+            {
+                _currentPowerUIString = newPowerUIString;
+                UpdateText(PowerUIText, _currentPowerUIString);
+            }
+
+            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
+        }
+    }
+
+    private void UpdateText(Text text,object str)
+    {
+        text.text = (string)str;
+    }
     #endregion
 }
