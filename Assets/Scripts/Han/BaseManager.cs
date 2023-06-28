@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class BaseManager : MonoBehaviour
 {
     #region property
-    protected static BaseManager _instance;
+    protected static BaseManager Instance;
     // プロパティを入れる。
     #endregion
 
@@ -48,9 +48,9 @@ public abstract class BaseManager : MonoBehaviour
     protected virtual void Initialize()
     {
         //共通初期化処理
-        if (_instance == null)
+        if (Instance == null)
         {
-            _instance = this;
+            Instance = this;
         }
         else
         {
