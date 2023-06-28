@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : BaseManager
+public class UIManager: MonoBehaviour
 {
     #region property
     // プロパティを入れる。
+
+    protected static UIManager Instance;
+
+    //Unit_Cards_Panel
+    public GameObject UnitCardsPanel;
+    public GameObject UnitCardPanel;
+
     //TopPanelText
     public Text PauseMenuUIText;
     public Text WaveUIText;
     public Text EnemyCntUIText;
     //BottomPlaneText
     public Text PowerUIText;
-    //Unit_Cards_PanelText(TODO)
 
     //TopPanelText
     public string PauseMenuUIString;
@@ -21,6 +27,14 @@ public class UIManager : BaseManager
     public string EnemyCntUICnt;
     //BottomPlaneText
     public string PowerUICnt;
+
+    public CardInfo[] unitCardsInfoArray;
+
+    //UnitCardsPanel
+    private int unitCardsNum = 0;
+    
+
+    public float UnitCardsPanelSpacingW = 0;
     #endregion
 
     #region serialize
@@ -35,6 +49,9 @@ public class UIManager : BaseManager
     private string _currentEnemyCntUIString;
     //BottomPlaneText
     private string _currentPowerUIString;
+
+    private List<GameObject> CardList;
+
     #endregion
 
     #region Constant
@@ -49,7 +66,14 @@ public class UIManager : BaseManager
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-        base.Initialize();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
@@ -66,7 +90,32 @@ public class UIManager : BaseManager
         _currentPowerUIString = PowerUIText.text;
         UpdateText(PowerUIText, PowerUICnt);
 
-        StartCoroutine(CheckValuesChanged());
+        CardList = new List<GameObject>();
+
+        unitCardsNum = unitCardsInfoArray.Length;
+
+        GridLayoutGroup cardsGrop = UnitCardsPanel.GetComponent<GridLayoutGroup>();
+
+        for (int cardCnt = 0; cardCnt < unitCardsNum; cardCnt++)
+        {
+            GameObject cardObj = Instantiate(UnitCardPanel, cardsGrop.transform);
+            UpdateCardsText(cardObj, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].CostUIString);
+            
+            CardList.Add(cardObj);
+        }
+
+        //System.Array.Copy(unitCardsInfoArray, _currentUnitCardsInfoArray, unitCardsInfoArray.Length);
+
+
+        RectTransform cardRectTransform = UnitCardPanel.GetComponent<RectTransform>();
+        cardsGrop.cellSize = cardRectTransform.sizeDelta;
+
+        cardsGrop.spacing = new Vector2(UnitCardsPanelSpacingW, cardsGrop.spacing.y);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(UnitCardsPanel.transform as RectTransform);
+
+        StartCoroutine(CheckSceneUIValuesChanged());
+        StartCoroutine(CheckCardValuesChanged());
     }
 
     private void Update()
@@ -82,7 +131,7 @@ public class UIManager : BaseManager
     #region private method
     // 自身で作成したPrivateな関数を入れる。
 
-    private IEnumerator CheckValuesChanged()
+    private IEnumerator CheckSceneUIValuesChanged()
     {
         while(true)
         {
@@ -117,6 +166,50 @@ public class UIManager : BaseManager
             yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
         }
     }
+
+    private IEnumerator CheckCardValuesChanged()
+    {
+        while (true)
+        {
+            for (int cardCnt = 0; cardCnt < unitCardsInfoArray.Length; cardCnt++)
+            {
+                GameObject card = CardList[cardCnt];
+                UpdateCardsText(card, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].CostUIString);
+            }
+
+            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
+        }
+
+            //while(true)
+            //{
+            //    for(int cardCnt = 0;cardCnt< unitCardsInfoArray.Length;cardCnt++)
+            //    {
+            //        CardInfo newInfo = new CardInfo() { LVUIString = unitCardsInfoArray[cardCnt].LVUIString, CostUIString = unitCardsInfoArray[cardCnt].CostUIString };
+            //        if(newInfo.LVUIString != _currentUnitCardsInfoArray[cardCnt].LVUIString)
+            //        {
+
+            //        }
+
+            //        if( newInfo.CostUIString != _currentUnitCardsInfoArray[cardCnt].CostUIString)
+            //        {
+
+            //        }
+
+            //    }
+
+            //}
+
+            
+    }
+
+    private void UpdateCardsText(GameObject obj,string LVStr,string costStr)
+    {
+        Card card = obj.GetComponent<Card>();
+        card.LVUIText.text = LVStr;
+        card.CostUIText.text = costStr;
+    }
+
+
 
     private void UpdateText(Text text,object str)
     {

@@ -242,8 +242,9 @@ GameObject:
   - component: {fileID: 4848619671085707758}
   - component: {fileID: 4848619671085707756}
   - component: {fileID: 4848619671085707759}
+  - component: {fileID: 3112287708074604575}
   m_Layer: 5
-  m_Name: Unit_Card_Panel
+  m_Name: UnitCardPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -308,6 +309,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3112287708074604575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4848619671085707753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3c186394251ac4d91071b8c5026438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LVUIText: {fileID: 6305623912516405503}
+  CostUIText: {fileID: 689657520802322207}
 --- !u!1 &5339758049138307173
 GameObject:
   m_ObjectHideFlags: 0

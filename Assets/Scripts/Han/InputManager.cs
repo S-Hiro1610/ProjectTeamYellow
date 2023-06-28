@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : BaseManager
+public class InputManager: MonoBehaviour
 {
     #region property
     // プロパティを入れる。
+
+    protected static InputManager Instance;
+
     public enum ControlType { MouseAndKeyboard, TouchScreen }
 
     /*動的入力モードを入り変え：
@@ -49,7 +52,14 @@ public class InputManager : BaseManager
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-        base.Initialize();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
