@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -99,8 +100,10 @@ public class UIManager: MonoBehaviour
         for (int cardCnt = 0; cardCnt < unitCardsNum; cardCnt++)
         {
             GameObject cardObj = Instantiate(UnitCardPanel, cardsGrop.transform);
-            UpdateCardsText(cardObj, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].CostUIString);
-            
+            UpdateCardsText(cardObj, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
+            cardObj.name = "Card_" + cardCnt;
+            Card card = cardObj.GetComponent<Card>();
+            cardObj.GetComponent<Button>().onClick.AddListener(() => card.OnClick());
             CardList.Add(cardObj);
         }
 
@@ -174,43 +177,19 @@ public class UIManager: MonoBehaviour
             for (int cardCnt = 0; cardCnt < unitCardsInfoArray.Length; cardCnt++)
             {
                 GameObject card = CardList[cardCnt];
-                UpdateCardsText(card, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].CostUIString);
+                UpdateCardsText(card, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             }
 
             yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
         }
-
-            //while(true)
-            //{
-            //    for(int cardCnt = 0;cardCnt< unitCardsInfoArray.Length;cardCnt++)
-            //    {
-            //        CardInfo newInfo = new CardInfo() { LVUIString = unitCardsInfoArray[cardCnt].LVUIString, CostUIString = unitCardsInfoArray[cardCnt].CostUIString };
-            //        if(newInfo.LVUIString != _currentUnitCardsInfoArray[cardCnt].LVUIString)
-            //        {
-
-            //        }
-
-            //        if( newInfo.CostUIString != _currentUnitCardsInfoArray[cardCnt].CostUIString)
-            //        {
-
-            //        }
-
-            //    }
-
-            //}
-
-            
     }
 
     private void UpdateCardsText(GameObject obj,string LVStr,string costStr)
     {
         Card card = obj.GetComponent<Card>();
         card.LVUIText.text = LVStr;
-        card.CostUIText.text = costStr;
+        card.costUIText.text = costStr;
     }
-
-
-
     private void UpdateText(Text text,object str)
     {
         text.text = (string)str;

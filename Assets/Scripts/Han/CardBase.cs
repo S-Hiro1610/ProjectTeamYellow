@@ -1,12 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseManager : MonoBehaviour
+[Serializable]
+public struct CardInfo
 {
     #region property
-    protected static BaseManager Instance;
     // プロパティを入れる。
+    public int coolTime;
+    public string LVUIString;
+    public string costUIString;
+
+    #endregion
+
+}
+public class CardBase : MonoBehaviour
+{
+    #region property
+    // プロパティを入れる。
+    //public event Action<CardBase> OnCardClicked;
     #endregion
 
     #region serialize
@@ -29,7 +42,7 @@ public abstract class BaseManager : MonoBehaviour
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-        Initialize();
+
     }
 
     private void Start()
@@ -45,18 +58,6 @@ public abstract class BaseManager : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    protected virtual void Initialize()
-    {
-        //共通初期化処理
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
     #endregion
 
     #region private method

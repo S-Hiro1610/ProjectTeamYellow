@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Card : MonoBehaviour
+public class Card : CardBase
 {
     #region property
     // プロパティを入れる。
     public Text LVUIText;
-    public Text CostUIText;
+    public Text costUIText;
     #endregion
 
     #region serialize
@@ -47,6 +47,11 @@ public class Card : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+
+    public void OnClick()
+    {
+        Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
+    }
     #endregion
 
     #region private method
