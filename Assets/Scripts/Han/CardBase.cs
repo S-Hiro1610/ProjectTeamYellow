@@ -8,9 +8,13 @@ public struct CardInfo
 {
     #region property
     // プロパティを入れる。
-    public int coolTime;
+    public GameObject thisGameObjcet;
+    public Card cardContext;
+
+    public float coolTime;
     public string LVUIString;
     public string costUIString;
+
 
     #endregion
 
@@ -58,6 +62,7 @@ public class CardBase : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    
     #endregion
 
     #region private method

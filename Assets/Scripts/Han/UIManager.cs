@@ -29,6 +29,10 @@ public class UIManager: MonoBehaviour
     //BottomPlaneText
     public string PowerUICnt;
 
+    public Button MenuButton;
+
+    public Dialogbox ExitDialogUI;
+
     public CardInfo[] unitCardsInfoArray;
 
     //UnitCardsPanel
@@ -50,8 +54,6 @@ public class UIManager: MonoBehaviour
     private string _currentEnemyCntUIString;
     //BottomPlaneText
     private string _currentPowerUIString;
-
-    private List<GameObject> CardList;
 
     #endregion
 
@@ -81,6 +83,9 @@ public class UIManager: MonoBehaviour
     {
         _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
+        MenuButton.onClick.AddListener(() => OnClickMenuButton());
+        ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
+        ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
 
         _currentWaveString = WaveUIText.text;
         UpdateText(WaveUIText, WaveCnt);
@@ -91,8 +96,6 @@ public class UIManager: MonoBehaviour
         _currentPowerUIString = PowerUIText.text;
         UpdateText(PowerUIText, PowerUICnt);
 
-        CardList = new List<GameObject>();
-
         unitCardsNum = unitCardsInfoArray.Length;
 
         GridLayoutGroup cardsGrop = UnitCardsPanel.GetComponent<GridLayoutGroup>();
@@ -100,11 +103,15 @@ public class UIManager: MonoBehaviour
         for (int cardCnt = 0; cardCnt < unitCardsNum; cardCnt++)
         {
             GameObject cardObj = Instantiate(UnitCardPanel, cardsGrop.transform);
-            UpdateCardsText(cardObj, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             cardObj.name = "Card_" + cardCnt;
-            Card card = cardObj.GetComponent<Card>();
-            cardObj.GetComponent<Button>().onClick.AddListener(() => card.OnClick());
-            CardList.Add(cardObj);
+            unitCardsInfoArray[cardCnt].thisGameObjcet = cardObj;
+            unitCardsInfoArray[cardCnt].cardContext = cardObj.GetComponent<Card>();
+
+            UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
+            
+            UpdateCardsCoolTime(unitCardsInfoArray[cardCnt].cardContext.coolTimePlane, unitCardsInfoArray[cardCnt].coolTime);
+            int index = cardCnt;
+            cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[index].cardContext.OnClick());
         }
 
         //System.Array.Copy(unitCardsInfoArray, _currentUnitCardsInfoArray, unitCardsInfoArray.Length);
@@ -123,7 +130,10 @@ public class UIManager: MonoBehaviour
 
     private void Update()
     {
-
+        //foreach(var item in unitCardsInfoArray)
+        //{
+        //    Debug.Log(item.cardContext.name);
+        //}
     }
     #endregion
 
@@ -176,23 +186,42 @@ public class UIManager: MonoBehaviour
         {
             for (int cardCnt = 0; cardCnt < unitCardsInfoArray.Length; cardCnt++)
             {
-                GameObject card = CardList[cardCnt];
-                UpdateCardsText(card, unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
+                UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             }
 
             yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
         }
     }
 
-    private void UpdateCardsText(GameObject obj,string LVStr,string costStr)
+    private void UpdateCardsCoolTime(Image image, float coolTime)
     {
-        Card card = obj.GetComponent<Card>();
-        card.LVUIText.text = LVStr;
-        card.costUIText.text = costStr;
+        image.fillAmount = coolTime;
+    }
+
+    private void UpdateCardsText(CardInfo info,string LVStr,string costStr)
+    {
+        info.cardContext.LVUIText.text = LVStr;
+        info.cardContext.costUIText.text = costStr;
     }
     private void UpdateText(Text text,object str)
     {
         text.text = (string)str;
     }
+
+    private void OnClickMenuButton()
+    {
+        ExitDialogUI.SetActive(true);
+    }
+
+    private void ExitDialogUIIsOpen()
+    {
+        Debug.Log("ExitDialogUIIsOpen");
+    }
+
+    private void ExitDialogUIIsClose()
+    {
+        Debug.Log("ExitDialogUIIsClose");
+    }
+
     #endregion
 }

@@ -7,8 +7,11 @@ public class Card : CardBase
 {
     #region property
     // プロパティを入れる。
+    
     public Text LVUIText;
     public Text costUIText;
+
+    public Image coolTimePlane;
     #endregion
 
     #region serialize
@@ -31,7 +34,7 @@ public class Card : CardBase
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-
+        
     }
 
     private void Start()
