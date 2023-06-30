@@ -1,17 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Card : CardBase
+public class Dialogbox : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
-    
-    public Text LVUIText;
-    public Text costUIText;
+    public Button ExitButton;
 
-    public Image coolTimePlane;
+    public UnityEvent OnOpenEvent;
+    public UnityEvent OnCloseEvent;
     #endregion
 
     #region serialize
@@ -34,7 +34,7 @@ public class Card : CardBase
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-        
+        ExitButton.onClick.AddListener(() => { SetActive(false); });
     }
 
     private void Start()
@@ -50,10 +50,30 @@ public class Card : CardBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-
-    public void OnClick()
+    public void SetActive(bool onoff)
     {
-        Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
+        //gameObject.transform.parent.gameObject.SetActive(onoff);
+
+        if (onoff)
+        {
+            Open();
+            return;
+        }
+        Close();
+    }
+
+    public void Open()
+    {
+        Debug.Log("Open");
+        gameObject.transform.parent.gameObject.SetActive(true);
+        OnOpenEvent.Invoke();
+    }
+
+    public void Close()
+    {
+        Debug.Log("Close");
+        gameObject.transform.parent.gameObject.SetActive(false);
+        OnCloseEvent.Invoke();
     }
     #endregion
 
