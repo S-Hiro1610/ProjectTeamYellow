@@ -10,6 +10,7 @@ public class AttackCollider : MonoBehaviour
     // プロパティを入れる。
     public bool IsTarget => _isTarget;
     public CharactorBase Target => _target;
+    public List<CharactorBase> Targets => _targets;
     #endregion
 
     #region serialize
