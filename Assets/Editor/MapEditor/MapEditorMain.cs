@@ -109,15 +109,7 @@ public class MapEditorMain : EditorWindow
         GUILayout.FlexibleSpace();
 
         // マップ編集ボタン描画
-        using (new EditorGUILayout.VerticalScope())
-        {
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("マップ編集開始"))
-            {
-                /// ボタン押下で編集画面を表示する
-                _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
-            }
-        }
+        DrawMapEditButton();
     }
     #endregion
 
@@ -161,6 +153,17 @@ public class MapEditorMain : EditorWindow
             }
         }
     }
+
+    private void DrawMapEditButton()
+    {
+        EditorGUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("マップ編集"))
+        {
+            _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
+        }
+        EditorGUILayout.EndVertical();
+    }
     #endregion
 }
 
@@ -168,11 +171,6 @@ public class MapEdittingWindow : EditorWindow
 {
     #region private
     private MapEditorMain _parentWindow;
-    private int _columns = 0;
-    private int _rows = 0;
-    private float _gridSize = 0f;
-    private MapCell[,] _mapCells;
-    private Rect[,] _gridRect;
     #endregion
 
     #region constant
@@ -182,106 +180,21 @@ public class MapEdittingWindow : EditorWindow
     private const float WINDOW_HEIGHT = 700.0f;
     #endregion
 
-    #region unity method
-    private void OnGUI()
-    {
-        // グリッド線の描画(★単純化できないか要検討！！！)
-        for(int row = 0; row < _rows; row++)
-        {
-            for(int col =0; col<_columns; col++)
-            {
-                DrawGrid(_gridRect[row, col]);
-            }
-        }
-
-        // クリック位置に選択中のマップパーツ画像を描画する
-
-    }
-    #endregion
-
     #region public method
-    /// <summary>
-    /// マップ編集画面をマップエディタメインの子画面として生成する
-    /// </summary>
-    /// <param name="parent"></param>
-    /// <returns></returns>
     public static MapEdittingWindow WillAppear(MapEditorMain parent)
     {
         MapEdittingWindow window = (MapEdittingWindow)GetWindow(typeof(MapEdittingWindow), title:null, utility:false, focus:true);
         window.minSize = new Vector2(WINDOW_WIDTH, WINDOW_HEIGHT);
-        window.SetUp(parent);
+        window.SetParent(parent);
+        // ここでマップ編集画面の初期化が必要
         return window;
     }
     #endregion
 
     #region private method
-    /// <summary>
-    /// マップ編集画面の
-    /// </summary>
-    /// <param name="parent"></param>
-    private void SetUp(MapEditorMain parent)
+    private void SetParent(MapEditorMain parent)
     {
         _parentWindow = parent;
-        _rows = _parentWindow.Rows;
-        _columns = _parentWindow.Columns;
-        _gridRect = new Rect[_rows, _columns];
-        _mapCells = new MapCell[_rows, _columns];
-    }
-
-    /// <summary>
-    /// 指定されたマスの上下左右にグリッド線を描く
-    /// </summary>
-    /// <param name="rect"></param>
-    private void DrawGrid(Rect rect)
-    {
-        // 上下左右に線を描く
-    }
-    #endregion
-}
-
-/// <summary>
-/// マップのマス目クラス
-/// シリアライズしてファイルへ出力できること
-/// </summary>
-[System.Serializable]
-public class MapCell
-{
-    #region property
-    public int Column = 0;
-    public int Row = 0;
-    public string PrefabPath = "";
-    /// <summary>パーツの原点がセットされているか</summary>
-    public bool IsOriginSet = false;
-    #endregion
-
-    #region private
-    #endregion
-
-    #region public method
-    public void SetData(MapCell[,] cells, string path)
-    {
-    }
-
-    /// <summary>
-    /// マスのデータをリセットする
-    /// </summary>
-    /// <param name="cells">マス全体のデータ</param>
-    public void ResetData(MapCell[,] cells)
-    {
-    }
-    #endregion
-
-    #region private method
-    /// <summary>
-    /// グリッドの範囲内か確認する（通路）
-    /// </summary>
-    /// <param name="cells">ステージデータ</param>
-    /// <param name="type">通路の種類</param>
-    /// <param name="dirType">向き</param>
-    /// <returns></returns>
-    private bool CheckGridForCorridor(MapCell[,] cells)
-    {
-        return true;
     }
     #endregion
 }
