@@ -109,7 +109,6 @@ public class MapEditorMain : EditorWindow
         GUILayout.FlexibleSpace();
 
         // マップ編集ボタン描画
-        DrawMapEditButton();
     }
     #endregion
 
@@ -153,17 +152,6 @@ public class MapEditorMain : EditorWindow
             }
         }
     }
-
-    private void DrawMapEditButton()
-    {
-        EditorGUILayout.BeginVertical();
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("マップ編集"))
-        {
-            _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
-        }
-        EditorGUILayout.EndVertical();
-    }
     #endregion
 }
 
@@ -171,6 +159,11 @@ public class MapEdittingWindow : EditorWindow
 {
     #region private
     private MapEditorMain _parentWindow;
+    private int _columns = 0;
+    private int _rows = 0;
+    private float _gridSize = 0f;
+    private MapCell[,] _mapCells;
+    private Rect[,] _gridRect;
     #endregion
 
     #region constant
