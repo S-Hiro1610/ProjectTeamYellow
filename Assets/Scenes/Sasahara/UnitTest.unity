@@ -273,11 +273,11 @@ GameObject:
   - component: {fileID: 1072089563}
   - component: {fileID: 1072089562}
   - component: {fileID: 1072089561}
-  - component: {fileID: 1072089560}
   - component: {fileID: 1072089565}
+  - component: {fileID: 1072089560}
   m_Layer: 0
   m_Name: Unit (1)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -294,8 +294,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b45aa98d1db0b4469cc1e85c4cfb9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hp: 10
+  _hp: 45
   _power: 15
+  _attackCoolTime: 5000
   _isCanAttack: 1
   _attackCollider: {fileID: 1491343694}
 --- !u!65 &1072089561
@@ -401,8 +402,8 @@ GameObject:
   - component: {fileID: 1364583480}
   - component: {fileID: 1364583479}
   - component: {fileID: 1364583478}
-  - component: {fileID: 1364583477}
   - component: {fileID: 1364583482}
+  - component: {fileID: 1364583477}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Enemy
@@ -422,8 +423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b45aa98d1db0b4469cc1e85c4cfb9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hp: 10
-  _power: 15
+  _hp: 30
+  _power: 5
+  _attackCoolTime: 2000
   _isCanAttack: 1
   _attackCollider: {fileID: 784776349}
 --- !u!65 &1364583478
@@ -434,7 +436,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364583476}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}

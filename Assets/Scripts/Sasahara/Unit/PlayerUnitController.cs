@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class PlayerUnitController : CharactorBase
 {
@@ -40,17 +42,15 @@ public class PlayerUnitController : CharactorBase
     {
         if (_isCanAttack && _attackCollider.IsTarget)
         {
+            _isCanAttack = false;
             Attack(_attackCollider.Target);
+            AttackDelay();
         }
     }
     #endregion
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public override void Attack(CharactorBase target)
-    {
-        base.Attack(target);
-    }
     #endregion
 
     #region private method
