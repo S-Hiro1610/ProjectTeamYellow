@@ -91,7 +91,7 @@ public class MapEdittingWindow : EditorWindow
         }
         Repaint();
 
-        // 格納先
+        // マップ生成ボタンの表示
         GUILayout.FlexibleSpace();
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -104,6 +104,7 @@ public class MapEdittingWindow : EditorWindow
             GUILayout.FlexibleSpace();
         }
 
+        // 区切りの表示
         GUILayout.Space(10);
         using(new EditorGUILayout.HorizontalScope())
         {
@@ -113,6 +114,7 @@ public class MapEdittingWindow : EditorWindow
         }
         GUILayout.Space(10);
 
+        // マップロードボタンの表示
         using (new EditorGUILayout.HorizontalScope())
         {
             GUILayout.Space(20);
@@ -131,7 +133,7 @@ public class MapEdittingWindow : EditorWindow
             GUILayout.FlexibleSpace();
         }
 
-
+        // 操作説明文の表示
         using (new EditorGUILayout.VerticalScope())
         {
             GUILayout.Space(10);
