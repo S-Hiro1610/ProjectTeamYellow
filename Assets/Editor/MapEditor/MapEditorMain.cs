@@ -119,6 +119,11 @@ public class MapEditorMain : EditorWindow
         GUILayout.FlexibleSpace();
 
         // マップ編集ボタン描画
+        using (new EditorGUILayout.VerticalScope())
+            if (GUILayout.Button("マップ編集画面を開く"))
+            {
+                    _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
+            }
     }
     #endregion
 

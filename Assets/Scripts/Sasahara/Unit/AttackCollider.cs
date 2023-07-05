@@ -61,31 +61,26 @@ public class AttackCollider : MonoBehaviour
     // 自身で作成したPrivateな関数を入れる。
     private void OnTriggerEnter(Collider other)
     {
-        _tag = other.gameObject.tag;
-        
+        // 自身と同じタグである場合は処理しない
+        if (TagCheck(other)) return;
+
         if (other.CompareTag(_enemyTag) || other.CompareTag(_playerTag))
         {
-            if (_tag == _enemyTag)
+            if (other.TryGetComponent(out CharactorBase item))
             {
-                if (other.TryGetComponent(out CharactorBase item))
-                {
-                    _targets.Add(item);
-                }
-            }
-            else if (_tag == _playerTag)
-            {
-                if (other.TryGetComponent(out _target))
-                {
-                    _isTarget = true;
-                }
+                _targets.Add(item);
             }
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag(_enemyTag))
-        {
+        // 自身と同じタグである場合は処理しない
+        if (TagCheck(other)) return;
+
+        if (other.CompareTag(_enemyTag) || other.CompareTag(_playerTag))
+        { 
+            if (_targets.Count == 0) return;
             _target = _targets[0];
             _isTarget = true;
         }
@@ -93,7 +88,20 @@ public class AttackCollider : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        _isTarget = false;
+        // 自身と同じタグである場合は処理しない
+        if (TagCheck(other)) return;
+
+        if (other.CompareTag(_enemyTag) || other.CompareTag(_playerTag))
+        {
+            _isTarget = false;
+        }
+    }
+
+    private bool TagCheck(Collider other)
+    {
+        _tag = other.gameObject.tag;
+        if (_tag == this.gameObject.transform.parent.tag) return true;
+        else return false;
     }
     #endregion
 }
