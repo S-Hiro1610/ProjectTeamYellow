@@ -51,16 +51,6 @@ public class PlayerUnitController : CharactorBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public override void Attack(CharactorBase target)
-    {
-        base.Attack(target);
-    }
-
-    public async UniTaskVoid AttackDelay()
-    {
-        await UniTask.Delay(_attackCoolTime);
-        _isCanAttack = true;
-    }
     #endregion
 
     #region private method

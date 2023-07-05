@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
 using System;
-
+using Cysharp.Threading.Tasks;
+using UniRx;
 
 public abstract class CharactorBase : MonoBehaviour
 {
@@ -60,18 +60,22 @@ public abstract class CharactorBase : MonoBehaviour
 
     private void Update()
     {
-
+        
     }
     #endregion
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public virtual void Attack(CharactorBase target)
+    #endregion
+
+    #region private method
+    // 自身で作成したPrivateな関数を入れる。
+    protected virtual void Attack(CharactorBase target)
     {
         target.Damaged(this);
     }
 
-    public virtual void Damaged(CharactorBase target)
+    protected virtual void Damaged(CharactorBase target)
     {
         _hp -= target.Power;
         Debug.Log($"Damaged:{_hp}");
@@ -80,9 +84,11 @@ public abstract class CharactorBase : MonoBehaviour
             Debug.Log($"Dead{gameObject}");
         }
     }
-    #endregion
 
-    #region private method
-    // 自身で作成したPrivateな関数を入れる。
+    protected async UniTaskVoid AttackDelay()
+    {
+        await UniTask.Delay(_attackCoolTime);
+        _isCanAttack = true;
+    }
     #endregion
 }
