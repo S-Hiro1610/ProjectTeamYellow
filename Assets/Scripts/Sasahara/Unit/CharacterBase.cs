@@ -11,7 +11,7 @@ public abstract class CharactorBase : MonoBehaviour
     // プロパティを入れる。
     public int Hp => _hp;
     public int Power => _power;
-    public int AttackCoolTime => _attackCoolTime;
+    public float AttackCoolTime => _attackCoolTime;
     public bool IsCanAttack => _isCanAttack;
     public IObservable<CharactorBase> OnAttack => _attackSubject;
 
@@ -23,9 +23,9 @@ public abstract class CharactorBase : MonoBehaviour
     protected int _hp;
     [SerializeField]
     protected int _power;
-    [Tooltip("攻撃間隔(ミリ秒) 1000=1s")]
+    [Tooltip("攻撃間隔(秒)")]
     [SerializeField]
-    protected int _attackCoolTime;
+    protected float _attackCoolTime;
     [SerializeField]
     protected bool _isCanAttack;
     [Tooltip("攻撃判定をする子オブジェクト")]
@@ -70,25 +70,29 @@ public abstract class CharactorBase : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
-    protected virtual void Attack(CharactorBase target)
+    protected virtual IEnumerator Attack(CharactorBase target)
     {
-        target.Damaged(this);
+        if (target != null)
+        {
+            // 自身と同じタグである場合は攻撃しない
+            if (target.transform.tag == this.transform.tag) yield break;
+            // クールタイムを待ってから攻撃する
+            _isCanAttack = false;
+            yield return new WaitForSeconds(_attackCoolTime);
+            target.Damaged(this);
+            _isCanAttack = true;
+        }
     }
 
     protected virtual void Damaged(CharactorBase target)
     {
         _hp -= target.Power;
         Debug.Log($"Damaged:{_hp}");
-        if (_hp < 0)
+        if (_hp <= 0)
         {
             Debug.Log($"Dead{gameObject}");
+            Destroy(gameObject);
         }
-    }
-
-    protected async UniTaskVoid AttackDelay()
-    {
-        await UniTask.Delay(_attackCoolTime);
-        _isCanAttack = true;
     }
     #endregion
 }
