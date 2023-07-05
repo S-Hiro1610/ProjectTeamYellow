@@ -42,9 +42,7 @@ public class PlayerUnitController : CharactorBase
     {
         if (_isCanAttack && _attackCollider.IsTarget)
         {
-            _isCanAttack = false;
-            Attack(_attackCollider.Target);
-            AttackDelay();
+            StartCoroutine(Attack(_attackCollider.Target));
         }
     }
     #endregion
