@@ -76,7 +76,7 @@ public class PlayerRangeUnitController : CharactorBase
             foreach (CharactorBase target in _attackCollider.Targets)
             {
                 // Targetがnull(ユニットが消滅)の場合はリストから削除
-                if (target == null)
+                if (target == null || !target.gameObject.activeSelf)
                 {
                     _attackCollider.Targets.RemoveAt(_attackCollider.Targets.IndexOf(target));
                     return;
