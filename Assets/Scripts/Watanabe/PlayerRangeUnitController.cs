@@ -85,7 +85,7 @@ public class PlayerRangeUnitController : CharactorBase
                 // 現在の攻撃回数が最大攻撃回数より小さい場合、Attackを実行
                 if (currentSubjects < _maxAttackCount)
                 {
-                    Attack(target);
+                    StartCoroutine(Attack(_attackCollider.Target));
                     // DrawRayで攻撃を可視化(仮)
                     var pos = target.transform.position - gameObject.transform.position;
                     Debug.DrawRay(gameObject.transform.position, pos, Color.white, 1.0f);
@@ -99,10 +99,6 @@ public class PlayerRangeUnitController : CharactorBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public override void Attack(CharactorBase target)
-    {
-        base.Attack(target);
-    }
     #endregion
 
     #region private method
