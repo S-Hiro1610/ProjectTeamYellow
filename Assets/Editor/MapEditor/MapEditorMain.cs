@@ -59,6 +59,16 @@ public class MapEditorMain : EditorWindow
     #endregion
 
     #region unity methods
+    /// <summary>
+    /// Window/MapEditor選択時にメニューのEditorMainウインドウを生成表示する。
+    /// 生成済みならばフォーカスする。(GetWindowのデフォルト動作)
+    /// </summary>
+    [MenuItem("Window/MapEditor")]
+    private static void ShowMainWindow()
+    {
+        var window = GetWindow(typeof(MapEditorMain));
+        window.minSize = new Vector2(WINDOW_WIDTH, WINDOW_HEIGHT);
+    }
     private void OnGUI()
     {
         // マス目パーツのPrefabが入っているフォルダをセットする枠の作成
@@ -109,7 +119,6 @@ public class MapEditorMain : EditorWindow
         GUILayout.FlexibleSpace();
 
         // マップ編集ボタン描画
-        DrawMapEditButton();
     }
     #endregion
 
@@ -117,12 +126,10 @@ public class MapEditorMain : EditorWindow
     #endregion
 
     #region private method
-    [MenuItem("Window/MapEditor")]
-    private static void ShowMainWindow()
-    {
-        var window = GetWindow(typeof(MapEditorMain));
-        window.minSize = new Vector2(WINDOW_WIDTH, WINDOW_HEIGHT);
-    }
+    /// <summary>
+    /// 指定されたフォルダ内のマップパーツプレファブを調べて、
+    /// マップパーツを選択ボタンを表示する。
+    /// </summary>
     private void DrawPartsSelector()
     {
         if(_mapPartsFolder != null)
@@ -152,49 +159,6 @@ public class MapEditorMain : EditorWindow
                 }
             }
         }
-    }
-
-    private void DrawMapEditButton()
-    {
-        EditorGUILayout.BeginVertical();
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("マップ編集"))
-        {
-            _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
-        }
-        EditorGUILayout.EndVertical();
-    }
-    #endregion
-}
-
-public class MapEdittingWindow : EditorWindow
-{
-    #region private
-    private MapEditorMain _parentWindow;
-    #endregion
-
-    #region constant
-    /// <summary>ウィンドウの横幅</summary>
-    private const float WINDOW_WIDTH = 600.0f;
-    /// <summary>ウィンドウの縦幅</summary>
-    private const float WINDOW_HEIGHT = 700.0f;
-    #endregion
-
-    #region public method
-    public static MapEdittingWindow WillAppear(MapEditorMain parent)
-    {
-        MapEdittingWindow window = (MapEdittingWindow)GetWindow(typeof(MapEdittingWindow), title:null, utility:false, focus:true);
-        window.minSize = new Vector2(WINDOW_WIDTH, WINDOW_HEIGHT);
-        window.SetParent(parent);
-        // ここでマップ編集画面の初期化が必要
-        return window;
-    }
-    #endregion
-
-    #region private method
-    private void SetParent(MapEditorMain parent)
-    {
-        _parentWindow = parent;
     }
     #endregion
 }
