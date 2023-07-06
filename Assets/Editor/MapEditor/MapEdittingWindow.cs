@@ -37,7 +37,6 @@ public class MapEdittingWindow : EditorWindow
 
         // 左ボタンクリックされたマス目にパーツ画像を設置/消去する
         Event e = Event.current;
-        //Debug.Log("Row/Col = " + _parentWindow.Rows + " / " + _parentWindow.Columns);
         if (e.type == EventType.MouseDown && e.button == 0)
         {
             Vector2 pos = Event.current.mousePosition;
@@ -67,8 +66,11 @@ public class MapEdittingWindow : EditorWindow
                         }
                         else
                         {
-                            // パーツ設置モード処理
-                            _mapCells[row, col].Set(_parentWindow.SelectedMapPartName);
+                            if (_parentWindow.SelectedMapPartName != "")
+                            {
+                                // パーツ設置モード処理
+                                _mapCells[row, col].Set(_parentWindow.SelectedMapPartName);
+                            }
                         }
                         break;
                     }
@@ -98,7 +100,7 @@ public class MapEdittingWindow : EditorWindow
             GUILayout.Space(20);
             if (GUILayout.Button("Push to Generate", GUILayout.MinWidth(120), GUILayout.MinHeight(40)))
             {
-                //GenerateStageObject(_stageCells);
+                GenerateMapObject(_mapCells);
                 //CheckCurrentStageData(_stageCells);
             }
             GUILayout.FlexibleSpace();
@@ -228,6 +230,39 @@ public class MapEdittingWindow : EditorWindow
 
         // 右側罫線
         Handles.DrawLine(new Vector2(r.xMax, r.yMin), new Vector2(r.xMax, r.yMax));
+    }
+
+    /// <summary>
+    /// マップオブジェクトを生成してプレファブ化する
+    /// </summary>
+    /// <param name="mapCells"></param>
+    private void GenerateMapObject(MapCell[,] mapCells)
+    {
+        var mapObject = new GameObject(_parentWindow.MapName);
+        for(int row=0; row < _parentWindow.Rows; row++)
+        {
+            for (int col = 0; col < _parentWindow.Columns; col++)
+            {
+                if (mapCells[row, col].PrefabName == "")
+                {
+                    continue;
+                }
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col].PrefabName);
+                var partObject = Instantiate(prefab, new Vector3(col, -1, -row),Quaternion.identity);
+                partObject.name = partObject.name.Replace("(Clone)", "" );
+                partObject.transform.SetParent(mapObject.transform);
+            }
+        }
+
+        // マップのプレファブ化
+        if (_parentWindow.IsCreatePrefab)
+        {
+            string mapPrefabAbsName = "Assets/Prefabs/Stages/" + mapObject.name + ".prefab";
+            var prefab = PrefabUtility.SaveAsPrefabAsset(mapObject, mapPrefabAbsName);
+            DestroyImmediate(mapObject);
+            var mapIns = Instantiate(prefab);
+            mapIns.name = mapIns.name.Replace("(Clone)", "");
+        }
     }
     #endregion
 }

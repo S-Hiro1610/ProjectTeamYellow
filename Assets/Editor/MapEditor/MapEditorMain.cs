@@ -14,7 +14,7 @@ public class MapEditorMain : EditorWindow
     public int Columns => _columns;
     public int Rows => _rows;
     public float GridSize => _gridSize;
-    public string StageName => _mapName;
+    public string MapName => _mapName;
     public string SelectedMapPartName => _selectedMapPartName;
     public bool IsEraserMode => _isEraserMode;
     public bool IsCreatePrefab => _isCreatePrefab;
@@ -26,12 +26,12 @@ public class MapEditorMain : EditorWindow
     #region private
     /// <summary>マス目パーツを格納しているフォルダ</summary>
     private Object _mapPartsFolder;
-    /// <summary>マップの横幅</summary>
-    private int _columns = 10;
     /// <summary>マップの縦幅</summary>
     private int _rows = 5;
+    /// <summary>マップの横幅</summary>
+    private int _columns = 10;
     /// <summary>エディタ画面のグリッドの大きさ</summary>
-    private float _gridSize = 20.0f;
+    private float _gridSize = 50.0f;
     /// <summary>マップ名</summary>
     private string _mapName = "";
     /// <summary>マップ編集画面</summary>
@@ -82,11 +82,10 @@ public class MapEditorMain : EditorWindow
         using (new EditorGUILayout.HorizontalScope())
         {
             GUILayout.Label("Map Size", GUILayout.Width(120));
+            _rows = EditorGUILayout.IntField("Number of Rows", _rows);
+            GUILayout.FlexibleSpace();
             _columns = EditorGUILayout.IntField("Number of Columns", _columns);
 
-            GUILayout.FlexibleSpace();
-
-            _rows = EditorGUILayout.IntField("Number of Rows", _rows);
         }
 
         // ステージ作成画面のグリッド幅を設定するフィールド
@@ -120,10 +119,12 @@ public class MapEditorMain : EditorWindow
 
         // マップ編集ボタン描画
         using (new EditorGUILayout.VerticalScope())
+        {
             if (GUILayout.Button("マップ編集画面を開く"))
             {
-                    _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
+                _mapEdittingWindow = MapEdittingWindow.WillAppear(this);
             }
+        }
     }
     #endregion
 
@@ -159,7 +160,6 @@ public class MapEditorMain : EditorWindow
                     {
                         _isEraserMode = false;
                         _selectedMapPartName = part;
-                        Debug.Log("SelectedMapPartName = "+_selectedMapPartName);
                     }
                 }
             }
