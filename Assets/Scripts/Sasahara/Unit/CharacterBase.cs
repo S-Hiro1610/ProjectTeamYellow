@@ -43,6 +43,8 @@ public abstract class CharactorBase : MonoBehaviour
 
     #region Constant
     // 定数をいれる。
+    protected const string _enemyTag = "Enemy";
+    protected const string _playerTag = "Player";
     #endregion
 
     #region Event
@@ -110,8 +112,16 @@ public abstract class CharactorBase : MonoBehaviour
         if (_hp <= 0)
         {
             Debug.Log($"Dead{gameObject}");
-            //Destroy(gameObject);
-            EnemyObjectPool.Instance.ReleaseGameObject(gameObject);
+            if (this.transform.tag == _enemyTag)
+            {
+                EnemyObjectPool.Instance.ReleaseGameObject(gameObject);
+            }
+            // TODO:プレイヤーもオブジェクトプールの仕様に変更する
+            else
+            {
+                Destroy(gameObject);
+            }
+
             _hp = _maxHp;
         }
     }
