@@ -94,5 +94,17 @@ public class EnemyMove : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    // アクティブになった際、位置の初期化を行う(オブジェクトプール用)
+    private void OnEnable()
+    {
+        // 初期値設定
+        _rootIndex = 0;
+        // 初期位置
+        transform.position = _rootList[_rootIndex];
+        // 向きの設定
+        _rootIndex++;
+        transform.LookAt(_rootList[_rootIndex]);
+    }
+
     #endregion
 }

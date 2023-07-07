@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerRangeUnitController : CharactorBase
+public class PlayerAreaUnitController : CharactorBase
 {
     #region property
     // プロパティを入れる
@@ -13,6 +13,9 @@ public class PlayerRangeUnitController : CharactorBase
     // unity inpectorに表示したいものを記述。
     [SerializeField]
     private int _maxAttackCount;
+    [Tooltip("範囲攻撃の攻撃判定をする子オブジェクト")]
+    [SerializeField]
+    protected AttackCollider _attackAreaCollider;
     #endregion
 
     #region private
@@ -85,10 +88,19 @@ public class PlayerRangeUnitController : CharactorBase
                 // 現在の攻撃回数が最大攻撃回数より小さい場合、Attackを実行
                 if (currentSubjects < _maxAttackCount)
                 {
-                    StartCoroutine(Attack(_attackCollider.Target));
                     // DrawRayで攻撃を可視化(仮)
                     var pos = target.transform.position - gameObject.transform.position;
                     Debug.DrawRay(gameObject.transform.position, pos, Color.white, 1.0f);
+
+                    // 範囲攻撃用コライダーをターゲットの位置へ移動
+                    _attackAreaCollider.transform.position = target.transform.position;
+                    _attackAreaCollider.transform.gameObject.SetActive(true);
+
+                    // 範囲攻撃用コライダーで取得したターゲットが1以上であれば範囲内のターゲットに攻撃
+                    if (_attackAreaCollider.Targets.Count > 0)
+                    {
+                        StartCoroutine(AreaAttack(_attackAreaCollider));
+                    }
                     // 現在の攻撃回数を増やす
                     currentSubjects++;
                 }
@@ -103,5 +115,25 @@ public class PlayerRangeUnitController : CharactorBase
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    private IEnumerator AreaAttack(AttackCollider areacollider)
+    {
+        _isCanAttack = false;
+        yield return new WaitForSeconds(_attackCoolTime);
+        foreach (CharactorBase areatarget in areacollider.Targets)
+        {
+            // Targetがnull(ユニットが消滅)の場合はリストから削除
+            if (areatarget == null || !areatarget.gameObject.activeSelf)
+            {
+                areacollider.Targets.RemoveAt(areacollider.Targets.IndexOf(areatarget));
+                _isCanAttack = true;
+                yield break;
+            }
+            NoDelayAttack(areatarget);
+        }
+        // 取得したターゲットをクリアする
+        areacollider.transform.gameObject.SetActive(false);
+        areacollider.Targets.Clear();
+        _isCanAttack = true;
+    }
     #endregion
 }
