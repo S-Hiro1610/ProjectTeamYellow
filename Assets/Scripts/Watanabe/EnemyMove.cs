@@ -90,6 +90,14 @@ public class EnemyMove : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    /// <summary>
+    /// エネミー移動フラグをセット
+    /// </summary>
+    /// <param name="flag">true:移動 false:停止</param>
+    public void MoveSet(bool flag)
+    {
+        _moveFlag = flag;
+    }
     #endregion
 
     #region private method

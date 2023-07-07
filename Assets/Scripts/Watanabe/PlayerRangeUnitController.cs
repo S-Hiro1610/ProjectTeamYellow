@@ -17,6 +17,7 @@ public class PlayerRangeUnitController : CharactorBase
 
     #region private
     // プライベートなメンバー変数。
+    private EnemyMove _enemyMove;
     #endregion
 
     #region Constant
@@ -31,7 +32,8 @@ public class PlayerRangeUnitController : CharactorBase
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-
+        // エネミーの場合はEnemyMoveコンポーネントを取得
+        if (transform.tag == "Enemy") _enemyMove = GetComponent<EnemyMove>();
     }
 
     private void Start()
@@ -43,6 +45,9 @@ public class PlayerRangeUnitController : CharactorBase
     {
         if (_isCanAttack && _attackCollider.IsTarget)
         {
+            // エネミーは攻撃中停止する
+            if (transform.tag == _enemyTag) _enemyMove.MoveSet(false);
+
             // ターゲットリストをソート
             if (_attackCollider.Targets.Count > 1)
             {
@@ -68,6 +73,11 @@ public class PlayerRangeUnitController : CharactorBase
                         return 0;
                     }
                 });
+            }
+            else if(_attackCollider.Targets.Count == 0)
+            {
+                // 攻撃対象がいない場合、エネミーは移動を開始
+                if (transform.tag == _enemyTag) _enemyMove.MoveSet(true);
             }
 
             // 攻撃回数の初期化
@@ -99,6 +109,11 @@ public class PlayerRangeUnitController : CharactorBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    public void EnemyInitilize(int level)
+    {
+        SetMaxHP(level);
+        _enemyMove.MoveSet(true);
+    }
     #endregion
 
     #region private method
