@@ -19,7 +19,7 @@ public struct CardInfo
     #endregion
 
 }
-public class CardBase : MonoBehaviour
+public abstract class CardBase : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
