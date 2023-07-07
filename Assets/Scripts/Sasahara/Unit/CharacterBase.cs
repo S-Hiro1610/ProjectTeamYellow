@@ -91,6 +91,18 @@ public abstract class CharactorBase : MonoBehaviour
         }
     }
 
+    protected virtual void NoDelayAttack(CharactorBase target)
+    {
+        if (target != null)
+        {
+            // 自身と同じタグである場合は攻撃しない
+            if (target.transform.tag == this.transform.tag) return;
+            _isCanAttack = false;
+            target.Damaged(this);
+            _isCanAttack = true;
+        }
+    }
+
     protected virtual void Damaged(CharactorBase target)
     {
         _hp -= target.Power;
