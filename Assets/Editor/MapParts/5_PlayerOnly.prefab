@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isEnemyRoute: 0
-  _isPlayerUnitSet: 0
+  _isPlayerUnitSet: 1
 --- !u!65 &7222595569653965065
 BoxCollider:
   m_ObjectHideFlags: 0
