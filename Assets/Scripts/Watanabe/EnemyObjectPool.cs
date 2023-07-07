@@ -96,7 +96,11 @@ public class EnemyObjectPool : MonoBehaviour
 
                 // これから使用するのでアクティブにする
                 go.SetActive(true);
-                if (level > 1) go.GetComponent<CharactorBase>().SetMaxHP(level);
+                PlayerUnitController enemyUnitController = go.GetComponent<PlayerUnitController>();
+                PlayerRangeUnitController enemyRangeUnitController = go.GetComponent<PlayerRangeUnitController>();
+                if (enemyUnitController != null) enemyUnitController.EnemyInitilize(level);
+                else if (enemyRangeUnitController != null) enemyRangeUnitController.EnemyInitilize(level);
+
                 return go;
             }
         }
