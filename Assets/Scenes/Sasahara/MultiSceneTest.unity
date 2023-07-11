@@ -365,7 +365,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: LoadScene
 --- !u!222 &666843725
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -609,7 +609,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: ChangeActive
 --- !u!222 &1459839396
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -630,6 +630,7 @@ GameObject:
   - component: {fileID: 1725213599}
   - component: {fileID: 1725213598}
   - component: {fileID: 1725213597}
+  - component: {fileID: 1725213600}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -700,8 +701,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1953122791}
-        m_MethodName: ChangeActiveScene
+      - m_Target: {fileID: 1725213600}
+        m_MethodName: ClickB
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -748,6 +749,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1725213595}
   m_CullTransparentMesh: 0
+--- !u!114 &1725213600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725213595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b43822c08fce7548b252c950758f455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1953122790
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,7 +770,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1953122792}
-  - component: {fileID: 1953122791}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -765,19 +777,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1953122791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1953122790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3035a83266bcd374086e4ea039a255f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sceneNameList: []
 --- !u!4 &1953122792
 Transform:
   m_ObjectHideFlags: 0
@@ -804,6 +803,7 @@ GameObject:
   - component: {fileID: 2137162786}
   - component: {fileID: 2137162785}
   - component: {fileID: 2137162784}
+  - component: {fileID: 2137162787}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -828,7 +828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -280, y: 0}
+  m_AnchoredPosition: {x: -230.6, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2137162784
@@ -874,8 +874,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1953122791}
-        m_MethodName: LoadScene
+      - m_Target: {fileID: 2137162787}
+        m_MethodName: ClickA
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -922,3 +922,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137162782}
   m_CullTransparentMesh: 0
+--- !u!114 &2137162787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137162782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b43822c08fce7548b252c950758f455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
