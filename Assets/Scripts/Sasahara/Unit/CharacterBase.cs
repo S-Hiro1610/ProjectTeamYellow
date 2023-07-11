@@ -4,22 +4,27 @@ using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
 using UniRx;
+using UnityEngine.UI;
 
 public abstract class CharactorBase : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
+    public int BaseHp => _baseHp;
     public int MaxHp => _maxHp;
     public int Hp => _hp;
     public int Power => _power;
     public float AttackCoolTime => _attackCoolTime;
     public bool IsCanAttack => _isCanAttack;
     public IObservable<CharactorBase> OnAttack => _attackSubject;
+    public Slider HpSlider => _hpSlider;
 
     #endregion
 
     #region serialize
     // unity inpectorに表示したいものを記述。
+    [SerializeField]
+    protected int _baseHp;
     [SerializeField]
     protected int _maxHp;
     [SerializeField]
@@ -34,6 +39,8 @@ public abstract class CharactorBase : MonoBehaviour
     [Tooltip("攻撃判定をする子オブジェクト")]
     [SerializeField]
     protected AttackCollider _attackCollider;
+    [SerializeField]
+    protected Slider _hpSlider;
     #endregion
 
     #region private
@@ -65,7 +72,7 @@ public abstract class CharactorBase : MonoBehaviour
 
     private void Update()
     {
-        
+
     }
     #endregion
 
@@ -73,7 +80,10 @@ public abstract class CharactorBase : MonoBehaviour
     //　自身で作成したPublicな関数を入れる。
     public void SetMaxHP(int level)
     {
-        _hp = _maxHp * level;
+        _hp = _baseHp * level;
+        _maxHp = _baseHp * level;
+        _hpSlider.value = 1.0f;
+        _isCanAttack = true;
     }
     #endregion
 
@@ -108,6 +118,7 @@ public abstract class CharactorBase : MonoBehaviour
     protected virtual void Damaged(CharactorBase target)
     {
         _hp -= target.Power;
+        _hpSlider.value = (float)_hp / (float)_maxHp;
         Debug.Log($"Damaged:{_hp}");
         if (_hp <= 0)
         {
@@ -124,6 +135,12 @@ public abstract class CharactorBase : MonoBehaviour
 
             _hp = _maxHp;
         }
+    }
+
+    protected virtual void SetRotationHPBarUI()
+    {
+        // HPバーの向きをカメラ方向に固定
+        _hpSlider.transform.rotation = Camera.main.transform.rotation;
     }
     #endregion
 }
