@@ -66,6 +66,7 @@ public class Dialogbox : MonoBehaviour
     {
         Debug.Log("Open");
         gameObject.transform.parent.gameObject.SetActive(true);
+        
         OnOpenEvent.Invoke();
     }
 

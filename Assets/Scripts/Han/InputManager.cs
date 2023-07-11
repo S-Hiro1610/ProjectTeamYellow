@@ -135,12 +135,12 @@ public class InputManager: MonoBehaviour
 
     private void ExitDialogUIIsOpen()
     {
-        Debug.Log("ExitDialogUIIsOpen");
+        Debug.Log("InputManager:ExitDialogUIIsOpen");
     }
 
     private void ExitDialogUIIsClose()
     {
-        Debug.Log("ExitDialogUIIsClose");
+        Debug.Log("InputManager:ExitDialogUIIsClose");
     }
     #endregion
 }
