@@ -16,6 +16,7 @@ public class PlayerUnitController : CharactorBase
 
     #region private
     // プライベートなメンバー変数。
+    private EnemyMove _enemyMove;
     #endregion
 
     #region Constant
@@ -30,7 +31,8 @@ public class PlayerUnitController : CharactorBase
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-
+        // エネミーの場合はEnemyMoveコンポーネントを取得
+        if (transform.tag == _enemyTag) _enemyMove = GetComponent<EnemyMove>();
     }
 
     private void Start()
@@ -40,15 +42,35 @@ public class PlayerUnitController : CharactorBase
 
     private void Update()
     {
+        // HPバーの向きをカメラ方向に固定
+        SetRotationHPBarUI();
+
         if (_isCanAttack && _attackCollider.IsTarget)
         {
-            StartCoroutine(Attack(_attackCollider.Target));
+            // エネミーは攻撃中に足を止める
+            if (transform.tag == _enemyTag) _enemyMove.MoveSet(false);
+
+            if (_attackCollider.Target != null)
+            {
+                StartCoroutine(Attack(_attackCollider.Target));
+            }
+            else
+            {
+                if (transform.tag == _enemyTag) _enemyMove.MoveSet(true);
+            }
+
         }
     }
     #endregion
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    public void EnemyInitilize(int level)
+    {
+        _attackCollider.Initilized();
+        SetMaxHP(level);
+        _enemyMove.MoveSet(true);
+    }
     #endregion
 
     #region private method

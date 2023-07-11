@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager: MonoBehaviour
@@ -9,7 +10,7 @@ public class UIManager: MonoBehaviour
     #region property
     // プロパティを入れる。
 
-    protected static UIManager Instance;
+    public static UIManager Instance;
 
     //Unit_Cards_Panel
     public GameObject UnitCardsPanel;
@@ -34,6 +35,8 @@ public class UIManager: MonoBehaviour
     public Dialogbox ExitDialogUI;
 
     public CardInfo[] unitCardsInfoArray;
+
+    public List<GameObject> cardGameObjcetList;
 
     //UnitCardsPanel
     private int unitCardsNum = 0;
@@ -81,11 +84,11 @@ public class UIManager: MonoBehaviour
 
     private void Start()
     {
+        cardGameObjcetList = new List<GameObject>();
+
         _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
-        MenuButton.onClick.AddListener(() => OnClickMenuButton());
-        ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
-        ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        
 
         _currentWaveString = WaveUIText.text;
         UpdateText(WaveUIText, WaveCnt);
@@ -110,8 +113,9 @@ public class UIManager: MonoBehaviour
             UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             
             UpdateCardsCoolTime(unitCardsInfoArray[cardCnt].cardContext.coolTimePlane, unitCardsInfoArray[cardCnt].coolTime);
-            int index = cardCnt;
-            cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[index].cardContext.OnClick());
+            //int index = cardCnt;
+            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[index].cardContext.OnClick());
+            cardGameObjcetList.Add(cardObj);
         }
 
         //System.Array.Copy(unitCardsInfoArray, _currentUnitCardsInfoArray, unitCardsInfoArray.Length);
@@ -126,6 +130,8 @@ public class UIManager: MonoBehaviour
 
         StartCoroutine(CheckSceneUIValuesChanged());
         StartCoroutine(CheckCardValuesChanged());
+
+        SceneManager.LoadSceneAsync("InputScene", LoadSceneMode.Additive);//InputSceneをロード
     }
 
     private void Update()
@@ -208,20 +214,7 @@ public class UIManager: MonoBehaviour
         text.text = (string)str;
     }
 
-    private void OnClickMenuButton()
-    {
-        ExitDialogUI.SetActive(true);
-    }
-
-    private void ExitDialogUIIsOpen()
-    {
-        Debug.Log("ExitDialogUIIsOpen");
-    }
-
-    private void ExitDialogUIIsClose()
-    {
-        Debug.Log("ExitDialogUIIsClose");
-    }
+    
 
     #endregion
 }

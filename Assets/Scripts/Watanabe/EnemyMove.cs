@@ -21,9 +21,9 @@ public class EnemyMove : MonoBehaviour
     #region private
     // プライベートなメンバー変数。
     // ルート座標リスト(仮)
-    private List<Vector3> _rootList = new List<Vector3>();
+    private List<Vector3> _routeList = new List<Vector3>();
     // 現在地座標番号
-    private int _rootIndex = 0;
+    private int _routeIndex = 0;
     #endregion
 
     #region Constant
@@ -39,25 +39,25 @@ public class EnemyMove : MonoBehaviour
     private void Awake()
     {
         // 初期値設定
-        _rootIndex = 0;
-        _rootList.Add(new Vector3(0, 1, 0));
+        _routeIndex = 0;
+        _routeList.Add(new Vector3(0, 1, 0));
         // 初期位置
-        transform.position = _rootList[_rootIndex];
+        transform.position = _routeList[_routeIndex];
 
         // ルート設定(仮で手動設定)
-        _rootList.Add(new Vector3(-2, 1, 0));
-        _rootList.Add(new Vector3(-2, 1, 3));
-        _rootList.Add(new Vector3(-4, 1, 3));
-        _rootList.Add(new Vector3(-4, 1, 1));
-        _rootList.Add(new Vector3(-6, 1, 1));
-        _rootList.Add(new Vector3(-6, 1, 4));
-        _rootList.Add(new Vector3(-8, 1, 4));
-        _rootList.Add(new Vector3(-8, 1, 1));
-        _rootList.Add(new Vector3(-9, 1, 1));
+        _routeList.Add(new Vector3(-2, 1, 0));
+        _routeList.Add(new Vector3(-2, 1, 3));
+        _routeList.Add(new Vector3(-4, 1, 3));
+        _routeList.Add(new Vector3(-4, 1, 1));
+        _routeList.Add(new Vector3(-6, 1, 1));
+        _routeList.Add(new Vector3(-6, 1, 4));
+        _routeList.Add(new Vector3(-8, 1, 4));
+        _routeList.Add(new Vector3(-8, 1, 1));
+        _routeList.Add(new Vector3(-9, 1, 1));
 
         // 向きの設定
-        _rootIndex++;
-        transform.LookAt(_rootList[_rootIndex]);
+        _routeIndex++;
+        transform.LookAt(_routeList[_routeIndex]);
     }
 
     private void Update()
@@ -67,16 +67,16 @@ public class EnemyMove : MonoBehaviour
         {
             // 目的地へ移動
             float step = _speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, _rootList[_rootIndex], step);
+            transform.position = Vector3.MoveTowards(transform.position, _routeList[_routeIndex], step);
 
             // 目的地に到達後、次のルート先を設定
-            if (transform.position == _rootList[_rootIndex])
+            if (transform.position == _routeList[_routeIndex])
             {
                 // 現在地座標番号がルートリスト数より小さければ、次の座標番号に移る
-                if (_rootIndex < (_rootList.Count -1))
+                if (_routeIndex < (_routeList.Count -1))
                 {
-                    _rootIndex++;
-                    transform.LookAt(_rootList[_rootIndex]);
+                    _routeIndex++;
+                    transform.LookAt(_routeList[_routeIndex]);
                 }
                 else
                 {
@@ -90,6 +90,25 @@ public class EnemyMove : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    /// <summary>
+    /// エネミー移動フラグをセット
+    /// </summary>
+    /// <param name="flag">true:移動 false:停止</param>
+    public void MoveSet(bool flag)
+    {
+        _moveFlag = flag;
+    }
+
+    /// <summary>
+    /// Spawnerからアクティブ化時に呼び出して進軍ルートをセットする
+    /// </summary>
+    /// <param name="route"></param>
+    public void SetRoute(List<Vector3> route)
+    {
+        _routeList = route;
+        transform.position = _routeList[_routeIndex];
+        transform.LookAt(_routeList[_routeIndex]);
+    }
     #endregion
 
     #region private method
@@ -98,12 +117,12 @@ public class EnemyMove : MonoBehaviour
     private void OnEnable()
     {
         // 初期値設定
-        _rootIndex = 0;
+        _routeIndex = 0;
         // 初期位置
-        transform.position = _rootList[_rootIndex];
+        transform.position = _routeList[_routeIndex];
         // 向きの設定
-        _rootIndex++;
-        transform.LookAt(_rootList[_rootIndex]);
+        _routeIndex++;
+        transform.LookAt(_routeList[_routeIndex]);
     }
 
     #endregion

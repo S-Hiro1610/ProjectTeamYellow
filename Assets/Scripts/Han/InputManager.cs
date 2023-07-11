@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputManager: MonoBehaviour
 {
@@ -38,6 +39,11 @@ public class InputManager: MonoBehaviour
 
     #region private
     // プライベートなメンバー変数。
+    private Button menuButton;
+
+    private Dialogbox exitDialogUI;
+
+    private List<GameObject> cardGameObjcetList;
     #endregion
 
     #region Constant
@@ -64,6 +70,19 @@ public class InputManager: MonoBehaviour
 
     private void Start()
     {
+        menuButton = UIManager.Instance.MenuButton;
+        exitDialogUI = UIManager.Instance.ExitDialogUI;
+
+        menuButton.onClick.AddListener(() => OnClickMenuButton());
+        exitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
+        exitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        cardGameObjcetList = UIManager.Instance.cardGameObjcetList;
+
+        foreach(GameObject cardObj in cardGameObjcetList)
+        {
+            Card cardContext = cardObj.GetComponent<Card>();
+            cardObj.GetComponent<Button>().onClick.AddListener(() => cardContext.OnClick());
+        }
 
     }
 
@@ -109,5 +128,19 @@ public class InputManager: MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    private void OnClickMenuButton()
+    {
+        exitDialogUI.SetActive(true);
+    }
+
+    private void ExitDialogUIIsOpen()
+    {
+        Debug.Log("ExitDialogUIIsOpen");
+    }
+
+    private void ExitDialogUIIsClose()
+    {
+        Debug.Log("ExitDialogUIIsClose");
+    }
     #endregion
 }
