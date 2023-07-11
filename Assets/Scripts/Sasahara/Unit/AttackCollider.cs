@@ -55,6 +55,11 @@ public class AttackCollider : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    public void Initilized()
+    {
+        _target = null;
+        _targets.Clear();
+    }
     #endregion
 
     #region private method

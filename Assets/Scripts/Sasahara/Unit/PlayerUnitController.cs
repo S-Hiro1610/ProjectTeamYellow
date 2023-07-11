@@ -42,6 +42,9 @@ public class PlayerUnitController : CharactorBase
 
     private void Update()
     {
+        // HPバーの向きをカメラ方向に固定
+        SetRotationHPBarUI();
+
         if (_isCanAttack && _attackCollider.IsTarget)
         {
             // エネミーは攻撃中に足を止める
@@ -64,6 +67,7 @@ public class PlayerUnitController : CharactorBase
     //　自身で作成したPublicな関数を入れる。
     public void EnemyInitilize(int level)
     {
+        _attackCollider.Initilized();
         SetMaxHP(level);
         _enemyMove.MoveSet(true);
     }

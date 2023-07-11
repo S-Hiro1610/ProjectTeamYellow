@@ -44,6 +44,9 @@ public class PlayerAreaUnitController : CharactorBase
 
     private void Update()
     {
+        // HPバーの向きをカメラ方向に固定
+        SetRotationHPBarUI();
+
         if (_isCanAttack && _attackCollider.IsTarget)
         {
             // ターゲットリストをソート
