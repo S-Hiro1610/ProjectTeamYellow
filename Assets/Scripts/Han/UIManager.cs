@@ -30,7 +30,7 @@ public class UIManager: MonoBehaviour
     public Image EnemyCntUIImage;
 
     //TopPanelText
-    public string PauseMenuUIString;
+    private string PauseMenuUIString;
     public string WaveCnt;
     //public string EnemyCntUICnt;
     //BottomPlaneText
@@ -92,6 +92,7 @@ public class UIManager: MonoBehaviour
     {
         cardGameObjcetList = new List<GameObject>();
 
+        PauseMenuUIString = "▶";
         _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
 

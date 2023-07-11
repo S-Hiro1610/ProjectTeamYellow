@@ -1032,7 +1032,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1504978652}
   m_OnClick:
     m_PersistentCalls:
@@ -1840,7 +1840,6 @@ MonoBehaviour:
   WaveUIText: {fileID: 1462540531}
   PowerUIText: {fileID: 2123198103}
   EnemyCntUIImage: {fileID: 1589786092}
-  PauseMenuUIString: "\u25B6"
   WaveCnt: 0/8
   PowerUICnt: 80
   MenuButton: {fileID: 599268957}
@@ -2155,7 +2154,22 @@ PrefabInstance:
     - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 960
+      value: 768
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
         type: 3}
