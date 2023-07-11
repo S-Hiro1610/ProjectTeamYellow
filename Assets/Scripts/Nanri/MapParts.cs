@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 /// <summary>
-/// マップエディタデバッグ用
+/// マップエディタ用UI
 /// このオブジェクトに Texture2D をアタッチして
 /// ツールバーに表示させる
 /// </summary>
@@ -11,11 +12,12 @@ public class MapParts : MonoBehaviour
 {
     #region property
     public Texture2D MapTexture => _mapTexture;
+    public int NextDirection = (int)Direction.None;
     #endregion
 
     #region private
     [SerializeField]
-    Texture2D _mapTexture;
+    private Texture2D _mapTexture;
     #endregion
 
     #region unity methods
@@ -33,3 +35,12 @@ public class MapParts : MonoBehaviour
     }
     #endregion
 }
+enum Direction
+{
+    Up = 0,
+    Right = 1,
+    Down = 2,
+    Left = 3,
+    None = -1
+}
+

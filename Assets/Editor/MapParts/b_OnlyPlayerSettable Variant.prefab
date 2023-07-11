@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 5639167233398036624, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
       propertyPath: m_Name
-      value: b_OnlyPlayerSettable
+      value: b_OnlyPlayerSettable Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8941862025240880985, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
@@ -76,6 +76,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _isPlayerUnitSet
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+        type: 3}
+      propertyPath: direction
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}

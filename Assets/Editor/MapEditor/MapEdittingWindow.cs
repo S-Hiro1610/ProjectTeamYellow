@@ -251,6 +251,55 @@ public class MapEdittingWindow : EditorWindow
                 var partObject = Instantiate(prefab, new Vector3(col, -1, -row),Quaternion.identity);
                 partObject.name = partObject.name.Replace("(Clone)", "" );
                 partObject.transform.SetParent(mapObject.transform);
+
+                // Spawnerマスへの進行方向設定
+                if (partObject.name.Contains("Spawn"))
+                {
+                    if (row > 0) 
+                    {
+                        if (mapCells[row - 1, col].PrefabName != "")
+                        {
+                            var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row - 1, col].PrefabName);
+                            if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
+                            {
+                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Up;
+                            }
+                        }
+                    }
+                    if(row < _parentWindow.Rows - 1)
+                    {
+                        if (mapCells[row + 1, col].PrefabName != "")
+                        {
+                            var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row + 1, col].PrefabName);
+                            if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
+                            {
+                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Down;
+                            }
+                        }
+                    }
+                    if (col > 0)
+                    {
+                        if (mapCells[row, col - 1].PrefabName != "")
+                        {
+                            var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col - 1].PrefabName);
+                            if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
+                            {
+                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Right;
+                            }
+                        }
+                    }
+                    if(col < _parentWindow.Columns - 1)
+                    {
+                        if (mapCells[row, col + 1].PrefabName != "")
+                        {
+                            var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col + 1].PrefabName);
+                            if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
+                            {
+                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Left;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -265,4 +314,12 @@ public class MapEdittingWindow : EditorWindow
         }
     }
     #endregion
+}
+enum Direction
+{
+    Up = 0,
+    Right = 1,
+    Down = 2,
+    Left = 3,
+    None = -1
 }
