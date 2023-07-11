@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &139088291626215499
+--- !u!1001 &6329292310383092215
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 5639167233398036624, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
       propertyPath: m_Name
-      value: 1_EnamyStart
+      value: 2_EndLine Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8941862025240880985, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
@@ -74,8 +74,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
+      propertyPath: direction
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+        type: 3}
       propertyPath: _mapTexture
       value: 
-      objectReference: {fileID: 2800000, guid: bfc758b078250124eaaf2d3350be8f20, type: 3}
+      objectReference: {fileID: 2800000, guid: 135b0b9a4716ef44fbe42ac9ef813678, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4895a39b57c256d4ab55374a7c4aef7e, type: 3}
