@@ -6,11 +6,13 @@ public class PlayerRangeUnitController : CharactorBase
 {
     #region property
     // プロパティを入れる
-    public int MaxAttackCount => _maxAttackCount;
+    public int BaseAttackCount => _baseAttackCount;
     #endregion
 
     #region serialize
     // unity inpectorに表示したいものを記述。
+    [SerializeField]
+    private int _baseAttackCount;
     [SerializeField]
     private int _maxAttackCount;
     #endregion
@@ -34,6 +36,8 @@ public class PlayerRangeUnitController : CharactorBase
     {
         // エネミーの場合はEnemyMoveコンポーネントを取得
         if (transform.tag == "Enemy") _enemyMove = GetComponent<EnemyMove>();
+        // 最大攻撃対象数の初期値を設定
+        _maxAttackCount = _baseAttackCount;
     }
 
     private void Start()
@@ -112,11 +116,16 @@ public class PlayerRangeUnitController : CharactorBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public void EnemyInitilize(int level)
+    public void UnitInitilize(int level)
     {
+        // パラメータの設定
+        SetParameter(level);
+        // ターゲットの初期化
         _attackCollider.Initilized();
-        SetMaxHP(level);
-        _enemyMove.MoveSet(true);
+        // 最大攻撃対象数の設定 3Lvごとに1上昇
+        _maxAttackCount = _baseAttackCount + (level / 3);
+        // エネミーの場合はEnemyMoveのフラグをtrue
+        if (transform.tag == _enemyTag) _enemyMove.MoveSet(true);
     }
     #endregion
 

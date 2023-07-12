@@ -10,9 +10,10 @@ public abstract class CharactorBase : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
+    public int Lv => _lv;
     public int BaseHp => _baseHp;
-    public int MaxHp => _maxHp;
     public int Hp => _hp;
+    public int BasePower => _basePower;
     public int Power => _power;
     public float AttackCoolTime => _attackCoolTime;
     public bool IsCanAttack => _isCanAttack;
@@ -24,11 +25,13 @@ public abstract class CharactorBase : MonoBehaviour
     #region serialize
     // unity inpectorに表示したいものを記述。
     [SerializeField]
+    protected int _lv;
+    [SerializeField]
     protected int _baseHp;
     [SerializeField]
-    protected int _maxHp;
-    [SerializeField]
     protected int _hp;
+    [SerializeField]
+    protected int _basePower;
     [SerializeField]
     protected int _power;
     [Tooltip("攻撃間隔(秒)")]
@@ -78,10 +81,12 @@ public abstract class CharactorBase : MonoBehaviour
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public void SetMaxHP(int level)
+    public void SetParameter(int level)
     {
-        _hp = _baseHp * level;
-        _maxHp = _baseHp * level;
+        // Lvに合わせたパラメータを設定
+        _lv = level;
+        _hp = _baseHp + (_lv * 5);
+        _power = _basePower + _lv;
         _hpSlider.value = 1.0f;
         _isCanAttack = true;
     }
@@ -118,14 +123,14 @@ public abstract class CharactorBase : MonoBehaviour
     protected virtual void Damaged(CharactorBase target)
     {
         _hp -= target.Power;
-        _hpSlider.value = (float)_hp / (float)_maxHp;
+        _hpSlider.value = (float)_hp / (float)(_baseHp + (_lv * 5));
         Debug.Log($"Damaged:{_hp}");
         if (_hp <= 0)
         {
             Debug.Log($"Dead{gameObject}");
             if (this.transform.tag == _enemyTag)
             {
-                EnemyObjectPool.Instance.ReleaseGameObject(gameObject);
+                UnitObjectPool.Instance.ReleaseGameObject(gameObject);
             }
             // TODO:プレイヤーもオブジェクトプールの仕様に変更する
             else
@@ -133,7 +138,7 @@ public abstract class CharactorBase : MonoBehaviour
                 Destroy(gameObject);
             }
 
-            _hp = _maxHp;
+            _hp = _baseHp + (_lv * 5);
         }
     }
 
