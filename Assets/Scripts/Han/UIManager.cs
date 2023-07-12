@@ -12,27 +12,33 @@ public class UIManager: MonoBehaviour
 
     public static UIManager Instance;
 
+
+    public int EnemyCnt = 0;
+    public int EnemyMaxNum = 0;
+
     //Unit_Cards_Panel
     public GameObject UnitCardsPanel;
     public GameObject UnitCardPanel;
 
     //TopPanelText
-    public Text PauseMenuUIText;
+    public Text PauseMenuUIText;//一時停止ボタン
     public Text WaveUIText;
-    public Text EnemyCntUIText;
     //BottomPlaneText
     public Text PowerUIText;
 
+
+    public Image EnemyCntUIImage;
+
     //TopPanelText
-    public string PauseMenuUIString;
+    private string PauseMenuUIString;
     public string WaveCnt;
-    public string EnemyCntUICnt;
+    //public string EnemyCntUICnt;
     //BottomPlaneText
     public string PowerUICnt;
 
     public Button MenuButton;
 
-    public Dialogbox ExitDialogUI;
+    public Dialogbox ExitDialogUI;//メインメニュー
 
     public CardInfo[] unitCardsInfoArray;
 
@@ -54,7 +60,7 @@ public class UIManager: MonoBehaviour
     //TopPanelText
     private string _currentPauseMenuUIString;
     private string _currentWaveString;
-    private string _currentEnemyCntUIString;
+    //private string _currentEnemyCntUIString;
     //BottomPlaneText
     private string _currentPowerUIString;
 
@@ -86,20 +92,26 @@ public class UIManager: MonoBehaviour
     {
         cardGameObjcetList = new List<GameObject>();
 
+        PauseMenuUIString = "▶";
         _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
-        
+
+        ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
+        ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+
 
         _currentWaveString = WaveUIText.text;
         UpdateText(WaveUIText, WaveCnt);
 
-        _currentEnemyCntUIString = EnemyCntUIText.text;
-        UpdateText(EnemyCntUIText, EnemyCntUICnt);
+        //_currentEnemyCntUIString = EnemyCntUIText.text;
+        //UpdateText(EnemyCntUIText, EnemyCntUICnt);
 
         _currentPowerUIString = PowerUIText.text;
         UpdateText(PowerUIText, PowerUICnt);
 
         unitCardsNum = unitCardsInfoArray.Length;
+
+        UpdateEnemyKillBar();
 
         GridLayoutGroup cardsGrop = UnitCardsPanel.GetComponent<GridLayoutGroup>();
 
@@ -130,6 +142,8 @@ public class UIManager: MonoBehaviour
 
         StartCoroutine(CheckSceneUIValuesChanged());
         StartCoroutine(CheckCardValuesChanged());
+
+        StartCoroutine(CheckEnemyKillBarChanged());
 
         SceneManager.LoadSceneAsync("InputScene", LoadSceneMode.Additive);//InputSceneをロード
     }
@@ -168,12 +182,12 @@ public class UIManager: MonoBehaviour
                 UpdateText(WaveUIText, _currentWaveString);
             }
 
-            string newEnemyCntUIString = EnemyCntUICnt;
-            if (newEnemyCntUIString != _currentEnemyCntUIString)
-            {
-                _currentEnemyCntUIString = newEnemyCntUIString;
-                UpdateText(EnemyCntUIText, _currentEnemyCntUIString);
-            }
+            //string newEnemyCntUIString = EnemyCntUICnt;
+            //if (newEnemyCntUIString != _currentEnemyCntUIString)
+            //{
+            //    _currentEnemyCntUIString = newEnemyCntUIString;
+            //    UpdateText(EnemyCntUIText, _currentEnemyCntUIString);
+            //}
 
             string newPowerUIString = PowerUICnt;
             if (newPowerUIString != _currentPowerUIString)
@@ -199,6 +213,16 @@ public class UIManager: MonoBehaviour
         }
     }
 
+    private IEnumerator CheckEnemyKillBarChanged()
+    {
+        while (true)
+        {
+            UpdateEnemyKillBar();
+
+            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
+        }
+    }
+
     private void UpdateCardsCoolTime(Image image, float coolTime)
     {
         image.fillAmount = coolTime;
@@ -214,7 +238,25 @@ public class UIManager: MonoBehaviour
         text.text = (string)str;
     }
 
-    
+    private void UpdateEnemyKillBar()
+    {
+        float percent = (float)EnemyCnt / EnemyMaxNum;
+        Mathf.Clamp01(percent);
+
+        EnemyCntUIImage.fillAmount = percent;
+    }
+
+    private void ExitDialogUIIsOpen()
+    {
+        UpdateText(PauseMenuUIText, "II");
+        Debug.Log("UIManager:ExitDialogUIIsOpen");
+    }
+
+    private void ExitDialogUIIsClose()
+    {
+        UpdateText(PauseMenuUIText, "▶");
+        Debug.Log("UIManager:ExitDialogUIIsClose");
+    }
 
     #endregion
 }
