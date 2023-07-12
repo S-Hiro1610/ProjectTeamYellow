@@ -133,7 +133,7 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < waveEnemyCount; i++)
         {
             yield return new WaitForSeconds(_wave[waveindex].waveEnemy[i].SpawneDelay);
-            var go = EnemyObjectPool.Instance.GetGameObject(_wave[waveindex].waveEnemy[i].Enemy, _spawnePoint.position, _wave[waveindex].waveEnemy[i].Level);
+            var go = UnitObjectPool.Instance.SpawneUnit(_wave[waveindex].waveEnemy[i].Enemy, _spawnePoint.position, _wave[waveindex].waveEnemy[i].Level);
             go.GetComponent<EnemyMove>().SetRoute(_enemyRoute);
         }
         _waveActive = false;

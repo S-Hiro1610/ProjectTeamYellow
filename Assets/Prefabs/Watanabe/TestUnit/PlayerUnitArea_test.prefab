@@ -611,13 +611,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39892a1207b69654eb86bb5c472245c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lv: 1
   _baseHp: 100
-  _maxHp: 100
   _hp: 100
-  _power: 2
+  _basePower: 1
+  _power: 1
   _attackCoolTime: 1.5
   _isCanAttack: 1
   _attackCollider: {fileID: 639951436114260471}
   _hpSlider: {fileID: 593277926}
+  AreaCollider: {fileID: 0}
   _maxAttackCount: 1
   _attackAreaCollider: {fileID: 639951436457437016}
+  _baseAreaRadius: 0

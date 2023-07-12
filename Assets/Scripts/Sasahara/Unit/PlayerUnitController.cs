@@ -65,11 +65,14 @@ public class PlayerUnitController : CharactorBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public void EnemyInitilize(int level)
+    public void UnitInitilize(int level)
     {
+        // パラメータの設定
+        SetParameter(level);
+        // ターゲットの初期化
         _attackCollider.Initilized();
-        SetMaxHP(level);
-        _enemyMove.MoveSet(true);
+        // エネミーの場合はEnemyMoveのフラグをtrue
+        if (_enemyMove != null) _enemyMove.MoveSet(true);
     }
     #endregion
 
