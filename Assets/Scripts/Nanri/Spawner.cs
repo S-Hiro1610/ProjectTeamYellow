@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
     #endregion
 
     #region serialize
-    // unity inpectorに表示したいものを記述。
+    // unity inspectorに表示したいものを記述。
     [SerializeField]
     private List<WaveList> _wave;
     [SerializeField]
@@ -36,6 +36,7 @@ public class Spawner : MonoBehaviour
     // プライベートなメンバー変数。
     private static EnemySpawner _instance;
     private int _waveIndex = 0;
+    private List<Vector3> _enemyRoute;
     #endregion
 
     #region Constant
@@ -47,6 +48,21 @@ public class Spawner : MonoBehaviour
     #endregion
 
     #region unity methods
+    //
+    private void Awake()
+    {
+        // テスト用の Default 値
+        _enemyRoute = new List<Vector3>();
+        _enemyRoute.Add(new Vector3(2, 0, 1));
+        _enemyRoute.Add(new Vector3(2, 0, 0));
+        _enemyRoute.Add(new Vector3(2, 0, -1));
+        _enemyRoute.Add(new Vector3(2, 0, -2));
+        _enemyRoute.Add(new Vector3(2, 0, -3));
+        _enemyRoute.Add(new Vector3(3, 0, -3));
+        _enemyRoute.Add(new Vector3(4, 0, -3));
+        _enemyRoute.Add(new Vector3(5, 0, -3));
+        _enemyRoute.Add(new Vector3(5, 0, -4));
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -93,21 +109,23 @@ public class Spawner : MonoBehaviour
             return _instance;
         }
     }
+    
+    /// <summary>
+    /// Stage Manager が SpawnPoint ごとの進軍ルートを設定する為に呼ぶ。
+    /// 呼ばれる都度、上書きする。
+    /// </summary>
+    /// <param name="rt"></param>    
+    public void SetRoute(List<Vector3> rt)
+    {
+        _enemyRoute = rt;
+        _spawnePoint.transform.position = rt[0];
+    }
     #endregion
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
     private IEnumerator WaveEnemy(int waveindex)
     {
-        List<Vector3> rt = new List<Vector3>();
-        rt.Add(new Vector3(2, 0, 0));
-        rt.Add(new Vector3(2, 0, -1));
-        rt.Add(new Vector3(2, 0, -2));
-        rt.Add(new Vector3(3, 0, -2));
-        rt.Add(new Vector3(4, 0, -2));
-        rt.Add(new Vector3(5, 0, -2));
-        rt.Add(new Vector3(5, 0, -3));
-        rt.Add(new Vector3(5, 0, -4));
 
         _waveActive = true;
         int waveEnemyCount = _wave[waveindex].waveEnemy.Count;
@@ -116,7 +134,7 @@ public class Spawner : MonoBehaviour
         {
             yield return new WaitForSeconds(_wave[waveindex].waveEnemy[i].SpawneDelay);
             var go = EnemyObjectPool.Instance.GetGameObject(_wave[waveindex].waveEnemy[i].Enemy, _spawnePoint.position, _wave[waveindex].waveEnemy[i].Level);
-            go.GetComponent<EnemyMove>().SetRoute(rt);
+            go.GetComponent<EnemyMove>().SetRoute(_enemyRoute);
         }
         _waveActive = false;
     }

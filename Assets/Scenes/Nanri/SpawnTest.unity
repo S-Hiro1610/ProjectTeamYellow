@@ -4316,9 +4316,9 @@ GameObject:
   - component: {fileID: 1060646533}
   - component: {fileID: 1060646532}
   - component: {fileID: 1060646531}
-  - component: {fileID: 1060646530}
   - component: {fileID: 1060646536}
   - component: {fileID: 1060646535}
+  - component: {fileID: 1060646530}
   m_Layer: 0
   m_Name: 1_Spawner Variant
   m_TagString: Untagged
@@ -5302,13 +5302,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502651749}
-  m_LocalRotation: {x: 0.21301705, y: -0, z: -0, w: 0.9770485}
-  m_LocalPosition: {x: 4.44, y: 2.66, z: -8.26}
+  m_LocalRotation: {x: 0.4330969, y: -0, z: -0, w: 0.9013474}
+  m_LocalPosition: {x: 4.44, y: 4.46, z: -6.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 24.598001, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 51.329002, y: 0, z: 0}
 --- !u!1 &1509986441
 GameObject:
   m_ObjectHideFlags: 0
