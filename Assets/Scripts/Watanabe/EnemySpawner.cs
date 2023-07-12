@@ -11,6 +11,8 @@ public class EnemySpawner : MonoBehaviour
     public bool WaveStart => _waveStart;
     public int ActiveEnemyCount => _activeEnemyCount;
     public bool WaveActive => _waveActive;
+
+    public GameObject UnitPool;
     #endregion
 
     #region serialize
@@ -76,14 +78,17 @@ public class EnemySpawner : MonoBehaviour
         }
 
         // 現在ActiveなEnemyの数を求める
-        int childCount = transform.childCount;
+        int childCount = UnitPool.transform.childCount;
         int activeEnemy = 0;
-        for (int i = 0;i < childCount;i++)
+        if (childCount > 0)
         {
-            GameObject childgameObject = transform.GetChild(i).gameObject;
-            if (childgameObject.activeSelf) activeEnemy++;
+            for (int i = 0; i < childCount; i++)
+            {
+                GameObject childgameObject = UnitPool.transform.GetChild(i).gameObject;
+                if (childgameObject.activeSelf) activeEnemy++;
+            }
+            _activeEnemyCount = activeEnemy;
         }
-        _activeEnemyCount = activeEnemy;
 
         // WaveのEnemyがすべてスポーン後かつActiveのEnemyの数が0になったらWaveのフラグを立てる
         if (_activeEnemyCount == 0 && !_waveActive) _waveStart = true;
@@ -111,7 +116,7 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0;i < waveEnemyCount; i++)
         {
             yield return new WaitForSeconds(_wave[waveindex].waveEnemy[i].SpawneDelay);
-            EnemyObjectPool.Instance.GetGameObject(_wave[waveindex].waveEnemy[i].Enemy, _spawnePoint.position, _wave[waveindex].waveEnemy[i].Level);
+            UnitObjectPool.Instance.SpawneUnit(_wave[waveindex].waveEnemy[i].Enemy, _spawnePoint.position, _wave[waveindex].waveEnemy[i].Level);
         }
         _waveActive = false;
     }

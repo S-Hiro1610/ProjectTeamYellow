@@ -7,6 +7,8 @@ public class PlayerAreaUnitController : CharactorBase
     #region property
     // プロパティを入れる
     public int MaxAttackCount => _maxAttackCount;
+    public SphereCollider AreaCollider;
+    public float BaseAreaRadius => _baseAreaRadius;
     #endregion
 
     #region serialize
@@ -16,6 +18,10 @@ public class PlayerAreaUnitController : CharactorBase
     [Tooltip("範囲攻撃の攻撃判定をする子オブジェクト")]
     [SerializeField]
     protected AttackCollider _attackAreaCollider;
+    [SerializeField]
+    private float _baseAreaRadius;
+    [SerializeField]
+    private float _areaRadius;
     #endregion
 
     #region private
@@ -34,7 +40,9 @@ public class PlayerAreaUnitController : CharactorBase
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-
+        // 攻撃範囲の初期値を設定
+        _areaRadius = _baseAreaRadius;
+        AreaCollider.radius = _areaRadius;
     }
 
     private void Start()
@@ -114,6 +122,16 @@ public class PlayerAreaUnitController : CharactorBase
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
+    public void UnitInitilize(int level)
+    {
+        // パラメータの設定
+        SetParameter(level);
+        // ターゲットの初期化
+        _attackCollider.Initilized();
+        // 範囲攻撃の範囲設定 3Lvごとに0.5上昇
+        _areaRadius = _baseAreaRadius + (level / 3 * 0.5f);
+        AreaCollider.radius = _areaRadius;
+    }
     #endregion
 
     #region private method
