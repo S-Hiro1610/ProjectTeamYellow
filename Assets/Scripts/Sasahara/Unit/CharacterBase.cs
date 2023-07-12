@@ -128,17 +128,10 @@ public abstract class CharactorBase : MonoBehaviour
         if (_hp <= 0)
         {
             Debug.Log($"Dead{gameObject}");
-            if (this.transform.tag == _enemyTag)
-            {
-                UnitObjectPool.Instance.ReleaseGameObject(gameObject);
-            }
-            // TODO:プレイヤーもオブジェクトプールの仕様に変更する
-            else
-            {
-                Destroy(gameObject);
-            }
+            // TODO: エネミーが倒された時、カウントするためにゲームマネージャーから呼ぶ
 
-            _hp = _baseHp + (_lv * 5);
+            // 非アクティブにする
+            UnitObjectPool.Instance.ReleaseGameObject(gameObject);
         }
     }
 

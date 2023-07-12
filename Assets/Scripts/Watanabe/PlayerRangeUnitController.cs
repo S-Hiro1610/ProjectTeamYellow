@@ -50,6 +50,17 @@ public class PlayerRangeUnitController : CharactorBase
         // HPバーの向きをカメラ方向に固定
         SetRotationHPBarUI();
 
+        // ターゲットが非アクティブである場合は初期化を行う
+        if (_attackCollider.Target != null)
+        {
+            if (!_attackCollider.Target.gameObject.activeSelf)
+            {
+                _attackCollider.Initilized();
+                _isCanAttack = false;
+                if (transform.tag == _enemyTag) _enemyMove.MoveSet(true);
+            }
+        }
+
         if (_isCanAttack && _attackCollider.IsTarget)
         {
             // エネミーは攻撃中停止する
