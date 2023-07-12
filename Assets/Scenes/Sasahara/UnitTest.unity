@@ -294,11 +294,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b45aa98d1db0b4469cc1e85c4cfb9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lv: 0
+  _baseHp: 0
   _hp: 45
+  _basePower: 0
   _power: 15
   _attackCoolTime: 5000
   _isCanAttack: 1
   _attackCollider: {fileID: 1491343694}
+  _hpSlider: {fileID: 0}
 --- !u!65 &1072089561
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -390,6 +394,51 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1233608891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233608893}
+  - component: {fileID: 1233608892}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1233608892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233608891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 988b42f5522169f4f8e9f14814afc016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _addResouce: 100
+  _levelUpList: 03000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!4 &1233608893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233608891}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1364583476
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,11 +472,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b45aa98d1db0b4469cc1e85c4cfb9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lv: 0
+  _baseHp: 0
   _hp: 30
+  _basePower: 0
   _power: 5
   _attackCoolTime: 2000
   _isCanAttack: 1
   _attackCollider: {fileID: 784776349}
+  _hpSlider: {fileID: 0}
 --- !u!65 &1364583478
 BoxCollider:
   m_ObjectHideFlags: 0

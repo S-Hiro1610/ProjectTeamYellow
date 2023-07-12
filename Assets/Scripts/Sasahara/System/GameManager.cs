@@ -41,8 +41,6 @@ public class GameManager : MonoBehaviour
     private Subject<Unit> _stopEvent = new Subject<Unit>();
     private Subject<Unit> _startEvent = new Subject<Unit>();
 
-    private Subject<Unit> _levelUpEvent = new Subject<Unit>();
-
     private Subject<Unit> _changeTitleEvent = new Subject<Unit>();
     private Subject<Unit> _changeInitializeEvent = new Subject<Unit>();
     private Subject<Unit> _changeInGameEvent = new Subject<Unit>();
@@ -79,10 +77,8 @@ public class GameManager : MonoBehaviour
         _stopEvent.Subscribe(_ => ChangePlayFrag());
         _startEvent.Subscribe(_ => ChangePlayFrag());
 
-
-
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
-        _changeInitializeEvent.Subscribe(_ => SetCurrentState(GameState.Initialize));
+        _changeInitializeEvent.Subscribe(_ => Initialize());
         _changeInGameEvent.Subscribe(_ => SetCurrentState(GameState.InGame));
         _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
     }
@@ -106,13 +102,12 @@ public class GameManager : MonoBehaviour
         _enemyCount.Value++;
         if (_enemyCount.Value >= _levelUpList[_levelUpIndex])
         {
-            _levelUpEvent.OnNext(Unit.Default);
+            LevelUp();
             if (_levelUpIndex < _levelUpList.Count)
             {
                 _levelUpIndex++;
             }
         }
-        //UI側で EnemyCount.Subscribe(x => [ここに表示を更新する処理(xが値)])
     }
 
     public void TimerStop()
@@ -136,7 +131,6 @@ public class GameManager : MonoBehaviour
             {
                 yield return new WaitForSeconds(1);
                 _resouce.Value += _addResouce;
-                //UI側で Resouce.Subscribe(x => [ここに表示を更新する処理(xが値)])
             }
         }
     }
@@ -149,6 +143,21 @@ public class GameManager : MonoBehaviour
     private void SetCurrentState(GameState state)
     {
         _currentState = state;
+    }
+
+    /// <summary>初期化処理</summary>
+    private void Initialize()
+    {
+        _currentState = GameState.Initialize;
+        _resouce.Value = 0;
+        _enemyCount.Value = 0;
+        _levelUpIndex = 0;
+    }
+
+    private void LevelUp()
+    {
+        TimerStop();
+        //UIの表示
     }
     #endregion
 }
