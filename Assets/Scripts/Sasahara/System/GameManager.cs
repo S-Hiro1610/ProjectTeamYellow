@@ -29,20 +29,26 @@ public class GameManager : MonoBehaviour
     /// <summary>1秒間に加算されるリソースの数</summary>
     [SerializeField]
     private int _addResouce = 100;
-
     /// <summary>手持ちの配置リソース</summary>
     private ReactiveProperty<int> _resouce = new ReactiveProperty<int>(0);
 
+    /// <summary>レベルアップの基準となる敵を倒す要求値のリスト</summary>
+    [SerializeField]
+    private List<int> _levelUpList = new List<int>();
     /// <summary>倒した敵のカウント</summary>
     private ReactiveProperty<int> _enemyCount = new ReactiveProperty<int>(0);
 
     private Subject<Unit> _stopEvent = new Subject<Unit>();
     private Subject<Unit> _startEvent = new Subject<Unit>();
+
+    private Subject<Unit> _levelUpEvent = new Subject<Unit>();
+
     private Subject<Unit> _changeTitleEvent = new Subject<Unit>();
     private Subject<Unit> _changeInitializeEvent = new Subject<Unit>();
     private Subject<Unit> _changeInGameEvent = new Subject<Unit>();
     private Subject<Unit> _changeGameOverEvent = new Subject<Unit>();
 
+    private int _levelUpIndex = 0;
     private GameState _currentState = GameState.Title;
     private bool _isPlay = false;
     private static GameManager _instance;
@@ -73,6 +79,8 @@ public class GameManager : MonoBehaviour
         _stopEvent.Subscribe(_ => ChangePlayFrag());
         _startEvent.Subscribe(_ => ChangePlayFrag());
 
+
+
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => SetCurrentState(GameState.Initialize));
         _changeInGameEvent.Subscribe(_ => SetCurrentState(GameState.InGame));
@@ -96,6 +104,14 @@ public class GameManager : MonoBehaviour
     public void AddEnemyCount()
     {
         _enemyCount.Value++;
+        if (_enemyCount.Value >= _levelUpList[_levelUpIndex])
+        {
+            _levelUpEvent.OnNext(Unit.Default);
+            if (_levelUpIndex < _levelUpList.Count)
+            {
+                _levelUpIndex++;
+            }
+        }
         //UI側で EnemyCount.Subscribe(x => [ここに表示を更新する処理(xが値)])
     }
 
