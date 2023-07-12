@@ -262,7 +262,7 @@ public class MapEdittingWindow : EditorWindow
                             var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row - 1, col].PrefabName);
                             if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
                             {
-                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Up;
+                                partObject.GetComponent<MapParts>().NextDirection = Direction.Up;
                             }
                         }
                     }
@@ -273,7 +273,7 @@ public class MapEdittingWindow : EditorWindow
                             var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row + 1, col].PrefabName);
                             if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
                             {
-                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Down;
+                                partObject.GetComponent<MapParts>().NextDirection = Direction.Down;
                             }
                         }
                     }
@@ -284,7 +284,7 @@ public class MapEdittingWindow : EditorWindow
                             var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col - 1].PrefabName);
                             if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
                             {
-                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Right;
+                                partObject.GetComponent<MapParts>().NextDirection = Direction.Right;
                             }
                         }
                     }
@@ -295,7 +295,7 @@ public class MapEdittingWindow : EditorWindow
                             var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col + 1].PrefabName);
                             if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
                             {
-                                partObject.GetComponent<MapParts>().NextDirection = (int)Direction.Left;
+                                partObject.GetComponent<MapParts>().NextDirection = Direction.Left;
                             }
                         }
                     }
@@ -314,12 +314,4 @@ public class MapEdittingWindow : EditorWindow
         }
     }
     #endregion
-}
-enum Direction
-{
-    Up = 0,
-    Right = 1,
-    Down = 2,
-    Left = 3,
-    None = -1
 }
