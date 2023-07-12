@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
-using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,8 +8,6 @@ public class GameManager : MonoBehaviour
     // プロパティを入れる。
     public GameState CurrentGameState => _currentGameState;
     public static GameManager Instance => _instance;
-    public IObservable<Unit> OnStop => _stopSubject;
-    public IObservable<Unit> OnStart => _startSubject;
     #endregion
 
     #region serialize
@@ -22,9 +18,6 @@ public class GameManager : MonoBehaviour
     // プライベートなメンバー変数。
     [SerializeField]
     private GameState _currentGameState = GameState.Title;
-    private Subject<Unit> _stopSubject = new Subject<Unit>();
-    private Subject<Unit> _startSubject = new Subject<Unit>();
-    private ReactiveProperty<int> _resouce = new ReactiveProperty<int>();
     private static GameManager _instance;
     #endregion
 
@@ -53,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
     private void Update()
@@ -72,15 +65,6 @@ public class GameManager : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
-    private void TimerStop()
-    {
-        _stopSubject.OnNext(Unit.Default);
-    }
-
-    private void TimerStart()
-    {
-        _startSubject.OnNext(Unit.Default);
-    }
     #endregion
 }
 public enum GameState 
