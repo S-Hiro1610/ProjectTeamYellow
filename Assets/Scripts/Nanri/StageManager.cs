@@ -52,86 +52,60 @@ public class StageManager : MonoBehaviour
             }
         }
 
-        foreach(Transform s in _spawnerList)
+        foreach(Transform spawner in _spawnerList)
         {
             // この Spawner の座標から SpawnPoint（y+1）を求める。
-            Vector3 sp = s.position;
-            sp.y += 1;
+            Vector3 spawnPointPosition = spawner.position;
+            spawnPointPosition.y += 1;
 
             // この Spawner の routeList を生成して、先頭に初期出現座標(盤面外)とSpawnPointを設定する。
-            var rt = new List<Vector3>();
-            rt.Add(new Vector3(-1,-1,1));
-            rt.Add(sp);
+            var routeList = new List<Vector3>();
+            routeList.Add(new Vector3(-1,-1,1));
+            routeList.Add(spawnPointPosition);
 
             // EndLine までのルートを探索して、routeList へ追加してゆく。
-            Direction _nextDirection = s.GetComponent<MapParts>().NextDirection;
-            while (_nextDirection != Direction.None)
+            Direction nextDirection = spawner.GetComponent<MapParts>().NextDirection;
+            Transform nextMapCell = spawner;
+            while (nextDirection != Direction.None)
             {
-                switch (_nextDirection)
+                var nextPosition = nextMapCell.position;
+                switch (nextDirection)
                 {
                     case Direction.Up:
+                        nextPosition.z += 1;
                         break;
 
                     case Direction.Right:
+                        nextPosition.x += 1;
                         break;
 
                     case Direction.Down:
+                        nextPosition.z -= 1;
                         break;
 
                     case Direction.Left:
+                        nextPosition.x -= 1;
                         break;
                 }
+                nextMapCell = FindAtPosition(_stage.transform, nextPosition);
+
+                // 敵ユニットの進軍位置は、MapCellの直上（ｙ＋１）
+                var nextEnemyPosition = nextMapCell.position;
+                nextEnemyPosition.y += 1;
+                routeList.Add(nextEnemyPosition);
+                nextDirection = nextMapCell.GetComponent<MapParts>().NextDirection;
             }
 
             // routeList を Spawner に SetRoute() する。
-            s.GetComponent<Spawner>().SetRoute(rt);
+            //spawner.GetComponent<Spawner>().SetRoute(routeList);
+            Debug.Log("Spawner:"+spawner.position);
+            foreach (Vector3 child in routeList)
+                Debug.Log(child);
         }
-        // 初期値設定
-        //_routeList.Add(new Vector3(0, 1, 0));
-        //// 初期位置
-        //transform.position = _routeList[_routeIndex];
-
-        //// ルート設定(仮で手動設定)
-        //_routeList.Add(new Vector3(-2, 1, 0));
-        //_routeList.Add(new Vector3(-2, 1, 3));
-        //_routeList.Add(new Vector3(-4, 1, 3));
-        //_routeList.Add(new Vector3(-4, 1, 1));
-        //_routeList.Add(new Vector3(-6, 1, 1));
-        //_routeList.Add(new Vector3(-6, 1, 4));
-        //_routeList.Add(new Vector3(-8, 1, 4));
-        //_routeList.Add(new Vector3(-8, 1, 1));
-        //_routeList.Add(new Vector3(-9, 1, 1));
-
-        //// 向きの設定
-        //_routeIndex++;
-        //transform.LookAt(_routeList[_routeIndex]);
     }
 
     private void Update()
     {
-        // 移動フラグを確認
-        //if (_moveFlag)
-        //{
-        //    // 目的地へ移動
-        //    float step = _speed * Time.deltaTime;
-        //    transform.position = Vector3.MoveTowards(transform.position, _routeList[_routeIndex], step);
-
-        //    // 目的地に到達後、次のルート先を設定
-        //    if (transform.position == _routeList[_routeIndex])
-        //    {
-        //        // 現在地座標番号がルートリスト数より小さければ、次の座標番号に移る
-        //        if (_routeIndex < (_routeList.Count - 1))
-        //        {
-        //            _routeIndex++;
-        //            transform.LookAt(_routeList[_routeIndex]);
-        //        }
-        //        else
-        //        {
-        //            _moveFlag = false;
-        //        }
-
-        //    }
-        //}
     }
     #endregion
 
@@ -139,5 +113,14 @@ public class StageManager : MonoBehaviour
     #endregion
 
     #region private method
+    private Transform FindAtPosition(Transform parent, Vector3 pos)
+    {
+        foreach(Transform child in parent)
+        {
+            if (child.position == pos)
+                return child;
+        }
+        return null;
+    }
     #endregion
 }
