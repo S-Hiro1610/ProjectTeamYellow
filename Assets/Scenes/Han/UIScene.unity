@@ -569,7 +569,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &992849756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,7 +629,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
 --- !u!224 &992849759
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1765,7 +1765,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
 --- !u!224 &1940977553
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2111,42 +2111,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 992849759}
     m_Modifications:
-    - target: {fileID: 416270741, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: m_Text
-      value: 0/20
-      objectReference: {fileID: 0}
-    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: WaveCnt
-      value: 0/20
-      objectReference: {fileID: 0}
-    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: WaveUIText
-      value: 
-      objectReference: {fileID: 6577110140866948332}
-    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: SubButtonTextList.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: SubButtonTextList.Array.data[0]
-      value: "\u30B2\u30FC\u30E0\u3092\u7D9A\u3051\u308B"
-      objectReference: {fileID: 0}
-    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: SubButtonTextList.Array.data[1]
-      value: "\u30B2\u30FC\u30E0\u3092\u7D42\u4E86\u3059\u308B"
-      objectReference: {fileID: 0}
-    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: SubButtonTextList.Array.data[2]
-      value: "\u30AA\u30D7\u30B7\u30E7\u30F3"
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038962107, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: m_CellSize.x
-      value: 960
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038962107, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
-      propertyPath: m_CellSize.y
-      value: 128
-      objectReference: {fileID: 0}
     - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2259,15 +2223,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
---- !u!114 &6577110140866948332 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 416270741, guid: 08a7c720cae20ba4bbb2873a445f73c9,
-    type: 3}
-  m_PrefabInstance: {fileID: 6577110140866948331}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
