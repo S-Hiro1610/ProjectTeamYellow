@@ -42,9 +42,10 @@ public class StageManager : MonoBehaviour
     {
         // Stage インスタンス作成
         _stage = Instantiate(_stagePrefab, _stagePosition, Quaternion.identity);
+        _stage.name = _stage.name.Replace("(Clone)", "");
 
         // Spawner LIst作成
-        foreach(Transform child in _stage.transform)
+        foreach (Transform child in _stage.transform)
         {
             if(child.name.Contains("Spawner"))
             {
@@ -60,7 +61,7 @@ public class StageManager : MonoBehaviour
 
             // この Spawner の routeList を生成して、先頭に初期出現座標(盤面外)とSpawnPointを設定する。
             var routeList = new List<Vector3>();
-            routeList.Add(new Vector3(-1,-1,1));
+            //routeList.Add(new Vector3(-1,-1,1));
             routeList.Add(spawnPointPosition);
 
             // EndLine までのルートを探索して、routeList へ追加してゆく。
@@ -97,10 +98,10 @@ public class StageManager : MonoBehaviour
             }
 
             // routeList を Spawner に SetRoute() する。
-            //spawner.GetComponent<Spawner>().SetRoute(routeList);
-            Debug.Log("Spawner:"+spawner.position);
-            foreach (Vector3 child in routeList)
-                Debug.Log(child);
+            spawner.GetComponent<Spawner>().SetRoute(routeList);
+            //Debug.Log("Spawner:"+spawner.position);
+            //foreach (Vector3 child in routeList)
+            //    Debug.Log(child);
         }
     }
 
