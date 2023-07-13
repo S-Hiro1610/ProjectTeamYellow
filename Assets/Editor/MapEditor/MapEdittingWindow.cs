@@ -94,16 +94,19 @@ public class MapEdittingWindow : EditorWindow
         }
         Repaint();
 
-        // マップ生成ボタンの表示
+        // マップ生成ボタンの表示（IsCreatePrefab のチェックが入った時だけ生成可能）
+        EditorGUI.BeginDisabledGroup(!_parentWindow.IsCreatePrefab);
+
         GUILayout.FlexibleSpace();
         using (new EditorGUILayout.HorizontalScope())
         {
             GUILayout.Space(20);
-            if (GUILayout.Button("Push to Generate", GUILayout.MinWidth(120), GUILayout.MinHeight(40)))
+            if (GUILayout.Button("Create Prefab", GUILayout.MinWidth(120), GUILayout.MinHeight(40)))
             {
                 GenerateMapObject(_mapCells);
-                //CheckCurrentStageData(_stageCells);
             }
+            GUILayout.Space(20);
+            GUILayout.Label("If create Prefab, IsCreatePrefab must be checked.", GUILayout.MinWidth(200));
             GUILayout.FlexibleSpace();
         }
 
@@ -115,13 +118,33 @@ public class MapEdittingWindow : EditorWindow
             GUILayout.Label("--- または ---", GUILayout.MinWidth(200));
             GUILayout.FlexibleSpace();
         }
+        EditorGUI.EndDisabledGroup();
+
         GUILayout.Space(10);
 
-        // マップロードボタンの表示
+        // Save マップデザインボタンの表示
+        //using (new EditorGUILayout.HorizontalScope())
+        //{
+        //    GUILayout.Space(20);
+        //    if (GUILayout.Button("Save", GUILayout.MinWidth(120)))
+        //    {
+        //        //ファイルがセットされている場合
+        //        if (_mapSaveFile != null)
+        //        {
+        //            //LoadStageDataFile();
+        //        }
+        //    }
+        //    GUILayout.Space(10);
+        //    GUILayout.Label("Specify folder to save ->", GUILayout.Width(200));
+        //    GUILayout.Space(5);
+        //    _mapSaveFile = EditorGUILayout.ObjectField(_mapSaveFile, typeof(Object), false);
+        //    GUILayout.FlexibleSpace();
+        //}
+        // マップデザインロードボタンの表示
         using (new EditorGUILayout.HorizontalScope())
         {
             GUILayout.Space(20);
-            if (GUILayout.Button("Push to Load", GUILayout.MinWidth(120)))
+            if (GUILayout.Button("Load", GUILayout.MinWidth(120)))
             {
                 //ファイルがセットされている場合
                 if (_mapSaveFile != null)
@@ -130,9 +153,9 @@ public class MapEdittingWindow : EditorWindow
                 }
             }
             GUILayout.Space(10);
-            GUILayout.Label("Specify Map File to load ->", GUILayout.Width(120));
+            GUILayout.Label("Specify file from load ->", GUILayout.Width(200));
             GUILayout.Space(5);
-            _mapSaveFile = EditorGUILayout.ObjectField(_mapSaveFile, typeof(Object), true);
+            _mapSaveFile = EditorGUILayout.ObjectField(_mapSaveFile, typeof(Object), false);
             GUILayout.FlexibleSpace();
         }
 
@@ -307,9 +330,6 @@ public class MapEdittingWindow : EditorWindow
             }
         }
 
-        // マップのプレファブ化
-        if (_parentWindow.IsCreatePrefab)
-        {
             // 総ての spawner に進軍リストを追加する。
             foreach(GameObject spawner in spawnerList)
             {
@@ -357,13 +377,8 @@ public class MapEdittingWindow : EditorWindow
 
                 // routeList を Spawner に SetRoute() する。
                 spawner.GetComponent<Spawner>().SetRoute(routeList);
-                //Debug.Log("Spawner:"+spawner.position);
-                //foreach (Vector3 child in routeList)
-                //    Debug.Log(child);
 
-
-            }
-
+            // マップオブジェクトをFrefab化して、Hierarchy上にクローンを表示する。 
             string mapPrefabAbsName = "Assets/Prefabs/Stages/" + mapObject.name + ".prefab";
             var prefab = PrefabUtility.SaveAsPrefabAsset(mapObject, mapPrefabAbsName);
             DestroyImmediate(mapObject);
@@ -388,5 +403,21 @@ public class MapEdittingWindow : EditorWindow
         return null;
     }
 
+    /// <summary>
+    /// 生成前のマップ構造を Scriptable Object として保存する
+    /// あとでロードして編集画面を再表示できる
+    /// </summary>
+    private void SaveMapDesign()
+    {
+
+    }
+
+    /// <summary>
+    /// Scriptable Object としてセーブされているマップ構造をロードして編集画面に反映する
+    /// </summary>
+    private void LoadMapDesign()
+    {
+
+    }
     #endregion
 }
