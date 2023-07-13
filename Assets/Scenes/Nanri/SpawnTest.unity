@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3093a59e73e2f3f4cb404ff236722b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stagePrefab: {fileID: 4142400308928587376, guid: 7d6a0f4b9bde5b541befc5ffa9c05fab,
+  _stagePrefab: {fileID: 9136811788368778177, guid: 41339b155241a344aa32fb64ed60cbe6,
     type: 3}
   _stagePosition: {x: 0, y: 0, z: 0}
   _stage: {fileID: 0}
@@ -289,7 +289,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502651749}
   m_LocalRotation: {x: 0.4330969, y: -0, z: -0, w: 0.9013474}
-  m_LocalPosition: {x: 4.44, y: 4.46, z: -6.1}
+  m_LocalPosition: {x: 4.521, y: 4.46, z: -6.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
