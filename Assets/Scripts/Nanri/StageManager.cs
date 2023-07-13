@@ -98,7 +98,7 @@ public class StageManager : MonoBehaviour
             }
 
             // routeList を Spawner に SetRoute() する。
-            spawner.GetComponent<Spawner>().SetRoute(routeList);
+            //spawner.GetComponent<Spawner>().SetRoute(routeList);
             //Debug.Log("Spawner:"+spawner.position);
             //foreach (Vector3 child in routeList)
             //    Debug.Log(child);

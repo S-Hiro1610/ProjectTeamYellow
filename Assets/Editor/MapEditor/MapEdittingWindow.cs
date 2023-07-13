@@ -11,6 +11,7 @@ public class MapEdittingWindow : EditorWindow
     private MapCell[,] _mapCells;
     private MapEditorMain _parentWindow;
     private Object _mapSaveFile;
+
     #endregion
 
     #region constant
@@ -239,7 +240,9 @@ public class MapEdittingWindow : EditorWindow
     private void GenerateMapObject(MapCell[,] mapCells)
     {
         var mapObject = new GameObject(_parentWindow.MapName);
-        for(int row=0; row < _parentWindow.Rows; row++)
+        List<GameObject> spawnerList = new List<GameObject>();
+
+        for (int row=0; row < _parentWindow.Rows; row++)
         {
             for (int col = 0; col < _parentWindow.Columns; col++)
             {
@@ -255,6 +258,7 @@ public class MapEdittingWindow : EditorWindow
                 // Spawnerマスへの進行方向設定
                 if (partObject.name.Contains("Spawn"))
                 {
+                    spawnerList.Add(partObject);
                     if (row > 0) 
                     {
                         if (mapCells[row - 1, col].PrefabName != "")
@@ -306,6 +310,60 @@ public class MapEdittingWindow : EditorWindow
         // マップのプレファブ化
         if (_parentWindow.IsCreatePrefab)
         {
+            // 総ての spawner に進軍リストを追加する。
+            foreach(GameObject spawner in spawnerList)
+            {
+                // 進軍ルートの探索
+                // この Spawner の座標から SpawnPoint（y+1）を求める。
+                Vector3 spawnPointPosition = spawner.transform.position;
+                spawnPointPosition.y += 1;
+
+                // この Spawner の routeList を生成して、先頭に初期出現座標(盤面外)とSpawnPointを設定する。
+                var routeList = new List<Vector3>();
+                routeList.Add(spawnPointPosition);
+
+                // EndLine までのルートを探索して、routeList へ追加してゆく。
+                Direction nextDirection = spawner.GetComponent<MapParts>().NextDirection;
+                Transform nextMapCell = spawner.transform;
+                while (nextDirection != Direction.None)
+                {
+                    var nextPosition = nextMapCell.position;
+                    switch (nextDirection)
+                    {
+                        case Direction.Up:
+                            nextPosition.z += 1;
+                            break;
+
+                        case Direction.Right:
+                            nextPosition.x += 1;
+                            break;
+
+                        case Direction.Down:
+                            nextPosition.z -= 1;
+                            break;
+
+                        case Direction.Left:
+                            nextPosition.x -= 1;
+                            break;
+                    }
+                    nextMapCell = FindAtPosition(mapObject.transform, nextPosition);
+
+                    // 敵ユニットの進軍位置は、MapCellの直上（ｙ＋１）
+                    var nextEnemyPosition = nextMapCell.position;
+                    nextEnemyPosition.y += 1;
+                    routeList.Add(nextEnemyPosition);
+                    nextDirection = nextMapCell.GetComponent<MapParts>().NextDirection;
+                }
+
+                // routeList を Spawner に SetRoute() する。
+                spawner.GetComponent<Spawner>().SetRoute(routeList);
+                //Debug.Log("Spawner:"+spawner.position);
+                //foreach (Vector3 child in routeList)
+                //    Debug.Log(child);
+
+
+            }
+
             string mapPrefabAbsName = "Assets/Prefabs/Stages/" + mapObject.name + ".prefab";
             var prefab = PrefabUtility.SaveAsPrefabAsset(mapObject, mapPrefabAbsName);
             DestroyImmediate(mapObject);
@@ -313,5 +371,22 @@ public class MapEdittingWindow : EditorWindow
             mapIns.name = mapIns.name.Replace("(Clone)", "");
         }
     }
+
+    /// <summary>
+    /// Stage Objcet 子の中から 指定された座標のものを見つけて返す
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    private Transform FindAtPosition(Transform parent, Vector3 pos)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.position == pos)
+                return child;
+        }
+        return null;
+    }
+
     #endregion
 }
