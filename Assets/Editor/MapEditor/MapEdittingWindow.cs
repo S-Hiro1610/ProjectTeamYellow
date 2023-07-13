@@ -284,7 +284,7 @@ public class MapEdittingWindow : EditorWindow
                             var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col - 1].PrefabName);
                             if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
                             {
-                                partObject.GetComponent<MapParts>().NextDirection = Direction.Right;
+                                partObject.GetComponent<MapParts>().NextDirection = Direction.Left;
                             }
                         }
                     }
@@ -295,7 +295,7 @@ public class MapEdittingWindow : EditorWindow
                             var upPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col + 1].PrefabName);
                             if (upPrefab.GetComponent<StageBlock>().isEnemyRoute)
                             {
-                                partObject.GetComponent<MapParts>().NextDirection = Direction.Left;
+                                partObject.GetComponent<MapParts>().NextDirection = Direction.Right;
                             }
                         }
                     }
