@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
     #region property
     // プロパティを入れる。
     public List<WaveList> Wave => _wave;
-    public Transform SpawnePoint => _spawnePoint;
+    public Transform SpawnPoint => _spawnPoint;
     public bool WaveStart => _waveStart;
     public int ActiveEnemyCount => _activeEnemyCount;
     public bool WaveActive => _waveActive;
@@ -23,20 +23,23 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private List<WaveList> _wave;
     [SerializeField]
-    private Transform _spawnePoint;
+    private Transform _spawnPoint;
     [SerializeField]
     private bool _waveStart;
     [SerializeField]
     private int _activeEnemyCount = 0;
     [SerializeField]
     private bool _waveActive;
+    [SerializeField]
+    private List<Vector3> _enemyRoute;
+
     #endregion
 
     #region private
     // プライベートなメンバー変数。
     private static EnemySpawner _instance;
     private int _waveIndex = 0;
-    private List<Vector3> _enemyRoute;
+    //private List<Vector3> _enemyRoute;
     #endregion
 
     #region Constant
@@ -51,17 +54,7 @@ public class Spawner : MonoBehaviour
     //
     private void Awake()
     {
-        // テスト用の Default 値
-        _enemyRoute = new List<Vector3>();
-        _enemyRoute.Add(new Vector3(2, 0, 1));
-        _enemyRoute.Add(new Vector3(2, 0, 0));
-        _enemyRoute.Add(new Vector3(2, 0, -1));
-        _enemyRoute.Add(new Vector3(2, 0, -2));
-        _enemyRoute.Add(new Vector3(2, 0, -3));
-        _enemyRoute.Add(new Vector3(3, 0, -3));
-        _enemyRoute.Add(new Vector3(4, 0, -3));
-        _enemyRoute.Add(new Vector3(5, 0, -3));
-        _enemyRoute.Add(new Vector3(5, 0, -4));
+
     }
     // Start is called before the first frame update
     void Start()
@@ -118,7 +111,9 @@ public class Spawner : MonoBehaviour
     public void SetRoute(List<Vector3> rt)
     {
         _enemyRoute = rt;
-        _spawnePoint.transform.position = rt[0];
+        var spawnPoint = new GameObject("SpawnPoint");
+        spawnPoint.transform.SetPositionAndRotation(rt[0], Quaternion.identity); 
+        _spawnPoint = spawnPoint.transform;
     }
     #endregion
 
@@ -133,7 +128,7 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < waveEnemyCount; i++)
         {
             yield return new WaitForSeconds(_wave[waveindex].waveEnemy[i].SpawneDelay);
-            var go = UnitObjectPool.Instance.SpawneUnit(_wave[waveindex].waveEnemy[i].Enemy, _spawnePoint.position, _wave[waveindex].waveEnemy[i].Level);
+            var go = UnitObjectPool.Instance.SpawneUnit(_wave[waveindex].waveEnemy[i].Enemy, _spawnPoint.position, _wave[waveindex].waveEnemy[i].Level);
             go.GetComponent<EnemyMove>().SetRoute(_enemyRoute);
         }
         _waveActive = false;
