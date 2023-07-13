@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
     #region property
     // プロパティを入れる。
     public List<WaveList> Wave => _wave;
-    public Transform SpawnPoint => _spawnPoint;
+    //public Transform SpawnPoint => _spawnPoint;
     public bool WaveStart => _waveStart;
     public int ActiveEnemyCount => _activeEnemyCount;
     public bool WaveActive => _waveActive;
@@ -22,8 +22,6 @@ public class Spawner : MonoBehaviour
     // unity inspectorに表示したいものを記述。
     [SerializeField]
     private List<WaveList> _wave;
-    [SerializeField]
-    private Transform _spawnPoint;
     [SerializeField]
     private bool _waveStart;
     [SerializeField]
@@ -39,7 +37,7 @@ public class Spawner : MonoBehaviour
     // プライベートなメンバー変数。
     private static EnemySpawner _instance;
     private int _waveIndex = 0;
-    //private List<Vector3> _enemyRoute;
+    private Vector3 _spawnPoint;
     #endregion
 
     #region Constant
@@ -59,7 +57,7 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        _spawnPoint = _enemyRoute[0];
     }
 
     // Update is called once per frame
@@ -102,7 +100,7 @@ public class Spawner : MonoBehaviour
             return _instance;
         }
     }
-    
+
     /// <summary>
     /// Stage Manager が SpawnPoint ごとの進軍ルートを設定する為に呼ぶ。
     /// 呼ばれる都度、上書きする。
@@ -111,9 +109,6 @@ public class Spawner : MonoBehaviour
     public void SetRoute(List<Vector3> rt)
     {
         _enemyRoute = rt;
-        var spawnPoint = new GameObject("SpawnPoint");
-        spawnPoint.transform.SetPositionAndRotation(rt[0], Quaternion.identity); 
-        _spawnPoint = spawnPoint.transform;
     }
     #endregion
 
@@ -128,7 +123,7 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < waveEnemyCount; i++)
         {
             yield return new WaitForSeconds(_wave[waveindex].waveEnemy[i].SpawneDelay);
-            var go = UnitObjectPool.Instance.SpawneUnit(_wave[waveindex].waveEnemy[i].Enemy, _spawnPoint.position, _wave[waveindex].waveEnemy[i].Level);
+            var go = UnitObjectPool.Instance.SpawneUnit(_wave[waveindex].waveEnemy[i].Enemy, _spawnPoint, _wave[waveindex].waveEnemy[i].Level);
             go.GetComponent<EnemyMove>().SetRoute(_enemyRoute);
         }
         _waveActive = false;

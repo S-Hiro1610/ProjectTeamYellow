@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 9055324520641429575}
   - component: {fileID: 8941862025240880985}
   - component: {fileID: 7377026676365239354}
-  - component: {fileID: 6890680852455160431}
   m_Layer: 0
   m_Name: MapCellBase
   m_TagString: Untagged
@@ -124,20 +123,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6890680852455160431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5639167233398036624}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd01f066e9af00b41bcb4a88b72ba712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _wave: []
-  _spawnPoint: {fileID: 0}
-  _waveStart: 0
-  _activeEnemyCount: 0
-  _waveActive: 0
