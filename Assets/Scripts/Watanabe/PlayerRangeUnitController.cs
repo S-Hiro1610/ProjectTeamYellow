@@ -55,7 +55,6 @@ public class PlayerRangeUnitController : CharactorBase
         {
             if (!_attackCollider.Target.gameObject.activeSelf)
             {
-                //_attackCollider.Initilized();
                 _attackCollider.TargetUpdate(_attackCollider.Target);
                 if (transform.tag == _enemyTag) _enemyMove.MoveSet(true);
             }
