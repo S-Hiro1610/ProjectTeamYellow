@@ -9,6 +9,13 @@ public class Dialogbox : MonoBehaviour
     #region property
     // プロパティを入れる。
     public Button ExitButton;
+    public GameObject SubButtonPlane;
+    public GameObject SubButtonObjcet;
+    
+    public Text WaveUIText;
+    public string WaveCnt;
+    public List<string> SubButtonTextList;
+
 
     public UnityEvent OnOpenEvent;
     public UnityEvent OnCloseEvent;
@@ -39,7 +46,17 @@ public class Dialogbox : MonoBehaviour
 
     private void Start()
     {
+        const int fontSize = 96;
 
+        for(int bCnt = 0;bCnt< SubButtonTextList.Count; bCnt++)
+        {
+            GameObject buttonObj = Instantiate(SubButtonObjcet);
+            buttonObj.GetComponentInChildren<Text>().text = SubButtonTextList[bCnt];
+            buttonObj.GetComponentInChildren<Text>().fontSize = fontSize;
+            buttonObj.transform.SetParent(SubButtonPlane.transform,false);
+            int n = bCnt;
+            buttonObj.GetComponent<Button>().onClick.AddListener(()=>SubButtonEvent(n)) ;
+        }
     }
 
     private void Update()
@@ -53,7 +70,7 @@ public class Dialogbox : MonoBehaviour
     public void SetActive(bool onoff)
     {
         //gameObject.transform.parent.gameObject.SetActive(onoff);
-
+        UpdateText(WaveUIText, WaveCnt);
         if (onoff)
         {
             Open();
@@ -76,9 +93,31 @@ public class Dialogbox : MonoBehaviour
         gameObject.transform.parent.gameObject.SetActive(false);
         OnCloseEvent.Invoke();
     }
+
+    public void SubButtonEvent(int buttonCnt)
+    {
+        Debug.Log(buttonCnt);
+
+        switch(buttonCnt)
+        {
+            case 0:
+                Close();
+                break;
+            case 1:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+    }
     #endregion
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    private void UpdateText(Text text, object str)
+    {
+        text.text = (string)str;
+    }
     #endregion
 }

@@ -67,10 +67,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: 0_NoRoad Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8941862025240880985, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+        type: 3}
+      propertyPath: _isEnemyRoute
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
       propertyPath: direction
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+        type: 3}
+      propertyPath: _mapTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 785ed403300b1a5419e9b41d37e46725, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4895a39b57c256d4ab55374a7c4aef7e, type: 3}

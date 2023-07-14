@@ -10,6 +10,7 @@ public class Wave
     public int Level => _level;
 
     public float SpawneDelay => _spawneDelay;
+    public int SpawnUnits => _spawnUnits;
 
     [SerializeField]
     private GameObject _enemy;
@@ -17,4 +18,6 @@ public class Wave
     private int _level;
     [SerializeField]
     private float _spawneDelay;
+    [SerializeField]
+    private int _spawnUnits;
 }

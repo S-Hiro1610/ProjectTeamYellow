@@ -564,7 +564,7 @@ GameObject:
   - component: {fileID: 992849757}
   - component: {fileID: 992849756}
   m_Layer: 5
-  m_Name: DialogUI
+  m_Name: MainMenuDialogUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -629,7 +629,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
 --- !u!224 &992849759
 RectTransform:
   m_ObjectHideFlags: 0
@@ -819,7 +819,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436836971}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1436836973
 Camera:
   m_ObjectHideFlags: 0
@@ -854,7 +854,7 @@ Camera:
     m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -1765,7 +1765,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
 --- !u!224 &1940977553
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2155,21 +2155,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 768
-      objectReference: {fileID: 0}
-    - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
         type: 3}

@@ -1,5 +1,26 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4984542615022684567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5741100689904218331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd01f066e9af00b41bcb4a88b72ba712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wave:
+  - {fileID: 11400000, guid: b05c6e382d5b35a43b41eb8d6362452b, type: 2}
+  - {fileID: 11400000, guid: d19bcb65972eb024ebe0e6a449202bb0, type: 2}
+  - {fileID: 11400000, guid: d86c5947255298c4884682fe7b5c7db5, type: 2}
+  _spawnPoint: {fileID: 0}
+  _waveStart: 0
+  _activeEnemyCount: 0
+  _waveActive: 0
+  _enemyRoute: []
 --- !u!1001 &139088291626215499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67,15 +88,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: 1_Spawner Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 8941862025240880985, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+    - target: {fileID: 6890680852455160431, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
-      propertyPath: _isEnemyRoute
+      propertyPath: _wave.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9055324520641429575, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+    - target: {fileID: 6890680852455160431, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
-      propertyPath: _mapTexture
+      propertyPath: _wave.Array.data[0]
       value: 
-      objectReference: {fileID: 2800000, guid: bfc758b078250124eaaf2d3350be8f20, type: 3}
+      objectReference: {fileID: 11400000, guid: b05c6e382d5b35a43b41eb8d6362452b,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4895a39b57c256d4ab55374a7c4aef7e, type: 3}
+--- !u!1 &5741100689904218331 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5639167233398036624, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+    type: 3}
+  m_PrefabInstance: {fileID: 139088291626215499}
+  m_PrefabAsset: {fileID: 0}
