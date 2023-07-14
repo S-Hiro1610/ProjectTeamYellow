@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 public class MapEdittingWindow : EditorWindow
 {
@@ -112,7 +111,7 @@ public class MapEdittingWindow : EditorWindow
 
         // 区切りの表示
         GUILayout.Space(10);
-        using(new EditorGUILayout.HorizontalScope())
+        using (new EditorGUILayout.HorizontalScope())
         {
             GUILayout.Space(20);
             GUILayout.Label("--- または ---", GUILayout.MinWidth(200));
@@ -265,7 +264,7 @@ public class MapEdittingWindow : EditorWindow
         var mapObject = new GameObject(_parentWindow.MapName);
         List<GameObject> spawnerList = new List<GameObject>();
 
-        for (int row=0; row < _parentWindow.Rows; row++)
+        for (int row = 0; row < _parentWindow.Rows; row++)
         {
             for (int col = 0; col < _parentWindow.Columns; col++)
             {
@@ -274,15 +273,15 @@ public class MapEdittingWindow : EditorWindow
                     continue;
                 }
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(mapCells[row, col].PrefabName);
-                var partObject = Instantiate(prefab, new Vector3(col, -1, -row),Quaternion.identity);
-                partObject.name = partObject.name.Replace("(Clone)", "" );
+                var partObject = Instantiate(prefab, new Vector3(col, -1, -row), Quaternion.identity);
+                partObject.name = partObject.name.Replace("(Clone)", "");
                 partObject.transform.SetParent(mapObject.transform);
 
                 // Spawnerマスへの進行方向設定
                 if (partObject.name.Contains("Spawn"))
                 {
                     spawnerList.Add(partObject);
-                    if (row > 0) 
+                    if (row > 0)
                     {
                         if (mapCells[row - 1, col].PrefabName != "")
                         {
@@ -293,7 +292,7 @@ public class MapEdittingWindow : EditorWindow
                             }
                         }
                     }
-                    if(row < _parentWindow.Rows - 1)
+                    if (row < _parentWindow.Rows - 1)
                     {
                         if (mapCells[row + 1, col].PrefabName != "")
                         {
@@ -315,7 +314,7 @@ public class MapEdittingWindow : EditorWindow
                             }
                         }
                     }
-                    if(col < _parentWindow.Columns - 1)
+                    if (col < _parentWindow.Columns - 1)
                     {
                         if (mapCells[row, col + 1].PrefabName != "")
                         {
@@ -330,61 +329,61 @@ public class MapEdittingWindow : EditorWindow
             }
         }
 
-            // 総ての spawner に進軍リストを追加する。
-            foreach(GameObject spawner in spawnerList)
+        // 総ての spawner に進軍リストを追加する。
+        foreach (GameObject spawner in spawnerList)
+        {
+            // 進軍ルートの探索
+            // この Spawner の座標から SpawnPoint（y+1）を求める。
+            Vector3 spawnPointPosition = spawner.transform.position;
+            spawnPointPosition.y += 1;
+
+            // この Spawner の routeList を生成して、先頭に初期出現座標(盤面外)とSpawnPointを設定する。
+            var routeList = new List<Vector3>();
+            routeList.Add(spawnPointPosition);
+
+            // EndLine までのルートを探索して、routeList へ追加してゆく。
+            Direction nextDirection = spawner.GetComponent<MapParts>().NextDirection;
+            Transform nextMapCell = spawner.transform;
+            while (nextDirection != Direction.None)
             {
-                // 進軍ルートの探索
-                // この Spawner の座標から SpawnPoint（y+1）を求める。
-                Vector3 spawnPointPosition = spawner.transform.position;
-                spawnPointPosition.y += 1;
-
-                // この Spawner の routeList を生成して、先頭に初期出現座標(盤面外)とSpawnPointを設定する。
-                var routeList = new List<Vector3>();
-                routeList.Add(spawnPointPosition);
-
-                // EndLine までのルートを探索して、routeList へ追加してゆく。
-                Direction nextDirection = spawner.GetComponent<MapParts>().NextDirection;
-                Transform nextMapCell = spawner.transform;
-                while (nextDirection != Direction.None)
+                var nextPosition = nextMapCell.position;
+                switch (nextDirection)
                 {
-                    var nextPosition = nextMapCell.position;
-                    switch (nextDirection)
-                    {
-                        case Direction.Up:
-                            nextPosition.z += 1;
-                            break;
+                    case Direction.Up:
+                        nextPosition.z += 1;
+                        break;
 
-                        case Direction.Right:
-                            nextPosition.x += 1;
-                            break;
+                    case Direction.Right:
+                        nextPosition.x += 1;
+                        break;
 
-                        case Direction.Down:
-                            nextPosition.z -= 1;
-                            break;
+                    case Direction.Down:
+                        nextPosition.z -= 1;
+                        break;
 
-                        case Direction.Left:
-                            nextPosition.x -= 1;
-                            break;
-                    }
-                    nextMapCell = FindAtPosition(mapObject.transform, nextPosition);
-
-                    // 敵ユニットの進軍位置は、MapCellの直上（ｙ＋１）
-                    var nextEnemyPosition = nextMapCell.position;
-                    nextEnemyPosition.y += 1;
-                    routeList.Add(nextEnemyPosition);
-                    nextDirection = nextMapCell.GetComponent<MapParts>().NextDirection;
+                    case Direction.Left:
+                        nextPosition.x -= 1;
+                        break;
                 }
+                nextMapCell = FindAtPosition(mapObject.transform, nextPosition);
 
-                // routeList を Spawner に SetRoute() する。
-                spawner.GetComponent<Spawner>().SetRoute(routeList);
+                // 敵ユニットの進軍位置は、MapCellの直上（ｙ＋１）
+                var nextEnemyPosition = nextMapCell.position;
+                nextEnemyPosition.y += 1;
+                routeList.Add(nextEnemyPosition);
+                nextDirection = nextMapCell.GetComponent<MapParts>().NextDirection;
+            }
 
-            // マップオブジェクトをFrefab化して、Hierarchy上にクローンを表示する。 
-            string mapPrefabAbsName = "Assets/Prefabs/Stages/" + mapObject.name + ".prefab";
-            var prefab = PrefabUtility.SaveAsPrefabAsset(mapObject, mapPrefabAbsName);
-            DestroyImmediate(mapObject);
-            var mapIns = Instantiate(prefab);
-            mapIns.name = mapIns.name.Replace("(Clone)", "");
+            // routeList を Spawner に SetRoute() する。
+            spawner.GetComponent<Spawner>().SetRoute(routeList);
         }
+
+        // マップオブジェクトをFrefab化して、Hierarchy上にクローンを表示する。 
+        string mapPrefabAbsName = "Assets/Prefabs/Stages/" + mapObject.name + ".prefab";
+        var mapPrefab = PrefabUtility.SaveAsPrefabAsset(mapObject, mapPrefabAbsName);
+        DestroyImmediate(mapObject);
+        var mapIns = Instantiate(mapPrefab);
+        mapIns.name = mapIns.name.Replace("(Clone)", "");
     }
 
     /// <summary>
