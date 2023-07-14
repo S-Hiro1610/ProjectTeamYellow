@@ -60,6 +60,20 @@ public class AttackCollider : MonoBehaviour
         _target = null;
         _targets.Clear();
     }
+
+    public void TargetUpdate(CharactorBase target)
+    {
+        _targets.RemoveAt(_targets.IndexOf(target));
+        if (_targets.Count == 0)
+        {
+            _target = null;
+            _targets.Clear();
+        }
+        else
+        {
+            _target = _targets[0];
+        }
+    }
     #endregion
 
     #region private method

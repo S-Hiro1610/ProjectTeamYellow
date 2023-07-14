@@ -60,8 +60,7 @@ public class PlayerAreaUnitController : CharactorBase
         {
             if (!_attackCollider.Target.gameObject.activeSelf)
             {
-                _attackCollider.Initilized();
-                _isCanAttack = false;
+                _attackCollider.TargetUpdate(_attackCollider.Target);
             }
         }
 
@@ -99,13 +98,6 @@ public class PlayerAreaUnitController : CharactorBase
             // Targetを順番に取得
             foreach (CharactorBase target in _attackCollider.Targets)
             {
-                // Targetがnull(ユニットが消滅)の場合はリストから削除
-                if (target == null || !target.gameObject.activeSelf)
-                {
-                    _attackCollider.Targets.RemoveAt(_attackCollider.Targets.IndexOf(target));
-                    return;
-                }
-
                 // 現在の攻撃回数が最大攻撃回数より小さい場合、Attackを実行
                 if (currentSubjects < _maxAttackCount)
                 {

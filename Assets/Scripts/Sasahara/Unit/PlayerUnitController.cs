@@ -50,8 +50,7 @@ public class PlayerUnitController : CharactorBase
         {
             if (!_attackCollider.Target.gameObject.activeSelf)
             {
-                _attackCollider.Initilized();
-                _isCanAttack = false;
+                _attackCollider.TargetUpdate(_attackCollider.Target);
                 if (transform.tag == _enemyTag) _enemyMove.MoveSet(true);
             }
         }
