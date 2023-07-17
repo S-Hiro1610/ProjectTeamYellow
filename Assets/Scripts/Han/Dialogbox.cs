@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UniRx;
 
 public class Dialogbox : MonoBehaviour
 {
@@ -11,9 +12,12 @@ public class Dialogbox : MonoBehaviour
     public Button ExitButton;
     public GameObject SubButtonPlane;
     public GameObject SubButtonObjcet;
-    
+
+    public int WaveCnt = 0; //現在のwave index
+    public int WaveMaxNum = 0;//総wave数
     public Text WaveUIText;
-    public string WaveCnt;
+
+    //public string WaveCnt;
     public List<string> SubButtonTextList;
 
 
@@ -42,6 +46,11 @@ public class Dialogbox : MonoBehaviour
     private void Awake()
     {
         ExitButton.onClick.AddListener(() => { SetActive(false); });
+        if (GameManager.Instance != null)
+        {
+            //GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            //GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+        }
     }
 
     private void Start()
@@ -70,7 +79,7 @@ public class Dialogbox : MonoBehaviour
     public void SetActive(bool onoff)
     {
         //gameObject.transform.parent.gameObject.SetActive(onoff);
-        UpdateText(WaveUIText, WaveCnt);
+        UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
         if (onoff)
         {
             Open();
@@ -104,6 +113,7 @@ public class Dialogbox : MonoBehaviour
                 Close();
                 break;
             case 1:
+                UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
                 break;
             case 3:
                 break;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UniRx;
 
 public class UIManager: MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class UIManager: MonoBehaviour
     public static UIManager Instance;
 
 
-    public int EnemyCnt = 0;
-    public int EnemyMaxNum = 0;
+    public int EnemyCnt = 0;//1wave残機数
+    public int EnemyMaxNum = 0;//１Waveの敵ユニットの総数
 
     //Unit_Cards_Panel
     public GameObject UnitCardsPanel;
@@ -30,11 +31,14 @@ public class UIManager: MonoBehaviour
     public Image EnemyCntUIImage;
 
     //TopPanelText
-    private string PauseMenuUIString;
-    public string WaveCnt;
+    
+    //public string WaveCnt;
+    public int WaveCnt = 0; //現在のwave index
+    public int WaveMaxNum = 0;//総wave数
     //public string EnemyCntUICnt;
     //BottomPlaneText
-    public string PowerUICnt;
+    //public string PowerUICnt;
+    public int PowerUI;
 
     public Button MenuButton;
 
@@ -46,9 +50,12 @@ public class UIManager: MonoBehaviour
 
     //UnitCardsPanel
     private int unitCardsNum = 0;
-    
+
+    private string PauseMenuUIString;
 
     public float UnitCardsPanelSpacingW = 0;
+
+    private Subject<int> enemyCnuntSubject;
     #endregion
 
     #region serialize
@@ -86,7 +93,18 @@ public class UIManager: MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        //OnChangeInitialize.Subscribe(_ => Debug.Log("ここに初期化用メソッド"));
+        if (GameManager.Instance != null)
+        {
+            //GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            //GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+            GameManager.Instance.EnemyCount.Subscribe(count => { EnemyCnt = count; });//1wave倒した敵機数
+            //GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });////１Waveの敵ユニットの総数
+            //GameManager.Instance.PowerUI.Subscribe(count => { PowerUI = count; });//配置にかかるコストのリソース
+        }
     }
+    
 
     private void Start()
     {
@@ -100,14 +118,14 @@ public class UIManager: MonoBehaviour
         ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
 
 
-        _currentWaveString = WaveUIText.text;
-        UpdateText(WaveUIText, WaveCnt);
+        _currentWaveString = WaveCnt + "/" + WaveMaxNum;
+        UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
 
         //_currentEnemyCntUIString = EnemyCntUIText.text;
         //UpdateText(EnemyCntUIText, EnemyCntUICnt);
 
-        _currentPowerUIString = PowerUIText.text;
-        UpdateText(PowerUIText, PowerUICnt);
+        _currentPowerUIString = PowerUI.ToString();
+        UpdateText(PowerUIText, PowerUI.ToString());
 
         unitCardsNum = unitCardsInfoArray.Length;
 
@@ -150,10 +168,16 @@ public class UIManager: MonoBehaviour
 
     private void Update()
     {
-        //foreach(var item in unitCardsInfoArray)
-        //{
-        //    Debug.Log(item.cardContext.name);
-        //}
+        //Debug.Log(EnemyCount.Subscribe(x => [ここに表示を更新する処理(xが値)]));
+        //Debug.Log(GameManager.Instance.EnemyCount);
+
+        //GameManager.Instance.EnemyCount.Subscribe(x => { EnemyCnt = x; });
+        //GameManager.Instance.EnemyCount.Subscribe(x => { EnemyCnt = (int)x; });
+        //GameManager.Instance.EnemyCount.Subscribe(x => Debug.Log(x));
+        //GameManager.Instance.EnemyCount.Subscribe(x => text.text = x.ToString());
+        //GameManager.Instance.AddEnemyCount();
+        //GameManager.Instance.EnemyCount.Subscribe(x => Debug.Log(x));
+        
     }
     #endregion
 
@@ -175,7 +199,7 @@ public class UIManager: MonoBehaviour
                 UpdateText(PauseMenuUIText, _currentPauseMenuUIString);
             }
 
-            string newWaveString = WaveCnt;
+            string newWaveString = WaveCnt + "/" + WaveMaxNum;
             if (newWaveString != _currentWaveString)
             {
                 _currentWaveString = newWaveString;
@@ -189,7 +213,7 @@ public class UIManager: MonoBehaviour
             //    UpdateText(EnemyCntUIText, _currentEnemyCntUIString);
             //}
 
-            string newPowerUIString = PowerUICnt;
+            string newPowerUIString = PowerUI.ToString();
             if (newPowerUIString != _currentPowerUIString)
             {
                 _currentPowerUIString = newPowerUIString;
