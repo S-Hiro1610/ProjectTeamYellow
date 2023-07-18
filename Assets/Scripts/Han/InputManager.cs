@@ -96,6 +96,19 @@ public class InputManager: MonoBehaviour
             {
                 return;
             }
+
+            //UIManager.Instance.cardGameObjcetList
+
+            int selectCnt = 0;
+            foreach(var item in UIManager.Instance.cardGameObjcetList)
+            {
+                Card card = item.GetComponent<Card>();
+                if (card.SelectMode.Value == SELSCT_MODE.SELECT_MOD_SELECT)
+                    selectCnt++;
+            }
+
+            if (selectCnt == 0) return;
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray);
             //hits = hits.Where(hit => hit.collider.gameObject.tag != "UI").ToArray();
@@ -113,6 +126,14 @@ public class InputManager: MonoBehaviour
 
             if (closestHit != null)
             {
+                StageBlock groundBlock = null;
+                closestHit.Value.transform.TryGetComponent(out groundBlock);
+                if (groundBlock == null) return;
+
+                if (groundBlock.isPlayerUnitSet == false) return;
+
+                UnitManager.Instance.UnitCreate(UnitType.Area, new Vector3(closestHit.Value.transform.position.x, 0, closestHit.Value.transform.position.z));
+
                 Debug.Log("Hit " + closestHit.Value.transform.name);
             }
         }
