@@ -620,7 +620,7 @@ MonoBehaviour:
   _isCanAttack: 1
   _attackCollider: {fileID: 2918498993013857385}
   _hpSlider: {fileID: 2333153984420175480}
-  AreaCollider: {fileID: 0}
+  AreaCollider: {fileID: 2918498993207085767}
   _maxAttackCount: 1
   _attackAreaCollider: {fileID: 2918498993207085766}
   _baseAreaRadius: 2
