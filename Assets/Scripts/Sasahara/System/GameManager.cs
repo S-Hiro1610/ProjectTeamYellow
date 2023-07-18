@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
     public ReactiveProperty<int> EnemyCount => _enemyCount;
     public ReactiveProperty<int> EnemyALLCount => _enemyALLCount;
     public ReactiveProperty<int> PowerUI => _powerUI;
-    public ReactiveProperty<int> WaveCnt => _waveCnt;
-    public ReactiveProperty<int> WaveMaxNum => _waveMaxNum;
     public ReactiveProperty<CardInfo[]> UnitCardsInfoArray => _unitCardsInfoArray;
     public GameState CurrentState => _currentState;
     public IObservable<Unit> OnStop => _stopEvent;
@@ -46,10 +44,6 @@ public class GameManager : MonoBehaviour
     private ReactiveProperty<int> _enemyALLCount = new ReactiveProperty<int>(0);
 
     private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<int> _waveCnt = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<int> _waveMaxNum = new ReactiveProperty<int>(0);
 
     private ReactiveProperty<CardInfo[]> _unitCardsInfoArray = new ReactiveProperty<CardInfo[]>();
 

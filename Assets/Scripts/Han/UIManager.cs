@@ -94,12 +94,16 @@ public class UIManager: MonoBehaviour
             Destroy(gameObject);
         }
 
+        if(WaveManager.Instance != null)
+        {
+            WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+        }
+
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
             GameManager.Instance.EnemyCount.Subscribe(count => { EnemyCnt = count; });//1wave倒した敵機数
-            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//１Waveの敵ユニットの総数
+            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//全て敵の数
             GameManager.Instance.PowerUI.Subscribe(count => { PowerUI = count; });//配置にかかるコストのリソース
             GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
         }
@@ -168,16 +172,7 @@ public class UIManager: MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(EnemyCount.Subscribe(x => [ここに表示を更新する処理(xが値)]));
-        //Debug.Log(GameManager.Instance.EnemyCount);
 
-        //GameManager.Instance.EnemyCount.Subscribe(x => { EnemyCnt = x; });
-        //GameManager.Instance.EnemyCount.Subscribe(x => { EnemyCnt = (int)x; });
-        //GameManager.Instance.EnemyCount.Subscribe(x => Debug.Log(x));
-        //GameManager.Instance.EnemyCount.Subscribe(x => text.text = x.ToString());
-        //GameManager.Instance.AddEnemyCount();
-        //GameManager.Instance.EnemyCount.Subscribe(x => Debug.Log(x));
-        
     }
     #endregion
 
