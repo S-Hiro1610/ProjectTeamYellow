@@ -54,8 +54,6 @@ public class UIManager: MonoBehaviour
     private string PauseMenuUIString;
 
     public float UnitCardsPanelSpacingW = 0;
-
-    private Subject<int> enemyCnuntSubject;
     #endregion
 
     #region serialize
@@ -70,6 +68,8 @@ public class UIManager: MonoBehaviour
     //private string _currentEnemyCntUIString;
     //BottomPlaneText
     private string _currentPowerUIString;
+
+    //private List<CardInfo> cardsInfoArray;
 
     #endregion
 
@@ -94,14 +94,14 @@ public class UIManager: MonoBehaviour
             Destroy(gameObject);
         }
 
-        //OnChangeInitialize.Subscribe(_ => Debug.Log("ここに初期化用メソッド"));
         if (GameManager.Instance != null)
         {
-            //GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            //GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+            GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
             GameManager.Instance.EnemyCount.Subscribe(count => { EnemyCnt = count; });//1wave倒した敵機数
-            //GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });////１Waveの敵ユニットの総数
-            //GameManager.Instance.PowerUI.Subscribe(count => { PowerUI = count; });//配置にかかるコストのリソース
+            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//１Waveの敵ユニットの総数
+            GameManager.Instance.PowerUI.Subscribe(count => { PowerUI = count; });//配置にかかるコストのリソース
+            GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
         }
     }
     

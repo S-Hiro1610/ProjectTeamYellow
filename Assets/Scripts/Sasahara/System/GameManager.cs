@@ -11,6 +11,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
     public ReactiveProperty<int> Resouce => _resouce;
     public ReactiveProperty<int> EnemyCount => _enemyCount;
+    public ReactiveProperty<int> EnemyALLCount => _enemyALLCount;
+    public ReactiveProperty<int> PowerUI => _powerUI;
+    public ReactiveProperty<int> WaveCnt => _waveCnt;
+    public ReactiveProperty<int> WaveMaxNum => _waveMaxNum;
+    public ReactiveProperty<CardInfo[]> UnitCardsInfoArray => _unitCardsInfoArray;
     public GameState CurrentState => _currentState;
     public IObservable<Unit> OnStop => _stopEvent;
     public IObservable<Unit> OnStart => _startEvent;
@@ -38,9 +43,20 @@ public class GameManager : MonoBehaviour
     /// <summary>倒した敵のカウント</summary>
     private ReactiveProperty<int> _enemyCount = new ReactiveProperty<int>(0);
 
+    private ReactiveProperty<int> _enemyALLCount = new ReactiveProperty<int>(0);
+
+    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(0);
+
+    private ReactiveProperty<int> _waveCnt = new ReactiveProperty<int>(0);
+
+    private ReactiveProperty<int> _waveMaxNum = new ReactiveProperty<int>(0);
+
+    private ReactiveProperty<CardInfo[]> _unitCardsInfoArray = new ReactiveProperty<CardInfo[]>();
+
     private Subject<Unit> _stopEvent = new Subject<Unit>();
     private Subject<Unit> _startEvent = new Subject<Unit>();
 
+    private Subject<Unit> _levelUpEvent = new Subject<Unit>();
     private Subject<Unit> _changeTitleEvent = new Subject<Unit>();
     private Subject<Unit> _changeInitializeEvent = new Subject<Unit>();
     private Subject<Unit> _changeInGameEvent = new Subject<Unit>();
@@ -86,6 +102,20 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 
+        CardInfo[] testCardInfo = new CardInfo[3];
+        testCardInfo[0].coolTime = 0;
+        testCardInfo[0].LVUIString = "2";
+        testCardInfo[0].costUIString = "20";
+
+        testCardInfo[1].coolTime = 0;
+        testCardInfo[1].LVUIString = "8";
+        testCardInfo[1].costUIString = "40";
+
+        testCardInfo[2].coolTime = 0;
+        testCardInfo[2].LVUIString = "1";
+        testCardInfo[2].costUIString = "100";
+        _unitCardsInfoArray.Value = new CardInfo[testCardInfo.Length];
+        Array.Copy(testCardInfo, _unitCardsInfoArray.Value,testCardInfo.Length);
     }
 
     private void Update()
