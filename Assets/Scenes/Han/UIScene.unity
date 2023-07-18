@@ -644,7 +644,7 @@ RectTransform:
   - {fileID: 1726461401}
   - {fileID: 824349082}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1698,7 +1698,7 @@ RectTransform:
   - {fileID: 143327690}
   - {fileID: 1998680076}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1763,17 +1763,20 @@ MonoBehaviour:
   MenuButton: {fileID: 599268957}
   ExitDialogUI: {fileID: 2009398036}
   unitCardsInfoArray:
-  - thisGameObjcet: {fileID: 0}
+  - selectMode: 0
+    thisGameObjcet: {fileID: 0}
     cardContext: {fileID: 0}
     coolTime: 0.4
     LVUIString: 1
     costUIString: 10
-  - thisGameObjcet: {fileID: 0}
+  - selectMode: 0
+    thisGameObjcet: {fileID: 0}
     cardContext: {fileID: 0}
     coolTime: 0
     LVUIString: 4
     costUIString: 40
-  - thisGameObjcet: {fileID: 0}
+  - selectMode: 0
+    thisGameObjcet: {fileID: 0}
     cardContext: {fileID: 0}
     coolTime: 0.2
     LVUIString: 1

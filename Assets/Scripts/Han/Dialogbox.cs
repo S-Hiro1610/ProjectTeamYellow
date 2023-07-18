@@ -51,6 +51,8 @@ public class Dialogbox : MonoBehaviour
             WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
             WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
         }
+
+        StartCoroutine(UpdateWaveInfo());
     }
 
     private void Start()
@@ -70,7 +72,7 @@ public class Dialogbox : MonoBehaviour
 
     private void Update()
     {
-
+        UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
     }
     #endregion
 
@@ -79,7 +81,7 @@ public class Dialogbox : MonoBehaviour
     public void SetActive(bool onoff)
     {
         //gameObject.transform.parent.gameObject.SetActive(onoff);
-        UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
+        //UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
         if (onoff)
         {
             Open();
@@ -125,6 +127,17 @@ public class Dialogbox : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    IEnumerator UpdateWaveInfo()
+    {
+        while (true)
+        {
+            UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
+
+            yield return new WaitForSeconds(.1f);
+        }
+    }
+
+
     private void UpdateText(Text text, object str)
     {
         text.text = (string)str;
