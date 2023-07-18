@@ -15,6 +15,7 @@ public abstract class CharactorBase : MonoBehaviour
     public int Hp => _hp;
     public int BasePower => _basePower;
     public int Power => _power;
+    public int SeIndex => _seIndex;
     public float AttackCoolTime => _attackCoolTime;
     public bool IsCanAttack => _isCanAttack;
     public IObservable<CharactorBase> OnAttack => _attackSubject;
@@ -34,6 +35,8 @@ public abstract class CharactorBase : MonoBehaviour
     protected int _basePower;
     [SerializeField]
     protected int _power;
+    [SerializeField]
+    protected int _seIndex;
     [Tooltip("攻撃間隔(秒)")]
     [SerializeField]
     protected float _attackCoolTime;
@@ -103,6 +106,8 @@ public abstract class CharactorBase : MonoBehaviour
             // クールタイムを待ってから攻撃する
             _isCanAttack = false;
             yield return new WaitForSeconds(_attackCoolTime);
+            // 効果音再生
+            AudioPlayer.Instance.SEPlay(SeIndex);
             target.Damaged(this);
             _isCanAttack = true;
         }
@@ -115,6 +120,8 @@ public abstract class CharactorBase : MonoBehaviour
             // 自身と同じタグである場合は攻撃しない
             if (target.transform.tag == this.transform.tag) return;
             _isCanAttack = false;
+            // 効果音再生
+            AudioPlayer.Instance.SEPlay(SeIndex);
             target.Damaged(this);
             _isCanAttack = true;
         }
@@ -128,7 +135,11 @@ public abstract class CharactorBase : MonoBehaviour
         if (_hp <= 0)
         {
             Debug.Log($"Dead{gameObject}");
-            // TODO: エネミーが倒された時、カウントするためにゲームマネージャーから呼ぶ
+            // エネミーが倒された時、カウントするためにGameManagerからAddEnemyCountを呼ぶ
+            if (this.transform.tag == _enemyTag)
+            {
+                GameManager.Instance.AddEnemyCount();
+            }
 
             // 非アクティブにする
             UnitObjectPool.Instance.ReleaseGameObject(gameObject);
