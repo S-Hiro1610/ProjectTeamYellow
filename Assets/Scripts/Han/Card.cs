@@ -57,7 +57,16 @@ public class Card : CardBase
 
     public void OnClick()
     {
-        Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
+
+        if (selectMode.Value == SELSCT_MODE.SELECT_MOD_NO)
+        {
+            selectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
+        }
+        else
+            selectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+
+        //Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
+
     }
     #endregion
 

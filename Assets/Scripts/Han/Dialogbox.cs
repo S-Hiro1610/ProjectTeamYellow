@@ -46,10 +46,10 @@ public class Dialogbox : MonoBehaviour
     private void Awake()
     {
         ExitButton.onClick.AddListener(() => { SetActive(false); });
-        if (GameManager.Instance != null)
+        if (WaveManager.Instance != null)
         {
-            //GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            //GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+            WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
         }
     }
 

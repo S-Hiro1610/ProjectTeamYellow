@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InputManager: MonoBehaviour
@@ -88,7 +90,32 @@ public class InputManager: MonoBehaviour
 
     private void Update()
     {
+        if (InputManager.Instance != null && InputManager.Instance.Click())
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+            //hits = hits.Where(hit => hit.collider.gameObject.tag != "UI").ToArray();
+            float minDistance = Mathf.Infinity;
+            RaycastHit? closestHit = null;
 
+            foreach (var hit in hits)
+            {
+                if (hit.distance < minDistance)
+                {
+                    minDistance = hit.distance;
+                    closestHit = hit;
+                }
+            }
+
+            if (closestHit != null)
+            {
+                Debug.Log("Hit " + closestHit.Value.transform.name);
+            }
+        }
     }
     #endregion
 
