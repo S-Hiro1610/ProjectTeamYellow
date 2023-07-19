@@ -150,7 +150,19 @@ public class UIManager: MonoBehaviour
             
             UpdateCardsCoolTime(unitCardsInfoArray[cardCnt].cardContext.coolTimePlane, unitCardsInfoArray[cardCnt].coolTime);
             //int index = cardCnt;
-            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[index].cardContext.OnClick());
+            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[cardCnt].cardContext.OnClick());
+            int index = cardCnt;
+            cardObj.GetComponent<Button>().onClick.AddListener(() => {
+                unitCardsInfoArray[index].cardContext.OnClick();
+                unitCardsInfoArray[index].cardContext.SelectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
+                for (int i = 0; i < unitCardsNum; i++)
+                {
+                    if (i != index)
+                    {
+                        unitCardsInfoArray[i].cardContext.SelectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+                    }
+                }
+            });
             cardGameObjcetList.Add(cardObj);
         }
 
@@ -169,12 +181,23 @@ public class UIManager: MonoBehaviour
 
         StartCoroutine(CheckEnemyKillBarChanged());
 
+        StartCoroutine(CheckUnitCardSelectMode());
+
         SceneManager.LoadSceneAsync("InputScene", LoadSceneMode.Additive);//InputSceneをロード
     }
 
     private void Update()
     {
+        //string[] str = new string[3];
+        //int scnt = 0;
+        //foreach (var item in cardGameObjcetList)
+        //{
+        //    str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
+        //    scnt++;
+        //}
 
+        //Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
+        //Debug.Log("selectMode=>"+selectMode.Value);
     }
     #endregion
 
@@ -244,6 +267,23 @@ public class UIManager: MonoBehaviour
         }
     }
 
+    private IEnumerator CheckUnitCardSelectMode()
+    {
+        while (true)
+        {
+            foreach (var item in cardGameObjcetList)
+            {
+                if (item.GetComponent<Card>().SelectMode.Value != SELSCT_MODE.SELECT_MOD_NO)
+                {
+                    SelectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
+                    break;
+                }
+                SelectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+            }
+            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
+        }
+    }
+
     private void UpdateCardsCoolTime(Image image, float coolTime)
     {
         image.fillAmount = coolTime;
@@ -278,6 +318,8 @@ public class UIManager: MonoBehaviour
         UpdateText(PauseMenuUIText, "▶");
         Debug.Log("UIManager:ExitDialogUIIsClose");
     }
+
+
 
     #endregion
 }
