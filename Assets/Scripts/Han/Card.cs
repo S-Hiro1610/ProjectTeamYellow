@@ -13,6 +13,8 @@ public class Card : CardBase
     public Text costUIText;
 
     public Image coolTimePlane;
+
+    public UnitType type;
     public ReactiveProperty<SELSCT_MODE> SelectMode => selectMode;
 
     #endregion
