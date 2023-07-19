@@ -62,6 +62,9 @@ public class Card : CardBase
         {
             selectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
         }
+        else
+            selectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+
         //Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
 
     }
