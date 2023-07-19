@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bae6d643967846c46bbd5405afe3929d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isEnemyRoute: 1
+  _isEnemyRoute: 0
   _isPlayerUnitSet: 0
 --- !u!65 &7377026676365239354
 BoxCollider:
