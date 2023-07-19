@@ -2032,6 +2032,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 992849759}
     m_Modifications:
+    - target: {fileID: 824349083, guid: 08a7c720cae20ba4bbb2873a445f73c9, type: 3}
+      propertyPath: SubButtonTextList.Array.data[2]
+      value: "\u97F3\u91CF\u8ABF\u6574"
+      objectReference: {fileID: 0}
     - target: {fileID: 6577110140076227953, guid: 08a7c720cae20ba4bbb2873a445f73c9,
         type: 3}
       propertyPath: m_Pivot.x
