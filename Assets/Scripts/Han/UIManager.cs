@@ -13,7 +13,7 @@ public class UIManager: MonoBehaviour
 
     public static UIManager Instance;
 
-
+    public ReactiveProperty<SELSCT_MODE> SelectMode => selectMode;
     public int EnemyCnt = 0;//1wave残機数
     public int EnemyMaxNum = 0;//１Waveの敵ユニットの総数
 
@@ -68,6 +68,8 @@ public class UIManager: MonoBehaviour
     //private string _currentEnemyCntUIString;
     //BottomPlaneText
     private string _currentPowerUIString;
+
+    private ReactiveProperty<SELSCT_MODE> selectMode = new ReactiveProperty<SELSCT_MODE>(SELSCT_MODE.SELECT_MOD_NO);
 
     //private List<CardInfo> cardsInfoArray;
 
@@ -148,7 +150,7 @@ public class UIManager: MonoBehaviour
             
             UpdateCardsCoolTime(unitCardsInfoArray[cardCnt].cardContext.coolTimePlane, unitCardsInfoArray[cardCnt].coolTime);
             //int index = cardCnt;
-            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[index].cardContext.OnClick());
+            cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[cardCnt].cardContext.OnClick());
             cardGameObjcetList.Add(cardObj);
         }
 
