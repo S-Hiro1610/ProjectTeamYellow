@@ -15,8 +15,6 @@ public struct CardInfo
     public float coolTime;
     public string LVUIString;
     public string costUIString;
-
-
     #endregion
 
 }

@@ -145,6 +145,7 @@ public class UIManager: MonoBehaviour
             cardObj.name = "Card_" + cardCnt;
             unitCardsInfoArray[cardCnt].thisGameObjcet = cardObj;
             unitCardsInfoArray[cardCnt].cardContext = cardObj.GetComponent<Card>();
+            cardObj.GetComponent<Card>().type = (UnitType)cardCnt;
 
             UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             
@@ -188,15 +189,15 @@ public class UIManager: MonoBehaviour
 
     private void Update()
     {
-        //string[] str = new string[3];
-        //int scnt = 0;
-        //foreach (var item in cardGameObjcetList)
-        //{
-        //    str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
-        //    scnt++;
-        //}
+        string[] str = new string[3];
+        int scnt = 0;
+        foreach (var item in cardGameObjcetList)
+        {
+            str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
+            scnt++;
+        }
 
-        //Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
+        Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
         //Debug.Log("selectMode=>"+selectMode.Value);
     }
     #endregion

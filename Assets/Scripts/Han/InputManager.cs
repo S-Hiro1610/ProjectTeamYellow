@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InputManager: MonoBehaviour
+public class InputManager : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
@@ -80,7 +80,7 @@ public class InputManager: MonoBehaviour
         exitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
         cardGameObjcetList = UIManager.Instance.cardGameObjcetList;
 
-        foreach(GameObject cardObj in cardGameObjcetList)
+        foreach (GameObject cardObj in cardGameObjcetList)
         {
             Card cardContext = cardObj.GetComponent<Card>();
             cardObj.GetComponent<Button>().onClick.AddListener(() => cardContext.OnClick());
@@ -100,14 +100,18 @@ public class InputManager: MonoBehaviour
             //UIManager.Instance.cardGameObjcetList
 
             int selectCnt = 0;
-            foreach(var item in UIManager.Instance.cardGameObjcetList)
+            Card selectCard = null;
+            foreach (var item in UIManager.Instance.cardGameObjcetList)
             {
                 Card card = item.GetComponent<Card>();
                 if (card.SelectMode.Value == SELSCT_MODE.SELECT_MOD_SELECT)
+                {
                     selectCnt++;
+                    selectCard = card;
+                }
             }
 
-            if (selectCnt == 0) return;
+            if (selectCnt == 0) goto ENDSELECT;
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray);
@@ -117,25 +121,35 @@ public class InputManager: MonoBehaviour
 
             foreach (var hit in hits)
             {
+                StageBlock groundBlock = null;
+                if (!hit.transform.TryGetComponent(out groundBlock)) continue;
                 if (hit.distance < minDistance)
                 {
                     minDistance = hit.distance;
                     closestHit = hit;
                 }
             }
-
+            //Debug.Log("OK0");
             if (closestHit != null)
             {
                 StageBlock groundBlock = null;
+                Debug.Log(closestHit.Value.transform.name);
                 closestHit.Value.transform.TryGetComponent(out groundBlock);
-                if (groundBlock == null) return;
+                //Debug.Log("OK1");
+                if (groundBlock == null) goto ENDSELECT;
+                //Debug.Log("OK2");
+                if (groundBlock.isPlayerUnitSet == false) goto ENDSELECT;
+                //Debug.Log("OK3");
 
-                if (groundBlock.isPlayerUnitSet == false) return;
 
-                UnitManager.Instance.UnitCreate(UnitType.Area, new Vector3(closestHit.Value.transform.position.x, 0, closestHit.Value.transform.position.z));
+                UnitManager.Instance.UnitCreate(selectCard.type, new Vector3(closestHit.Value.transform.position.x, 0, closestHit.Value.transform.position.z));
 
-                Debug.Log("Hit " + closestHit.Value.transform.name);
+                //Debug.Log("Hit " + closestHit.Value.transform.name);
             }
+
+        ENDSELECT:
+            if(selectCard != null)
+            selectCard.SelectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
         }
     }
     #endregion
@@ -145,7 +159,7 @@ public class InputManager: MonoBehaviour
 
     public bool Click()
     {
-        switch(nowControlType)
+        switch (nowControlType)
         {
             case ControlType.MouseAndKeyboard:
                 return Input.GetMouseButtonDown(0);
