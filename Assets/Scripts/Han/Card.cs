@@ -59,7 +59,7 @@ public class Card : CardBase
 
     public void OnClick()
     {
-
+        InputManager.Instance.canPushUnitQuitButton = false;
         //if (selectMode.Value == SELSCT_MODE.SELECT_MOD_NO)
         //{
         //    selectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;

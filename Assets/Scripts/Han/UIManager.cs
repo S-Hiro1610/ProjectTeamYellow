@@ -42,6 +42,8 @@ public class UIManager: MonoBehaviour
 
     public Button MenuButton;
 
+    public Button UnitQuitButton;//退場ボタン
+
     public Dialogbox ExitDialogUI;//メインメニュー
 
     public CardInfo[] unitCardsInfoArray;
@@ -189,15 +191,15 @@ public class UIManager: MonoBehaviour
 
     private void Update()
     {
-        string[] str = new string[3];
-        int scnt = 0;
-        foreach (var item in cardGameObjcetList)
-        {
-            str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
-            scnt++;
-        }
+        //string[] str = new string[3];
+        //int scnt = 0;
+        //foreach (var item in cardGameObjcetList)
+        //{
+        //    str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
+        //    scnt++;
+        //}
 
-        Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
+        //Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
         //Debug.Log("selectMode=>"+selectMode.Value);
     }
     #endregion
