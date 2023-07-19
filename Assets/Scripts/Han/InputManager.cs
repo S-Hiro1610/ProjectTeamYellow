@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UniRx;
 
 public class InputManager : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class InputManager : MonoBehaviour
     private Dialogbox exitDialogUI;
 
     private List<GameObject> cardGameObjcetList;
+
+    private int playerPower = 0;
     #endregion
 
     #region Constant
@@ -67,6 +70,11 @@ public class InputManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PowerUI.Subscribe(count => { playerPower = count; });//配置にかかるコストのリソース
         }
     }
 
@@ -101,6 +109,7 @@ public class InputManager : MonoBehaviour
 
             int selectCnt = 0;
             Card selectCard = null;
+            GameObject cardObj = null;
             foreach (var item in UIManager.Instance.cardGameObjcetList)
             {
                 Card card = item.GetComponent<Card>();
@@ -108,10 +117,21 @@ public class InputManager : MonoBehaviour
                 {
                     selectCnt++;
                     selectCard = card;
+                    cardObj = item;
                 }
             }
 
             if (selectCnt == 0) goto ENDSELECT;
+
+
+            if (GameManager.Instance == null) goto ENDSELECT;
+
+            int cost = int.Parse(cardObj.GetComponent<Card>().costUIText.text);
+
+            if (cost > playerPower) goto ENDSELECT;
+
+            GameManager.Instance.PowerUI.Value -= cost;
+
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray);
