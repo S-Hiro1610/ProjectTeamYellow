@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UniRx;
 using UnityEngine;
-using UniRx;
 
 /// <summary>
 /// マップエディタ用UI
@@ -44,10 +42,11 @@ public class MapParts : MonoBehaviour
         if (GetComponent<StageBlock>().isPlayerUnitSet)
         {
             _stagingEffect = GetComponent<ParticleSystem>();
-        }
-        if(UIManager.Instance != null)
-        {
-            UIManager.Instance.SelectMode.Subscribe(selectMode => { _isSelectMode = (selectMode == SELSCT_MODE.SELECT_MOD_NO) ? false : true; });
+
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.SelectMode.Subscribe(selectMode => { _isSelectMode = (selectMode == SELSCT_MODE.SELECT_MOD_NO) ? false : true; });
+            }
         }
     }
 
@@ -59,16 +58,16 @@ public class MapParts : MonoBehaviour
         {
             if (!_effectStarted)
             {
-                _effectStarted = true;
                 if (_stagingEffect != null)
                 {
+                    _effectStarted = true;
                     _stagingEffect.Play();
                 }
             }
         }
         else
         {
-        // UIのモードが「その他」でエフェクト開始後ならマスのエフェクトを停止
+            // UIのモードが「その他」でエフェクト開始後ならマスのエフェクトを停止
 
             if (_effectStarted)
             {
