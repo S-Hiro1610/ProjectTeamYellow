@@ -43,21 +43,8 @@ public class EnemyMove : MonoBehaviour
         _routeList.Add(new Vector3(0, 1, 0));
         // 初期位置
         transform.position = _routeList[_routeIndex];
-
-        // ルート設定(仮で手動設定)
-        _routeList.Add(new Vector3(-2, 1, 0));
-        _routeList.Add(new Vector3(-2, 1, 3));
-        _routeList.Add(new Vector3(-4, 1, 3));
-        _routeList.Add(new Vector3(-4, 1, 1));
-        _routeList.Add(new Vector3(-6, 1, 1));
-        _routeList.Add(new Vector3(-6, 1, 4));
-        _routeList.Add(new Vector3(-8, 1, 4));
-        _routeList.Add(new Vector3(-8, 1, 1));
-        _routeList.Add(new Vector3(-9, 1, 1));
-
         // 向きの設定
         _routeIndex++;
-        transform.LookAt(_routeList[_routeIndex]);
     }
 
     private void Update()
@@ -76,7 +63,6 @@ public class EnemyMove : MonoBehaviour
                 if (_routeIndex < (_routeList.Count -1))
                 {
                     _routeIndex++;
-                    transform.LookAt(_routeList[_routeIndex]);
                 }
                 else
                 {
@@ -107,7 +93,6 @@ public class EnemyMove : MonoBehaviour
     {
         _routeList = route;
         transform.position = _routeList[_routeIndex];
-        transform.LookAt(_routeList[_routeIndex]);
     }
     #endregion
 
@@ -122,7 +107,6 @@ public class EnemyMove : MonoBehaviour
         transform.position = _routeList[_routeIndex];
         // 向きの設定
         _routeIndex++;
-        transform.LookAt(_routeList[_routeIndex]);
     }
 
     #endregion
