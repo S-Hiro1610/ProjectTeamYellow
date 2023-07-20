@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 /// <summary>
 /// Stage テスト用 Spawner
@@ -16,13 +17,15 @@ public class Spawner : MonoBehaviour
     #region serialize
     // unity inspectorに表示したいものを記述。
     [SerializeField]
+    private string _trailerPath = "Assets/Prefabs/Nanri/EnemyRouteTrailer.prefab";
+    [SerializeField]
     private List<Vector3> _enemyRoute;
-
     #endregion
 
     #region private
     // プライベートなメンバー変数。
     private Vector3 _spawnPoint;
+    private GameObject _enemyTrailer;
     #endregion
 
     #region Constant
@@ -43,6 +46,16 @@ public class Spawner : MonoBehaviour
     void Start()
     {
         _spawnPoint = _enemyRoute[0];
+        var origin = AssetDatabase.LoadAssetAtPath<GameObject>(_trailerPath);
+        if (origin != null)
+        {
+            _enemyTrailer = (GameObject)Instantiate(origin, _spawnPoint, transform.rotation);
+            _enemyTrailer.GetComponent<EnemyTrail>().SetRouteList(_enemyRoute);
+        }
+        else
+        {
+            Debug.Log("Trailler Prefab = " + origin);
+        }
     }
 
     // Update is called once per frame

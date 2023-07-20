@@ -28,6 +28,24 @@ public class EnemyTrail : MonoBehaviour
 
     #region unity methods
 
+    private void Awake()
+    {
+        // 仮データ
+        //_routeList = new List<Vector3>();
+        //_routeList.Add(new Vector3(0, 0, 0));
+        //_routeList.Add(new Vector3(1, 0, 0));
+        //_routeList.Add(new Vector3(2, 0, 0));
+        //_routeList.Add(new Vector3(3, 0, 0));
+        //_routeList.Add(new Vector3(4, 0, 0));
+        //_routeList.Add(new Vector3(5, 0, 0));
+        //_routeList.Add(new Vector3(5, 0, -1));
+        //_routeList.Add(new Vector3(5, 0, -2));
+        //_routeList.Add(new Vector3(6, 0, -2));
+        //_routeList.Add(new Vector3(7, 0, -2));
+        //_routeList.Add(new Vector3(8, 0, -2));
+        //_routeList.Add(new Vector3(9, 0, -2));
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +79,12 @@ public class EnemyTrail : MonoBehaviour
 
             }
         }
+    }
+    #endregion
+    #region public
+    public void SetRouteList(List<Vector3> rt)
+    {
+        _routeList = rt;
     }
     #endregion
 }
