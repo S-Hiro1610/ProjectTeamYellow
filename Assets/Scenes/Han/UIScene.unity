@@ -1761,6 +1761,7 @@ MonoBehaviour:
   WaveMaxNum: 8
   PowerUI: 60
   MenuButton: {fileID: 599268957}
+  UnitQuitButton: {fileID: 1504978651}
   ExitDialogUI: {fileID: 2009398036}
   unitCardsInfoArray:
   - selectMode: 0
