@@ -19,6 +19,8 @@ public class PlayerAreaUnitController : CharactorBase
     [SerializeField]
     protected AttackCollider _attackAreaCollider;
     [SerializeField]
+    protected ParticleSystem _explosion;
+    [SerializeField]
     private float _baseAreaRadius;
     [SerializeField]
     private float _areaRadius;
@@ -112,7 +114,7 @@ public class PlayerAreaUnitController : CharactorBase
                     // 範囲攻撃用コライダーで取得したターゲットが1以上であれば範囲内のターゲットに攻撃
                     if (_attackAreaCollider.Targets.Count > 0)
                     {
-                        StartCoroutine(AreaAttack(_attackAreaCollider));
+                        StartCoroutine(AreaAttack(_attackAreaCollider, target.transform.position));
                     }
                     // 現在の攻撃回数を増やす
                     currentSubjects++;
@@ -138,7 +140,7 @@ public class PlayerAreaUnitController : CharactorBase
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
-    private IEnumerator AreaAttack(AttackCollider areacollider)
+    private IEnumerator AreaAttack(AttackCollider areacollider, Vector3 position)
     {
         _isCanAttack = false;
         yield return new WaitForSeconds(_attackCoolTime);
@@ -153,6 +155,13 @@ public class PlayerAreaUnitController : CharactorBase
             }
             NoDelayAttack(areatarget);
         }
+        // パーティクルをターゲットの位置へ移動させて、Playを実行
+        if (_explosion != null)
+        {
+            _explosion.transform.position = position;
+            _explosion.Play();
+        }
+
         // 取得したターゲットをクリアする
         areacollider.transform.gameObject.SetActive(false);
         areacollider.Targets.Clear();
