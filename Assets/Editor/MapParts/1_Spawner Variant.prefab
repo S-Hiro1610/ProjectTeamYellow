@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd01f066e9af00b41bcb4a88b72ba712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _trailerPath: Assets/Prefabs/Nanri/EnemyRouteTrailer.prefab
   _enemyRoute: []
 --- !u!1001 &139088291626215499
 PrefabInstance:
@@ -91,6 +92,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b05c6e382d5b35a43b41eb8d6362452b,
         type: 2}
+    - target: {fileID: 8096684390260057951, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 395178cfce1f6224686cd94e4f802939, type: 2}
     - target: {fileID: 8941862025240880985, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
       propertyPath: _isEnemyRoute

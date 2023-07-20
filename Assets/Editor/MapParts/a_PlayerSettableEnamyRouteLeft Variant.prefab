@@ -4789,6 +4789,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: a_PlayerSettableEnamyRouteLeft Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8096684390260057951, guid: 4895a39b57c256d4ab55374a7c4aef7e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: de9acc37994685a4caaa20c5a0cae540, type: 2}
     - target: {fileID: 8941862025240880985, guid: 4895a39b57c256d4ab55374a7c4aef7e,
         type: 3}
       propertyPath: _isEnemyRoute
