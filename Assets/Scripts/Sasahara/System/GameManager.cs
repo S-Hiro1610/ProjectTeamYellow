@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-            return;
+            //return;
         }
         else if (_instance != this)
         {
@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => Initialize());
-        OnChangeInGame.Subscribe(_ => { SetCurrentStateInGame(); });
+        _changeInGameEvent.Subscribe(_ => SetCurrentState(GameState.InGame));
         _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
     }
 
@@ -183,11 +183,11 @@ public class GameManager : MonoBehaviour
     {
         _isPlay = !_isPlay;
     }
-    private void SetCurrentStateInGame()
-    {
-        _currentState = GameState.InGame;
-        Debug.Log("SetCurrentState Recived");
-    }
+    //private void SetCurrentStateInGame()
+    //{
+    //    _currentState = GameState.InGame;
+    //    Debug.Log("SetCurrentState Recived");
+    //}
     private void SetCurrentState(GameState state)
     {
         _currentState = state;
