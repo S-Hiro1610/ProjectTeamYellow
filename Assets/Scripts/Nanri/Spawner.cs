@@ -21,8 +21,6 @@ public class Spawner : MonoBehaviour
     private string _trailerPath = "Assets/Prefabs/Nanri/EnemyRouteTrailer.prefab";
     [SerializeField]
     private List<Vector3> _enemyRoute;
-    [SerializeField]
-    private bool _isTrailStarted = false;
     #endregion
 
     #region private
@@ -51,7 +49,7 @@ public class Spawner : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.CurrentState.Subscribe( _ => { if (_ == GameState.InGame) Trail(); });
+            GameManager.Instance.OnChangeInGame.Subscribe( _ => { Trail(); });
         }
     }
 

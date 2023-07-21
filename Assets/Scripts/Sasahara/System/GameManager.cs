@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public ReactiveProperty<int> EnemyALLCount => _enemyALLCount;
     public ReactiveProperty<int> PowerUI => _powerUI;
     public ReactiveProperty<CardInfo[]> UnitCardsInfoArray => _unitCardsInfoArray;
-    public ReactiveProperty<GameState> CurrentState => _currentState;
+    public GameState CurrentState => _currentState;
     public IObservable<Unit> OnStop => _stopEvent;
     public IObservable<Unit> OnStart => _startEvent;
     public IObservable<Unit> OnChangeTitle => _changeTitleEvent;
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     private ReactiveProperty<int> _enemyALLCount = new ReactiveProperty<int>(0);
 
-    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(0);
+    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(100);
 
     private ReactiveProperty<CardInfo[]> _unitCardsInfoArray = new ReactiveProperty<CardInfo[]>();
 
@@ -57,9 +57,11 @@ public class GameManager : MonoBehaviour
     private Subject<Unit> _changeGameOverEvent = new Subject<Unit>();
 
     private int _levelUpIndex = 0;
-    private ReactiveProperty<GameState> _currentState = new ReactiveProperty<GameState>(GameState.Title);
+    [SerializeField]
+    private GameState _currentState = GameState.Title;
     private bool _isPlay = false;
     private static GameManager _instance;
+    private GameState _oldState = GameState.Title;
     #endregion
 
     #region Constant
@@ -89,12 +91,14 @@ public class GameManager : MonoBehaviour
 
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => Initialize());
-        _changeInGameEvent.Subscribe(_ => SetCurrentState(GameState.InGame));
+        OnChangeInGame.Subscribe(_ => { SetCurrentStateInGame(); });
         _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
     }
 
     private void Start()
     {
+        // Game 起動直後は、Title画面なのでタイマーを停止する。 
+        TimerStop();
 
         CardInfo[] testCardInfo = new CardInfo[3];
         testCardInfo[0].coolTime = 0;
@@ -114,7 +118,15 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-
+        if(_oldState != _currentState)
+        {
+            _oldState = _currentState;
+            if(_currentState == GameState.InGame)
+            {
+                WaitTrail();
+                TimerStart();
+            }
+        }
     }
     #endregion
 
@@ -137,12 +149,20 @@ public class GameManager : MonoBehaviour
     public void TimerStop()
     {
         _stopEvent.OnNext(Unit.Default);
+        Debug.Log("Timer Stop!");
+
     }
 
     public void TimerStart()
     {
         _startEvent.OnNext(Unit.Default);
+        Debug.Log("Timer Start!");
     }
+
+    public void StartGame()
+    {
+        _changeInGameEvent.OnNext(Unit.Default);
+    } 
     #endregion
 
     #region private method
@@ -153,9 +173,9 @@ public class GameManager : MonoBehaviour
         {
             if (_isPlay)
             {
-                yield return new WaitForSeconds(1);
                 _resouce.Value += _addResouce;
             }
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -163,16 +183,21 @@ public class GameManager : MonoBehaviour
     {
         _isPlay = !_isPlay;
     }
-
+    private void SetCurrentStateInGame()
+    {
+        _currentState = GameState.InGame;
+        Debug.Log("SetCurrentState Recived");
+    }
     private void SetCurrentState(GameState state)
     {
-        _currentState.Value = state;
+        _currentState = state;
+        Debug.Log("SetCurrentState Recived");
     }
 
     /// <summary>初期化処理</summary>
     private void Initialize()
     {
-        _currentState.Value = GameState.Initialize;
+        _currentState = GameState.Initialize;
         _resouce.Value = 0;
         _enemyCount.Value = 0;
         _levelUpIndex = 0;
@@ -182,6 +207,15 @@ public class GameManager : MonoBehaviour
     {
         TimerStop();
         //UIの表示
+    }
+
+    /// <summary>
+    /// ゲーム開始時の敵ユニット侵攻ルート表示処理待ち
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator WaitTrail()
+    {
+        yield return new WaitForSeconds(3.0f);
     }
     #endregion
 }
