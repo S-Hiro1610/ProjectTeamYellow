@@ -671,7 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1572636308}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &400105084
@@ -1691,7 +1691,6 @@ GameObject:
   - component: {fileID: 1572636313}
   - component: {fileID: 1572636312}
   - component: {fileID: 1572636311}
-  - component: {fileID: 1572636310}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -1723,19 +1722,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1572636310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1572636308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d49b7c1bcd2e07499844da127be038d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ForceModuleActive: 0
 --- !u!114 &1572636311
 MonoBehaviour:
   m_ObjectHideFlags: 0
