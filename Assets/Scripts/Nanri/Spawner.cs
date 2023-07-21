@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UniRx;
 
 /// <summary>
 /// Stage テスト用 Spawner
@@ -20,12 +21,15 @@ public class Spawner : MonoBehaviour
     private string _trailerPath = "Assets/Prefabs/Nanri/EnemyRouteTrailer.prefab";
     [SerializeField]
     private List<Vector3> _enemyRoute;
+    [SerializeField]
+    private bool _isTrailStarted = false;
     #endregion
 
     #region private
     // プライベートなメンバー変数。
     private Vector3 _spawnPoint;
     private GameObject _enemyTrailer;
+    //private GameState _gameState;
     #endregion
 
     #region Constant
@@ -44,6 +48,14 @@ public class Spawner : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.CurrentState.Subscribe( _ => { if (_ == GameState.InGame) Trail(); });
+        }
+    }
+
+    private void Trail()
     {
         _spawnPoint = _enemyRoute[0];
         var origin = AssetDatabase.LoadAssetAtPath<GameObject>(_trailerPath);

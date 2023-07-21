@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public ReactiveProperty<int> EnemyALLCount => _enemyALLCount;
     public ReactiveProperty<int> PowerUI => _powerUI;
     public ReactiveProperty<CardInfo[]> UnitCardsInfoArray => _unitCardsInfoArray;
-    public GameState CurrentState => _currentState;
+    public ReactiveProperty<GameState> CurrentState => _currentState;
     public IObservable<Unit> OnStop => _stopEvent;
     public IObservable<Unit> OnStart => _startEvent;
     public IObservable<Unit> OnChangeTitle => _changeTitleEvent;
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     private Subject<Unit> _changeGameOverEvent = new Subject<Unit>();
 
     private int _levelUpIndex = 0;
-    private GameState _currentState = GameState.Title;
+    private ReactiveProperty<GameState> _currentState = new ReactiveProperty<GameState>(GameState.Title);
     private bool _isPlay = false;
     private static GameManager _instance;
     #endregion
@@ -166,13 +166,13 @@ public class GameManager : MonoBehaviour
 
     private void SetCurrentState(GameState state)
     {
-        _currentState = state;
+        _currentState.Value = state;
     }
 
     /// <summary>初期化処理</summary>
     private void Initialize()
     {
-        _currentState = GameState.Initialize;
+        _currentState.Value = GameState.Initialize;
         _resouce.Value = 0;
         _enemyCount.Value = 0;
         _levelUpIndex = 0;
