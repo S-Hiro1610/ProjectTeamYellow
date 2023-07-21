@@ -60,6 +60,11 @@ public class UIManager: MonoBehaviour
 
     #region serialize
     // unity inpectorに表示したいものを記述。
+
+    [SerializeField]
+    private GameObject _titleWindow;
+    [SerializeField]
+    private GameObject _gameOverWindow;
     #endregion
 
     #region private
@@ -116,6 +121,30 @@ public class UIManager: MonoBehaviour
 
     private void Start()
     {
+        // ここから タイトル画面とゲームオーバー画面のオン／オフ イベント購読
+        // タイトル画面とゲームオーバー画面の Sort OrderをメインUIより大きくすることが必須。
+        // メインUIより前に表示してタゲをとる方式！
+        if(_titleWindow == null)
+        {
+            Debug.Log("TitleWindow_Object is not set!");
+            return;
+        }
+        _titleWindow.SetActive(true);
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => _titleWindow.SetActive(false));
+        GameManager.Instance.OnChangeTitle.Subscribe(_ => _titleWindow.SetActive(true));
+
+        if(_gameOverWindow == null)
+        {
+            Debug.Log("GameOverWindow_Object is not set!");
+            return;
+        }
+        _gameOverWindow.SetActive(false);
+        GameManager.Instance.OnChangeTitle.Subscribe(_ => _gameOverWindow.SetActive(false));
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => _gameOverWindow.SetActive(false));
+        GameManager.Instance.OnChangeGameOver.Subscribe(_ => _gameOverWindow.SetActive(true));
+        // ここまで タイトル画面とゲームオーバー画面のオン／オフ イベント購読
+
+        // ここから メインＵＩの作成なのでアンタッチャブル
         cardGameObjcetList = new List<GameObject>();
 
         PauseMenuUIString = "▶";

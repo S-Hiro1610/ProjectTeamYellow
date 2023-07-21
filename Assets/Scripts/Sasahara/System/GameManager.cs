@@ -61,7 +61,6 @@ public class GameManager : MonoBehaviour
     private GameState _currentState = GameState.Title;
     private bool _isPlay = false;
     private static GameManager _instance;
-    private GameState _oldState = GameState.Title;
     #endregion
 
     #region Constant
@@ -91,7 +90,12 @@ public class GameManager : MonoBehaviour
 
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => Initialize());
-        _changeInGameEvent.Subscribe(_ => SetCurrentState(GameState.InGame));
+        _changeInGameEvent.Subscribe(_ =>
+        {
+            SetCurrentState(GameState.InGame);
+            WaitTrail();
+            TimerStart();
+        });
         _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
     }
 
@@ -118,15 +122,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(_oldState != _currentState)
-        {
-            _oldState = _currentState;
-            if(_currentState == GameState.InGame)
-            {
-                WaitTrail();
-                TimerStart();
-            }
-        }
+
     }
     #endregion
 
@@ -149,14 +145,14 @@ public class GameManager : MonoBehaviour
     public void TimerStop()
     {
         _stopEvent.OnNext(Unit.Default);
-        Debug.Log("Timer Stop!");
+        //Debug.Log("Timer Stop!");
 
     }
 
     public void TimerStart()
     {
         _startEvent.OnNext(Unit.Default);
-        Debug.Log("Timer Start!");
+        //Debug.Log("Timer Start!");
     }
 
     public void StartGame()
@@ -183,15 +179,9 @@ public class GameManager : MonoBehaviour
     {
         _isPlay = !_isPlay;
     }
-    //private void SetCurrentStateInGame()
-    //{
-    //    _currentState = GameState.InGame;
-    //    Debug.Log("SetCurrentState Recived");
-    //}
     private void SetCurrentState(GameState state)
     {
         _currentState = state;
-        Debug.Log("SetCurrentState Recived");
     }
 
     /// <summary>初期化処理</summary>
