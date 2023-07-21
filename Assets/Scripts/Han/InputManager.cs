@@ -106,7 +106,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("canPushUnitQuitButton=>" + canPushUnitQuitButton);
+        //Debug.Log("canPushUnitQuitButton=>" + canPushUnitQuitButton);
 
         if (InputManager.Instance != null && InputManager.Instance.Click())
         {
