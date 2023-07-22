@@ -832,7 +832,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 325767314}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1743247505}
+        m_MethodName: ReturnTitleButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &325767314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,7 +1767,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f1a0336da9967ef448723b51d0c94ff9, type: 3}
   - {fileID: 8300000, guid: 3dbbd425e96a96b488f7637a210164bd, type: 3}
   - {fileID: 8300000, guid: 793c039ed7479ec4da52c4035b189b29, type: 3}
-  _maxSePlaySoundCount: 0
+  _maxSePlaySoundCount: 10
 --- !u!4 &794086260
 Transform:
   m_ObjectHideFlags: 0
@@ -3546,6 +3557,7 @@ GameObject:
   - component: {fileID: 1743247503}
   - component: {fileID: 1743247502}
   - component: {fileID: 1743247501}
+  - component: {fileID: 1743247505}
   m_Layer: 5
   m_Name: GameOverWindow
   m_TagString: Untagged
@@ -3633,6 +3645,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1743247505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743247500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16855e8e85f38244a87e1f46a1f3c8c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1777040950
 GameObject:
   m_ObjectHideFlags: 0
@@ -3714,7 +3738,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1777040953}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1743247505}
+        m_MethodName: RestartButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1777040953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3877,7 +3912,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: cb539a07500d76244a9f8364a2a784d5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -26,18 +26,6 @@ public class TitleWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
- 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    //
-    private void OnEnable()
-    {
         _isBGMPlayable = false;
         if (AudioPlayer.Instance == null)
         {
@@ -51,6 +39,24 @@ public class TitleWindow : MonoBehaviour
         {
             // タイトル画面用ＢＧＭのスタート
             _isBGMPlayable = true;
+            _volumeSlider = transform.Find("Panel/Slider").GetComponent<Slider>();
+            _volumeSlider.value = AudioPlayer.Instance.BGMVolume;
+            AudioPlayer.Instance.BGMPlay("BGM_02");
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    //
+    private void OnEnable()
+    {
+        if(_isBGMPlayable)
+        {
+            // タイトル画面用ＢＧＭのスタート
             _volumeSlider = transform.Find("Panel/Slider").GetComponent<Slider>();
             _volumeSlider.value = AudioPlayer.Instance.BGMVolume;
             AudioPlayer.Instance.BGMPlay("BGM_02");
