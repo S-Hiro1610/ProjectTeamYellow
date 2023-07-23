@@ -158,7 +158,12 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         _changeInGameEvent.OnNext(Unit.Default);
-    } 
+    }
+
+    public void ReturnTitle()
+    {
+        _changeTitleEvent.OnNext(Unit.Default);
+    }
     #endregion
 
     #region private method

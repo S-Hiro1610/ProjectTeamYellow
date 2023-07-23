@@ -5,9 +5,12 @@ using UnityEngine;
 public class GameOverWindow : MonoBehaviour
 {
     #region property
+    public int SeIndex => _seIndex;
     #endregion
 
     #region serialize
+    [SerializeField]
+    protected int _seIndex;
     #endregion
 
     #region private
@@ -41,7 +44,7 @@ public class GameOverWindow : MonoBehaviour
         else
         {
             // ゲームオーバージングルを一回流す
-            AudioPlayer.Instance.SEPlay(3);
+            AudioPlayer.Instance.SEPlay(_seIndex);
         }
     }
     #endregion
@@ -55,7 +58,7 @@ public class GameOverWindow : MonoBehaviour
             Debug.Log("GameManager Instance Not Found at GameOverWindow.RestartButton()");
             return;
         }
-        //GameManager.Instance.OnChangeInitialize;
+        GameManager.Instance.StartGame();
     }
 
     public void ReturnTitleButton()
@@ -66,7 +69,7 @@ public class GameOverWindow : MonoBehaviour
             Debug.Log("GameManager Instance Not Found at GameOverWindow.ReturnTitleButton()");
             return;
         }
-        //GameManager.Instance.StartGame();
+        GameManager.Instance.ReturnTitle();
     }
     #endregion
 
