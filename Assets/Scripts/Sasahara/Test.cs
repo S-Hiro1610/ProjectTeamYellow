@@ -18,7 +18,7 @@ public class Test : MonoBehaviour
 
     public void ClickA(string name)
     {
-        SceneController.LoadScene(name);
+        
     }
 
     public void ClickB(string name)
