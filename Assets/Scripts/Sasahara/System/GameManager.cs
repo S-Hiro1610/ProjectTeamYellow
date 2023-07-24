@@ -85,8 +85,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        _stopEvent.Subscribe(_ => ChangePlayFrag());
-        _startEvent.Subscribe(_ => ChangePlayFrag());
+        _startEvent.Subscribe(_ => ChangePlayStart());
+        _stopEvent.Subscribe(_ => ChangePlayStop());
 
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => Initialize());
@@ -162,6 +162,10 @@ public class GameManager : MonoBehaviour
         _changeInGameEvent.OnNext(Unit.Default);
     }
 
+    public void EndGame()
+    {
+        _changeGameOverEvent.OnNext(Unit.Default);
+    }
     public void ReturnTitle()
     {
         _changeTitleEvent.OnNext(Unit.Default);
@@ -182,9 +186,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ChangePlayFrag()
+    private void ChangePlayStart()
     {
-        _isPlay = !_isPlay;
+        _isPlay = true;
+    }
+    private void ChangePlayStop()
+    {
+        _isPlay = false;
     }
     private void SetCurrentState(GameState state)
     {
