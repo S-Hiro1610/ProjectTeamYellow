@@ -73,7 +73,17 @@ public class GameOverWindow : MonoBehaviour
     /// </summary>
     public void ReturnTitleButton()
     {
-        Debug.Log("Return Title!");
+        if (AudioPlayer.Instance == null)
+        {
+            Debug.Log("Audio Player is not found!");
+        }
+        else
+        {
+            // ゲームオーバージングルを一回流す
+            AudioPlayer.Instance.SEStop();
+        }
+
+        //Debug.Log("Return Title!");
         if (GameManager.Instance == null)
         {
             Debug.Log("GameManager Instance Not Found at GameOverWindow.ReturnTitleButton()");
