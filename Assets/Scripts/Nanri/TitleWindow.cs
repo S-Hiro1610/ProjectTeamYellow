@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 public class TitleWindow : MonoBehaviour
 {
@@ -26,6 +27,10 @@ public class TitleWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.SetActive(true);
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => gameObject.SetActive(false));
+        GameManager.Instance.OnChangeTitle.Subscribe(_ => gameObject.SetActive(true));
+
         // タイトル画面のＢＧＭ処理
         _isBGMPlayable = false;
         if (AudioPlayer.Instance == null)
