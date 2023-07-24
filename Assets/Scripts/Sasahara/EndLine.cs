@@ -55,7 +55,8 @@ public class EndLine : MonoBehaviour
     {
         if (other.CompareTag(EnemyTag))
         {
-            //GameManagerのpublicメソッドでゲームオーバーイベントを呼ぶ
+            GameManager.Instance.TimerStop();
+            GameManager.Instance.EndGame();
         }
     }
     #endregion
