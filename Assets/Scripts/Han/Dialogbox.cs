@@ -32,6 +32,7 @@ public class Dialogbox : MonoBehaviour
 
     public OpenWindowEvent OnSubWindowEvent;
 
+    public Slider VolumeSlider;
     #endregion
 
     #region serialize
@@ -124,6 +125,8 @@ public class Dialogbox : MonoBehaviour
     public void Open(bool fromExit = true)
     {
         Debug.Log("Open");
+        GameManager.Instance.TimerStop();
+        if (VolumeSlider != null) VolumeSlider.value = AudioPlayer.Instance.BGMVolume;
         if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
         {
             if (fromExit == true)
@@ -143,6 +146,7 @@ public class Dialogbox : MonoBehaviour
     public void Close(bool fromExit = true)
     {
         Debug.Log("Close");
+        GameManager.Instance.TimerStart();
         if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
         {
             if (fromExit == true)
@@ -172,6 +176,8 @@ public class Dialogbox : MonoBehaviour
                 break;
             case 1:
                 //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+                Close();
+                GameManager.Instance.ReturnTitle();
                 break;
             case 2:
                 OnSubWindowEvent.Invoke(DIALOG_TYPE.TYPE_OPTION, button);
@@ -179,6 +185,12 @@ public class Dialogbox : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void OnChangeVolume()
+    {
+        AudioPlayer.Instance.BGMVolume = VolumeSlider.value;
+        AudioPlayer.Instance.SEVolume = VolumeSlider.value;
     }
     #endregion
 

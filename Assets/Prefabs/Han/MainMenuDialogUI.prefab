@@ -309,7 +309,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &2700490260412979536
 MonoBehaviour:
@@ -1254,6 +1254,7 @@ MonoBehaviour:
   OnSubWindowEvent:
     m_PersistentCalls:
       m_Calls: []
+  VolumeSlider: {fileID: 6881498709357535502}
 --- !u!1 &6681342099749835205
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,7 +1343,18 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2700490261215331030}
+        m_MethodName: OnChangeVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7313090689605700399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1870,7 +1882,7 @@ MonoBehaviour:
   WaveUIText: {fileID: 3462347642987126257}
   SubButtonTextList:
   - "\u30B2\u30FC\u30E0\u3092\u7D9A\u3051\u308B"
-  - "\u30B2\u30FC\u30E0\u3092\u7D42\u4E86\u3059\u308B"
+  - "\u30BF\u30A4\u30C8\u30EB\u306B\u3082\u3069\u308B"
   - "\u97F3\u91CF\u8ABF\u6574"
   OnOpenEvent:
     m_PersistentCalls:
@@ -1881,3 +1893,4 @@ MonoBehaviour:
   OnSubWindowEvent:
     m_PersistentCalls:
       m_Calls: []
+  VolumeSlider: {fileID: 6881498709357535502}
