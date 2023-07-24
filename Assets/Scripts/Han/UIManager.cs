@@ -340,6 +340,8 @@ public class UIManager: MonoBehaviour
     private void UpdateEnemyKillBar()
     {
         float percent = (float)EnemyCnt / EnemyMaxNum;
+        
+        if (EnemyMaxNum == 0) percent = 0;
         Mathf.Clamp01(percent);
 
         EnemyCntUIImage.fillAmount = percent;
