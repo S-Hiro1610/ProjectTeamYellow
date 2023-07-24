@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class GameOverWindow : MonoBehaviour
 {
@@ -25,7 +26,10 @@ public class GameOverWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        GameManager.Instance.OnChangeTitle.Subscribe(_ => gameObject.SetActive(false));
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => gameObject.SetActive(false));
+        GameManager.Instance.OnChangeGameOver.Subscribe(_ => gameObject.SetActive(true));
+        gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -50,17 +54,23 @@ public class GameOverWindow : MonoBehaviour
     #endregion
 
     #region public
-    public void RestartButton()
-    {
-        Debug.Log("Restart Game!");
-        if (GameManager.Instance == null)
-        {
-            Debug.Log("GameManager Instance Not Found at GameOverWindow.RestartButton()");
-            return;
-        }
-        GameManager.Instance.StartGame();
-    }
+    /// <summary>
+    /// はじめからやりなおすボタンクリック時の処理（ボタン廃止）
+    /// </summary>
+    //public void RestartButton()
+    //{
+    //    Debug.Log("Restart Game!");
+    //    if (GameManager.Instance == null)
+    //    {
+    //        Debug.Log("GameManager Instance Not Found at GameOverWindow.RestartButton()");
+    //        return;
+    //    }
+    //    GameManager.Instance.StartGame();
+    //}
 
+    /// <summary>
+    /// タイトルにもどるボタンクリック時の処理
+    /// </summary>
     public void ReturnTitleButton()
     {
         Debug.Log("Return Title!");
