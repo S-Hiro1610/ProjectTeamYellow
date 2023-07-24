@@ -251,6 +251,15 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 再生中のSEを止める
+    /// </summary>
+    public void SEStop()
+    {
+        // SEを停止
+        _seAudioSource.Stop();
+    }
+
     #endregion
 
     #region private method
