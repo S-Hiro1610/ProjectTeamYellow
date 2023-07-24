@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class AudioPlayer : MonoBehaviour
 {
@@ -58,6 +59,11 @@ public class AudioPlayer : MonoBehaviour
         // BGMの名前とBGM番号を格納
         AudioNameList(_bgmList, _bgmNameIndex);
         AudioNameList(_seList, _seNameIndex);
+    }
+
+    public void Start()
+    {
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => BGMPlay("BGM_03"));
     }
 
     private void Update()

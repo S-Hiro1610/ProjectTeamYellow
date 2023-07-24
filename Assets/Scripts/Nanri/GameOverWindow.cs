@@ -7,6 +7,7 @@ public class GameOverWindow : MonoBehaviour
 {
     #region property
     public int SeIndex => _seIndex;
+    public GameObject GameOverWindowObject;
     #endregion
 
     #region serialize
@@ -26,12 +27,15 @@ public class GameOverWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var _panel = transform.Find("Panel");
-        _panel.GetComponent<GameOverPanel>().SeIndex = _seIndex;
-        GameManager.Instance.OnChangeTitle.Subscribe(_ => _panel.gameObject.SetActive(false));
-        GameManager.Instance.OnChangeInGame.Subscribe(_ => _panel.gameObject.SetActive(false));
-        GameManager.Instance.OnChangeGameOver.Subscribe(_ => _panel.gameObject.SetActive(true));
-        _panel.gameObject.SetActive(false);
+        GameManager.Instance.OnChangeTitle.Subscribe(_ => GameOverWindowObject.SetActive(false));
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => GameOverWindowObject.SetActive(false));
+        GameManager.Instance.OnChangeGameOver.Subscribe(_ =>
+        {
+            AudioPlayer.Instance.BGMStop();
+            AudioPlayer.Instance.SEPlay(_seIndex);
+            GameOverWindowObject.SetActive(true);
+        });
+        GameOverWindowObject.SetActive(false);
     }
 
     // Update is called once per frame
