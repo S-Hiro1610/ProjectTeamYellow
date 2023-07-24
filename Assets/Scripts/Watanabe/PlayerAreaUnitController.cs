@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class PlayerAreaUnitController : CharactorBase
 {
@@ -28,6 +29,8 @@ public class PlayerAreaUnitController : CharactorBase
 
     #region private
     // プライベートなメンバー変数。
+    // 画面停止中のフラグ
+    private bool _stopflag = false;
     #endregion
 
     #region Constant
@@ -49,7 +52,9 @@ public class PlayerAreaUnitController : CharactorBase
 
     private void Start()
     {
-        
+        GameManager.Instance.OnChangeInitialize.Subscribe(_ => UnitObjectPool.Instance.ReleaseGameObject(gameObject));
+        GameManager.Instance.OnStop.Subscribe(_ => _stopflag = true);
+        GameManager.Instance.OnStart.Subscribe(_ => _stopflag = false);
     }
 
     private void Update()
@@ -57,67 +62,70 @@ public class PlayerAreaUnitController : CharactorBase
         // HPバーの向きをカメラ方向に固定
         SetRotationHPBarUI();
 
-        // ターゲットが非アクティブである場合は初期化を行う
-        if (_attackCollider.Target != null)
+        if(_stopflag)
         {
-            if (!_attackCollider.Target.gameObject.activeSelf)
+            // ターゲットが非アクティブである場合は初期化を行う
+            if (_attackCollider.Target != null)
             {
-                _attackCollider.TargetUpdate(_attackCollider.Target);
-            }
-        }
-
-        if (_isCanAttack && _attackCollider.IsTarget)
-        {
-            // ターゲットリストをソート
-            if (_attackCollider.Targets.Count > 1)
-            {
-                _attackCollider.Targets.Sort((x, y) => {
-                    // 対象がいない場合は0を返す
-                    if (x == null) return 0;
-                    else if (y == null) return 0;
-
-                    // ユニットとターゲットの位置の差分からベクトルの長さを求める
-                    float x_magnitude = (gameObject.transform.position - x.transform.position).magnitude;
-                    float y_magnitude = (gameObject.transform.position - y.transform.position).magnitude;
-                    // XがYより大きければ後ろへ、XがYより小さければ前に回す
-                    if (x_magnitude > y_magnitude)
-                    {
-                        return 1;
-                    }
-                    else if (x_magnitude < y_magnitude)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                });
-            }
-
-            // 攻撃回数の初期化
-            int currentSubjects = 0;
-            // Targetを順番に取得
-            foreach (CharactorBase target in _attackCollider.Targets)
-            {
-                // 現在の攻撃回数が最大攻撃回数より小さい場合、Attackを実行
-                if (currentSubjects < _maxAttackCount)
+                if (!_attackCollider.Target.gameObject.activeSelf)
                 {
-                    // DrawRayで攻撃を可視化(仮)
-                    var pos = target.transform.position - gameObject.transform.position;
-                    Debug.DrawRay(gameObject.transform.position, pos, Color.white, 1.0f);
+                    _attackCollider.TargetUpdate(_attackCollider.Target);
+                }
+            }
 
-                    // 範囲攻撃用コライダーをターゲットの位置へ移動
-                    _attackAreaCollider.transform.position = target.transform.position;
-                    _attackAreaCollider.transform.gameObject.SetActive(true);
+            if (_isCanAttack && _attackCollider.IsTarget)
+            {
+                // ターゲットリストをソート
+                if (_attackCollider.Targets.Count > 1)
+                {
+                    _attackCollider.Targets.Sort((x, y) => {
+                        // 対象がいない場合は0を返す
+                        if (x == null) return 0;
+                        else if (y == null) return 0;
 
-                    // 範囲攻撃用コライダーで取得したターゲットが1以上であれば範囲内のターゲットに攻撃
-                    if (_attackAreaCollider.Targets.Count > 0)
+                        // ユニットとターゲットの位置の差分からベクトルの長さを求める
+                        float x_magnitude = (gameObject.transform.position - x.transform.position).magnitude;
+                        float y_magnitude = (gameObject.transform.position - y.transform.position).magnitude;
+                        // XがYより大きければ後ろへ、XがYより小さければ前に回す
+                        if (x_magnitude > y_magnitude)
+                        {
+                            return 1;
+                        }
+                        else if (x_magnitude < y_magnitude)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    });
+                }
+
+                // 攻撃回数の初期化
+                int currentSubjects = 0;
+                // Targetを順番に取得
+                foreach (CharactorBase target in _attackCollider.Targets)
+                {
+                    // 現在の攻撃回数が最大攻撃回数より小さい場合、Attackを実行
+                    if (currentSubjects < _maxAttackCount)
                     {
-                        StartCoroutine(AreaAttack(_attackAreaCollider, target.transform.position));
+                        // DrawRayで攻撃を可視化(仮)
+                        var pos = target.transform.position - gameObject.transform.position;
+                        Debug.DrawRay(gameObject.transform.position, pos, Color.white, 1.0f);
+
+                        // 範囲攻撃用コライダーをターゲットの位置へ移動
+                        _attackAreaCollider.transform.position = target.transform.position;
+                        _attackAreaCollider.transform.gameObject.SetActive(true);
+
+                        // 範囲攻撃用コライダーで取得したターゲットが1以上であれば範囲内のターゲットに攻撃
+                        if (_attackAreaCollider.Targets.Count > 0)
+                        {
+                            StartCoroutine(AreaAttack(_attackAreaCollider, target.transform.position));
+                        }
+                        // 現在の攻撃回数を増やす
+                        currentSubjects++;
                     }
-                    // 現在の攻撃回数を増やす
-                    currentSubjects++;
                 }
             }
         }
