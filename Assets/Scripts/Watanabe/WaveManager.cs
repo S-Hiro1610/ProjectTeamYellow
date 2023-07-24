@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class WaveManager : MonoBehaviour
 {
@@ -8,9 +9,8 @@ public class WaveManager : MonoBehaviour
     // プロパティを入れる
     public List<WaveList> Wave => _wave;
     public List<Spawner> Spawner => _spawner;
-    public int WaveCount => _waveCount;
-    [SerializeField]
-    public int WaveEnemyCount => _waveEnemyCount;
+    public ReactiveProperty<int> WaveCount => _waveCount;
+    public ReactiveProperty<int> WaveEnemyCount => _waveEnemyCount;
     public bool WaveStart => _waveStart;
     public float WaveDelayTime => _waveDelayTime;
     #endregion
@@ -22,9 +22,9 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     private List<Spawner> _spawner;
     [SerializeField]
-    private int _waveCount;
+    private ReactiveProperty<int> _waveCount = new ReactiveProperty<int>(0);
     [SerializeField]
-    private int _waveEnemyCount;
+    private ReactiveProperty<int> _waveEnemyCount = new ReactiveProperty<int>(0);
     [SerializeField]
     private bool _waveStart;
     [SerializeField]
@@ -38,6 +38,10 @@ public class WaveManager : MonoBehaviour
     private bool _waveActive;
     // エンドレスでの周回カウント用　初期値:0
     private int _weekCount;
+    // コルーチンのインスタンス保存用
+    private Coroutine _coroutine;
+    // 画面停止中のコルーチンフラグ
+    private bool _stopflag = false;
     #endregion
 
     #region Constant
@@ -67,7 +71,10 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
-
+        GameManager.Instance.OnChangeInitialize.Subscribe(_ => WaveInitilize());
+        GameManager.Instance.OnStop.Subscribe(_ => _stopflag = true);
+        GameManager.Instance.OnStart.Subscribe(_ => _stopflag = false);
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => SetWaveStart());
     }
 
     private void Update()
@@ -76,13 +83,13 @@ public class WaveManager : MonoBehaviour
         if (WaveStart && !_waveActive)
         {
             // Wave表示カウントアップ、敵総数カウント初期化
-            _waveCount++;
-            _waveEnemyCount = 0;
+            _waveCount.Value++;
+            _waveEnemyCount.Value = 0;
             // Wave中はWaveStartフラグを止めて、WaveActiveフラグを立てる
             _waveStart = false;
             _waveActive = true;
             // Waveエネミーを生成
-            StartCoroutine(StartEnemySpawne(_currentwave));
+            _coroutine = StartCoroutine(StartEnemySpawne(_currentwave));
         }
     }
     #endregion
@@ -106,9 +113,10 @@ public class WaveManager : MonoBehaviour
         _waveStart = false;
         _waveActive = false;
         _currentwave = 1;
-        _waveCount = 0;
+        _waveCount.Value = 0;
         _weekCount = 0;
-        _waveEnemyCount = 0;
+        _waveEnemyCount.Value = 0;
+        if (_coroutine != null) StopCoroutine(_coroutine);
     }
 
     /// <summary>
@@ -131,7 +139,7 @@ public class WaveManager : MonoBehaviour
         {
             Wave WaveEnemys = Wave[index].waveEnemy[i];
             int waveEnemyUnits = WaveEnemys.SpawnUnits;
-            _waveEnemyCount += waveEnemyUnits;
+            _waveEnemyCount.Value += waveEnemyUnits;
         }
 
         // エネミー生成
@@ -142,6 +150,13 @@ public class WaveManager : MonoBehaviour
             int spawnerCount = 0;
             for (int j = 0; j < waveEnemyUnits; j++)
             {
+                // 画面停止フラグ確認
+                while(true)
+                {
+                    if (!_stopflag) break;
+                    else yield return new WaitForSeconds(0.1f);
+                }
+
                 if (spawnerCount == Spawner.Count) spawnerCount = 0;
 
                 GameObject Enemy = WaveEnemys.Enemy;

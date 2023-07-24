@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
     public ReactiveProperty<int> EnemyCount => _enemyCount;
     public ReactiveProperty<int> EnemyALLCount => _enemyALLCount;
     public ReactiveProperty<int> PowerUI => _powerUI;
-    public ReactiveProperty<int> WaveCnt => _waveCnt;
-    public ReactiveProperty<int> WaveMaxNum => _waveMaxNum;
     public ReactiveProperty<CardInfo[]> UnitCardsInfoArray => _unitCardsInfoArray;
     public GameState CurrentState => _currentState;
     public IObservable<Unit> OnStop => _stopEvent;
@@ -45,11 +43,7 @@ public class GameManager : MonoBehaviour
 
     private ReactiveProperty<int> _enemyALLCount = new ReactiveProperty<int>(0);
 
-    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<int> _waveCnt = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<int> _waveMaxNum = new ReactiveProperty<int>(0);
+    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(100);
 
     private ReactiveProperty<CardInfo[]> _unitCardsInfoArray = new ReactiveProperty<CardInfo[]>();
 
@@ -63,6 +57,7 @@ public class GameManager : MonoBehaviour
     private Subject<Unit> _changeGameOverEvent = new Subject<Unit>();
 
     private int _levelUpIndex = 0;
+    [SerializeField]
     private GameState _currentState = GameState.Title;
     private bool _isPlay = false;
     private static GameManager _instance;
@@ -83,7 +78,7 @@ public class GameManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-            return;
+            //return;
         }
         else if (_instance != this)
         {
@@ -95,12 +90,20 @@ public class GameManager : MonoBehaviour
 
         _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => Initialize());
-        _changeInGameEvent.Subscribe(_ => SetCurrentState(GameState.InGame));
+        _changeInGameEvent.Subscribe(_ =>
+        {
+            SetCurrentState(GameState.InGame);
+            TimerStop();
+            WaitTrail();
+            TimerStart();
+        });
         _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
     }
 
     private void Start()
     {
+        // Game 起動直後は、Title画面なのでタイマーを停止する。 
+        TimerStop();
 
         CardInfo[] testCardInfo = new CardInfo[3];
         testCardInfo[0].coolTime = 0;
@@ -143,11 +146,25 @@ public class GameManager : MonoBehaviour
     public void TimerStop()
     {
         _stopEvent.OnNext(Unit.Default);
+        //Debug.Log("Timer Stop!");
+
     }
 
     public void TimerStart()
     {
         _startEvent.OnNext(Unit.Default);
+        //Debug.Log("Timer Start!");
+    }
+
+    public void StartGame()
+    {
+        _changeInitializeEvent.OnNext(Unit.Default);
+        _changeInGameEvent.OnNext(Unit.Default);
+    }
+
+    public void ReturnTitle()
+    {
+        _changeTitleEvent.OnNext(Unit.Default);
     }
     #endregion
 
@@ -159,9 +176,9 @@ public class GameManager : MonoBehaviour
         {
             if (_isPlay)
             {
-                yield return new WaitForSeconds(1);
                 _resouce.Value += _addResouce;
             }
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -169,7 +186,6 @@ public class GameManager : MonoBehaviour
     {
         _isPlay = !_isPlay;
     }
-
     private void SetCurrentState(GameState state)
     {
         _currentState = state;
@@ -188,6 +204,15 @@ public class GameManager : MonoBehaviour
     {
         TimerStop();
         //UIの表示
+    }
+
+    /// <summary>
+    /// ゲーム開始時の敵ユニット侵攻ルート表示処理待ち
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator WaitTrail()
+    {
+        yield return new WaitForSeconds(3.0f);
     }
     #endregion
 }

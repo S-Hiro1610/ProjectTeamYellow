@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 public class Card : CardBase
 {
@@ -12,6 +13,10 @@ public class Card : CardBase
     public Text costUIText;
 
     public Image coolTimePlane;
+
+    public UnitType type;
+    public ReactiveProperty<SELSCT_MODE> SelectMode => selectMode;
+
     #endregion
 
     #region serialize
@@ -20,6 +25,7 @@ public class Card : CardBase
 
     #region private
     // プライベートなメンバー変数。
+    private ReactiveProperty<SELSCT_MODE> selectMode  = new ReactiveProperty<SELSCT_MODE>(SELSCT_MODE.SELECT_MOD_NO);
     #endregion
 
     #region Constant
@@ -53,7 +59,16 @@ public class Card : CardBase
 
     public void OnClick()
     {
-        Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
+        InputManager.Instance.canPushUnitQuitButton = false;
+        //if (selectMode.Value == SELSCT_MODE.SELECT_MOD_NO)
+        //{
+        //    selectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
+        //}
+        //else
+        //    selectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+
+        //Debug.Log("Name=>"+gameObject.name+",LV=>"+ LVUIText.text+",COST=>"+costUIText.text);
+
     }
     #endregion
 

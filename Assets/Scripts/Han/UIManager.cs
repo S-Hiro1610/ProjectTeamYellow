@@ -13,7 +13,7 @@ public class UIManager: MonoBehaviour
 
     public static UIManager Instance;
 
-
+    public ReactiveProperty<SELSCT_MODE> SelectMode => selectMode;
     public int EnemyCnt = 0;//1wave残機数
     public int EnemyMaxNum = 0;//１Waveの敵ユニットの総数
 
@@ -42,7 +42,13 @@ public class UIManager: MonoBehaviour
 
     public Button MenuButton;
 
+    public Button UnitQuitButton;//退場ボタン
+
+    public Button OptionMenuButton;
+
     public Dialogbox ExitDialogUI;//メインメニュー
+
+    public Dialogbox ExitDialogOptionUI;//オプション(音量調整)
 
     public CardInfo[] unitCardsInfoArray;
 
@@ -58,6 +64,11 @@ public class UIManager: MonoBehaviour
 
     #region serialize
     // unity inpectorに表示したいものを記述。
+
+    [SerializeField]
+    private GameObject _titleWindow;
+    [SerializeField]
+    private GameObject _gameOverWindow;
     #endregion
 
     #region private
@@ -68,6 +79,8 @@ public class UIManager: MonoBehaviour
     //private string _currentEnemyCntUIString;
     //BottomPlaneText
     private string _currentPowerUIString;
+
+    private ReactiveProperty<SELSCT_MODE> selectMode = new ReactiveProperty<SELSCT_MODE>(SELSCT_MODE.SELECT_MOD_NO);
 
     //private List<CardInfo> cardsInfoArray;
 
@@ -94,12 +107,16 @@ public class UIManager: MonoBehaviour
             Destroy(gameObject);
         }
 
+        if(WaveManager.Instance != null)
+        {
+            WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+        }
+
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.WaveCnt.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            GameManager.Instance.WaveMaxNum.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
             GameManager.Instance.EnemyCount.Subscribe(count => { EnemyCnt = count; });//1wave倒した敵機数
-            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//１Waveの敵ユニットの総数
+            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//全て敵の数
             GameManager.Instance.PowerUI.Subscribe(count => { PowerUI = count; });//配置にかかるコストのリソース
             GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
         }
@@ -108,14 +125,40 @@ public class UIManager: MonoBehaviour
 
     private void Start()
     {
+        // ここから タイトル画面とゲームオーバー画面のオン／オフ イベント購読
+        // タイトル画面とゲームオーバー画面の Sort OrderをメインUIより大きくすることが必須。
+        // メインUIより前に表示してタゲをとる方式！
+        //if(_titleWindow == null)
+        //{
+        //    Debug.Log("TitleWindow_Object is not set!");
+        //    return;
+        //}
+        //_titleWindow.SetActive(true);
+        //GameManager.Instance.OnChangeInGame.Subscribe(_ => _titleWindow.SetActive(false));
+        //GameManager.Instance.OnChangeTitle.Subscribe(_ => _titleWindow.SetActive(true));
+
+        //if(_gameOverWindow == null)
+        //{
+        //    Debug.Log("GameOverWindow_Object is not set!");
+        //    return;
+        //}
+        //_gameOverWindow.SetActive(false);
+        //GameManager.Instance.OnChangeTitle.Subscribe(_ => _gameOverWindow.SetActive(false));
+        //GameManager.Instance.OnChangeInGame.Subscribe(_ => _gameOverWindow.SetActive(false));
+        //GameManager.Instance.OnChangeGameOver.Subscribe(_ => _gameOverWindow.SetActive(true));
+        //// ここまで タイトル画面とゲームオーバー画面のオン／オフ イベント購読
+
+        // ここから メインＵＩの作成なのでアンタッチャブル
         cardGameObjcetList = new List<GameObject>();
 
         PauseMenuUIString = "▶";
         _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
 
-        ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
-        ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        //ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
+        //ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+
+        ExitDialogUI.OnSubWindowEvent.AddListener(OpenDialogOptionMenu);
 
 
         _currentWaveString = WaveCnt + "/" + WaveMaxNum;
@@ -139,12 +182,25 @@ public class UIManager: MonoBehaviour
             cardObj.name = "Card_" + cardCnt;
             unitCardsInfoArray[cardCnt].thisGameObjcet = cardObj;
             unitCardsInfoArray[cardCnt].cardContext = cardObj.GetComponent<Card>();
+            cardObj.GetComponent<Card>().type = (UnitType)cardCnt;
 
             UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             
             UpdateCardsCoolTime(unitCardsInfoArray[cardCnt].cardContext.coolTimePlane, unitCardsInfoArray[cardCnt].coolTime);
             //int index = cardCnt;
-            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[index].cardContext.OnClick());
+            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[cardCnt].cardContext.OnClick());
+            int index = cardCnt;
+            cardObj.GetComponent<Button>().onClick.AddListener(() => {
+                unitCardsInfoArray[index].cardContext.OnClick();
+                unitCardsInfoArray[index].cardContext.SelectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
+                for (int i = 0; i < unitCardsNum; i++)
+                {
+                    if (i != index)
+                    {
+                        unitCardsInfoArray[i].cardContext.SelectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+                    }
+                }
+            });
             cardGameObjcetList.Add(cardObj);
         }
 
@@ -163,21 +219,23 @@ public class UIManager: MonoBehaviour
 
         StartCoroutine(CheckEnemyKillBarChanged());
 
+        StartCoroutine(CheckUnitCardSelectMode());
+
         SceneManager.LoadSceneAsync("InputScene", LoadSceneMode.Additive);//InputSceneをロード
     }
 
     private void Update()
     {
-        //Debug.Log(EnemyCount.Subscribe(x => [ここに表示を更新する処理(xが値)]));
-        //Debug.Log(GameManager.Instance.EnemyCount);
+        //string[] str = new string[3];
+        //int scnt = 0;
+        //foreach (var item in cardGameObjcetList)
+        //{
+        //    str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
+        //    scnt++;
+        //}
 
-        //GameManager.Instance.EnemyCount.Subscribe(x => { EnemyCnt = x; });
-        //GameManager.Instance.EnemyCount.Subscribe(x => { EnemyCnt = (int)x; });
-        //GameManager.Instance.EnemyCount.Subscribe(x => Debug.Log(x));
-        //GameManager.Instance.EnemyCount.Subscribe(x => text.text = x.ToString());
-        //GameManager.Instance.AddEnemyCount();
-        //GameManager.Instance.EnemyCount.Subscribe(x => Debug.Log(x));
-        
+        //Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
+        //Debug.Log("selectMode=>"+selectMode.Value);
     }
     #endregion
 
@@ -247,6 +305,23 @@ public class UIManager: MonoBehaviour
         }
     }
 
+    private IEnumerator CheckUnitCardSelectMode()
+    {
+        while (true)
+        {
+            foreach (var item in cardGameObjcetList)
+            {
+                if (item.GetComponent<Card>().SelectMode.Value != SELSCT_MODE.SELECT_MOD_NO)
+                {
+                    SelectMode.Value = SELSCT_MODE.SELECT_MOD_SELECT;
+                    break;
+                }
+                SelectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+            }
+            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
+        }
+    }
+
     private void UpdateCardsCoolTime(Image image, float coolTime)
     {
         image.fillAmount = coolTime;
@@ -281,6 +356,15 @@ public class UIManager: MonoBehaviour
         UpdateText(PauseMenuUIText, "▶");
         Debug.Log("UIManager:ExitDialogUIIsClose");
     }
+
+    private void OpenDialogOptionMenu(Dialogbox.DIALOG_TYPE dialogType,Button button)
+    {
+        //Debug.Log(dialogType);
+        button.transform.parent.parent.gameObject.SetActive(false);
+        ExitDialogOptionUI.SetActive(true,false);
+    }
+
+
 
     #endregion
 }

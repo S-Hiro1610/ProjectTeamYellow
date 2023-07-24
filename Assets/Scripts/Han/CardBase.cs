@@ -8,16 +8,21 @@ public struct CardInfo
 {
     #region property
     // プロパティを入れる。
+    public SELSCT_MODE selectMode;
     public GameObject thisGameObjcet;
     public Card cardContext;
 
     public float coolTime;
     public string LVUIString;
     public string costUIString;
-
-
     #endregion
 
+}
+
+public enum SELSCT_MODE
+{
+    SELECT_MOD_NO,
+    SELECT_MOD_SELECT
 }
 public abstract class CardBase : MonoBehaviour
 {

@@ -164,6 +164,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f814808e51621c43afd13f0e68e39f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MenuButton: {fileID: 0}
-  ExitDialogUI: {fileID: 0}
   nowControlType: 0
+  canPushUnitQuitButton: 0

@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UniRx;
 
-public class InputManager: MonoBehaviour
+public class InputManager : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
 
-    protected static InputManager Instance;
+    public static InputManager Instance;
 
     public enum ControlType { MouseAndKeyboard, TouchScreen }
 
@@ -31,6 +34,7 @@ public class InputManager: MonoBehaviour
             }
         }
      */
+    public bool canPushUnitQuitButton = false;
     #endregion
 
     #region serialize
@@ -39,11 +43,26 @@ public class InputManager: MonoBehaviour
 
     #region private
     // プライベートなメンバー変数。
+    private bool initAtUpdate;
+
     private Button menuButton;
+
+    private Button optionMenuButton;
+
+    //private Dialogbox exitDialogOptionUI;//オプション(音量調整)
+
+    private Button unitQuitButton;//退場ボタン
 
     private Dialogbox exitDialogUI;
 
+    private Dialogbox optionDialogUI;
+
     private List<GameObject> cardGameObjcetList;
+
+    private int playerPower = 0;
+
+    private GameObject quitUnit = null;
+    
     #endregion
 
     #region Constant
@@ -66,19 +85,34 @@ public class InputManager: MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PowerUI.Subscribe(count => { playerPower = count; });//配置にかかるコストのリソース
+        }
     }
 
     private void Start()
     {
+        initAtUpdate = false;
+
         menuButton = UIManager.Instance.MenuButton;
+        //optionMenuButton = UIManager.Instance.OptionMenuButton;
         exitDialogUI = UIManager.Instance.ExitDialogUI;
+        optionDialogUI = UIManager.Instance.ExitDialogOptionUI;
+        unitQuitButton = UIManager.Instance.UnitQuitButton;
 
         menuButton.onClick.AddListener(() => OnClickMenuButton());
+        //optionMenuButton.onClick.AddListener(() => OnClickOptionMenuButton());
         exitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
+        unitQuitButton.onClick.AddListener(() => OnClickUnitQuitButton());
         exitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        optionDialogUI.OnCloseEvent.AddListener(ExitOptionUIIsClose);
         cardGameObjcetList = UIManager.Instance.cardGameObjcetList;
 
-        foreach(GameObject cardObj in cardGameObjcetList)
+        //exitDialogOptionUI.OnSubWindowEvent.AddListener(OpenDialogOptionMenu);
+
+        foreach (GameObject cardObj in cardGameObjcetList)
         {
             Card cardContext = cardObj.GetComponent<Card>();
             cardObj.GetComponent<Button>().onClick.AddListener(() => cardContext.OnClick());
@@ -88,7 +122,129 @@ public class InputManager: MonoBehaviour
 
     private void Update()
     {
+        //Debug.Log("canPushUnitQuitButton=>" + canPushUnitQuitButton);
 
+        if (UIManager.Instance.OptionMenuButton != null && initAtUpdate == false)
+        {
+            initAtUpdate = true;
+            optionMenuButton = UIManager.Instance.OptionMenuButton;
+            optionMenuButton.onClick.AddListener(() => OnClickOptionMenuButton());
+        }
+
+        if (InputManager.Instance != null && InputManager.Instance.Click())
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                //unitQuitButton.interactable = false;
+                return;
+            }
+
+            if (UIManager.Instance.SelectMode.Value == SELSCT_MODE.SELECT_MOD_NO)
+            {
+                Ray ray2 = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit[] hits2 = Physics.RaycastAll(ray2);
+
+                float minDistance2 = Mathf.Infinity;
+                RaycastHit? closestHit2 = null;
+                GameObject cardObj2 = null;
+                foreach (var hit in hits2)
+                {
+                    if (!(hit.collider is BoxCollider) || hit.transform.tag != "Player")
+                    {
+                        canPushUnitQuitButton = false;
+                        quitUnit = null;
+                        continue;
+                    }
+                    if (hit.distance < minDistance2)
+                    {
+                        minDistance2 = hit.distance;
+                        closestHit2 = hit;
+                        cardObj2 = hit.transform.gameObject;
+                        //quitUnitCost = int.Parse(cardObj2.GetComponent<Card>().costUIText.text);//TODO
+                    }
+                }
+
+                if (closestHit2 != null)
+                {
+                    canPushUnitQuitButton = true;
+                    unitQuitButton.interactable = true;
+                    quitUnit = closestHit2.Value.transform.gameObject;
+                    
+                    Debug.Log(closestHit2.Value.transform.name);
+                }
+            }else
+            {
+                canPushUnitQuitButton = false;
+                unitQuitButton.interactable = false;
+                quitUnit = null;
+            }
+
+
+
+            int selectCnt = 0;
+            Card selectCard = null;
+            GameObject cardObj = null;
+            foreach (var item in UIManager.Instance.cardGameObjcetList)
+            {
+                Card card = item.GetComponent<Card>();
+                if (card.SelectMode.Value == SELSCT_MODE.SELECT_MOD_SELECT)
+                {
+                    selectCnt++;
+                    selectCard = card;
+                    cardObj = item;
+                }
+            }
+
+            if (selectCnt == 0) goto ENDSELECT;
+
+
+            if (GameManager.Instance == null) goto ENDSELECT;
+
+            int cost = int.Parse(cardObj.GetComponent<Card>().costUIText.text);
+
+            if (cost > playerPower) goto ENDSELECT;
+
+            GameManager.Instance.PowerUI.Value -= cost;
+
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+
+            float minDistance = Mathf.Infinity;
+            RaycastHit? closestHit = null;
+
+            foreach (var hit in hits)
+            {
+                StageBlock groundBlock = null;
+                if (!hit.transform.TryGetComponent(out groundBlock)) continue;
+                if (hit.distance < minDistance)
+                {
+                    minDistance = hit.distance;
+                    closestHit = hit;
+                }
+            }
+            //Debug.Log("OK0");
+            if (closestHit != null)
+            {
+                StageBlock groundBlock = null;
+                Debug.Log(closestHit.Value.transform.name);
+                closestHit.Value.transform.TryGetComponent(out groundBlock);
+                //Debug.Log("OK1");
+                if (groundBlock == null) goto ENDSELECT;
+                //Debug.Log("OK2");
+                if (groundBlock.isPlayerUnitSet == false) goto ENDSELECT;
+                //Debug.Log("OK3");
+
+
+                UnitManager.Instance.UnitCreate(selectCard.type, new Vector3(closestHit.Value.transform.position.x, 0, closestHit.Value.transform.position.z));
+
+                //Debug.Log("Hit " + closestHit.Value.transform.name);
+            }
+
+        ENDSELECT:
+            if(selectCard != null)
+            selectCard.SelectMode.Value = SELSCT_MODE.SELECT_MOD_NO;
+        }
     }
     #endregion
 
@@ -97,7 +253,7 @@ public class InputManager: MonoBehaviour
 
     public bool Click()
     {
-        switch(nowControlType)
+        switch (nowControlType)
         {
             case ControlType.MouseAndKeyboard:
                 return Input.GetMouseButtonDown(0);
@@ -133,6 +289,19 @@ public class InputManager: MonoBehaviour
         exitDialogUI.SetActive(true);
     }
 
+    private void OnClickOptionMenuButton()
+    {
+        //exitDialogUI.SetActive(false);
+        //optionDialogUI.SetActive(true);
+    }
+
+    private void OnClickUnitQuitButton()
+    {
+        if (canPushUnitQuitButton == false) return;
+        UnitObjectPool.Instance.ReleaseGameObject(quitUnit);
+        unitQuitButton.interactable = false;
+    }
+
     private void ExitDialogUIIsOpen()
     {
         Debug.Log("InputManager:ExitDialogUIIsOpen");
@@ -142,5 +311,16 @@ public class InputManager: MonoBehaviour
     {
         Debug.Log("InputManager:ExitDialogUIIsClose");
     }
+
+    private void ExitOptionUIIsClose()
+    {
+        Debug.Log("InputManager:ExitOptionUIIsClose");
+        exitDialogUI.SetActive(true);
+    }
+
+    //private void OpenDialogOptionMenu(Dialogbox.DIALOG_TYPE dialogType)
+    //{
+    //    Debug.Log(dialogType);
+    //}
     #endregion
 }
