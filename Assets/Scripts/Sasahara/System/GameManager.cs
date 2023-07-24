@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
         _changeInGameEvent.Subscribe(_ =>
         {
             SetCurrentState(GameState.InGame);
+            TimerStop();
             WaitTrail();
             TimerStart();
         });
@@ -157,6 +158,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        _changeInitializeEvent.OnNext(Unit.Default);
         _changeInGameEvent.OnNext(Unit.Default);
     }
 
