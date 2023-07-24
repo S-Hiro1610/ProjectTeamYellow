@@ -348,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6577110140076227953
 RectTransform:
   m_ObjectHideFlags: 0
@@ -421,11 +421,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ExitButton: {fileID: 662328918}
+  SubExitButton: {fileID: 0}
   SubButtonPlane: {fileID: 2038962103}
   SubButtonObjcet: {fileID: 6534616274608709948, guid: d4670873827a5114f82d807d1689efb1,
     type: 3}
+  dialogType: 0
+  WaveCnt: 0
+  WaveMaxNum: 0
   WaveUIText: {fileID: 416270741}
-  WaveCnt: 0/20
   SubButtonTextList:
   - "\u30B2\u30FC\u30E0\u3092\u7D9A\u3051\u308B"
   - "\u30B2\u30FC\u30E0\u3092\u7D42\u4E86\u3059\u308B"
@@ -434,6 +437,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnCloseEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSubWindowEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &6577110140372400825

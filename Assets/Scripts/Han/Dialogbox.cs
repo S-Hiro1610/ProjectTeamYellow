@@ -10,8 +10,11 @@ public class Dialogbox : MonoBehaviour
     #region property
     // プロパティを入れる。
     public Button ExitButton;
+    public Button SubExitButton;
     public GameObject SubButtonPlane;
     public GameObject SubButtonObjcet;
+
+    public DIALOG_TYPE dialogType;
 
     public int WaveCnt = 0; //現在のwave index
     public int WaveMaxNum = 0;//総wave数
@@ -23,6 +26,12 @@ public class Dialogbox : MonoBehaviour
 
     public UnityEvent OnOpenEvent;
     public UnityEvent OnCloseEvent;
+
+    [System.Serializable]
+    public class OpenWindowEvent:UnityEvent<DIALOG_TYPE,Button> { }
+
+    public OpenWindowEvent OnSubWindowEvent;
+
     #endregion
 
     #region serialize
@@ -31,10 +40,16 @@ public class Dialogbox : MonoBehaviour
 
     #region private
     // プライベートなメンバー変数。
+
     #endregion
 
     #region Constant
     // 定数をいれる。
+    public enum DIALOG_TYPE
+    {
+        TYPE_MAIN_MENU,
+        TYPE_OPTION
+    }
     #endregion
 
     #region Event
@@ -45,67 +60,108 @@ public class Dialogbox : MonoBehaviour
     //  Start, UpdateなどのUnityのイベント関数。
     private void Awake()
     {
-        ExitButton.onClick.AddListener(() => { SetActive(false); });
-        if (WaveManager.Instance != null)
+        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
         {
-            WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
-        }
+            ExitButton.onClick.AddListener(() => { SetActive(false); });
+            if (WaveManager.Instance != null)
+            {
+                WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
+                WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+            }
 
-        StartCoroutine(UpdateWaveInfo());
+            StartCoroutine(UpdateWaveInfo());
+        }else
+        {
+            SubExitButton.onClick.AddListener(() => { SetActive(false); });
+        }
     }
 
     private void Start()
     {
-        const int fontSize = 96;
-
-        for(int bCnt = 0;bCnt< SubButtonTextList.Count; bCnt++)
+        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
         {
-            GameObject buttonObj = Instantiate(SubButtonObjcet);
-            buttonObj.GetComponentInChildren<Text>().text = SubButtonTextList[bCnt];
-            buttonObj.GetComponentInChildren<Text>().fontSize = fontSize;
-            buttonObj.transform.SetParent(SubButtonPlane.transform,false);
-            int n = bCnt;
-            buttonObj.GetComponent<Button>().onClick.AddListener(()=>SubButtonEvent(n)) ;
+            const int fontSize = 96;
+
+            for (int bCnt = 0; bCnt < SubButtonTextList.Count; bCnt++)
+            {
+                GameObject buttonObj = Instantiate(SubButtonObjcet);
+                buttonObj.GetComponentInChildren<Text>().text = SubButtonTextList[bCnt];
+                buttonObj.GetComponentInChildren<Text>().fontSize = fontSize;
+                buttonObj.transform.SetParent(SubButtonPlane.transform, false);
+                int n = bCnt;
+                Button button = buttonObj.GetComponent<Button>();
+                button.onClick.AddListener(() => SubButtonEvent(n, button));
+
+                if(SubButtonTextList[bCnt] == "オプション")
+                {
+                    UIManager.Instance.OptionMenuButton = button;
+                }
+            }
         }
     }
 
     private void Update()
     {
-        UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
+        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
+            UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
     }
     #endregion
 
     #region public method
     //　自身で作成したPublicな関数を入れる。
-    public void SetActive(bool onoff)
+    public void SetActive(bool onoff,bool fromExit = true)
     {
         //gameObject.transform.parent.gameObject.SetActive(onoff);
         //UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
         if (onoff)
         {
-            Open();
+            Open(fromExit);
             return;
         }
-        Close();
+        Close(fromExit);
     }
 
-    public void Open()
+    public void Open(bool fromExit = true)
     {
         Debug.Log("Open");
-        gameObject.transform.parent.gameObject.SetActive(true);
-        
-        OnOpenEvent.Invoke();
+        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
+        {
+            if (fromExit == true)
+            {
+                transform.parent.gameObject.SetActive(true);
+                gameObject.SetActive(true);
+
+                OnOpenEvent.Invoke();
+            }
+        }else
+        {
+            
+            gameObject.SetActive(true);
+        }
     }
 
-    public void Close()
+    public void Close(bool fromExit = true)
     {
         Debug.Log("Close");
-        gameObject.transform.parent.gameObject.SetActive(false);
-        OnCloseEvent.Invoke();
+        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
+        {
+            if (fromExit == true)
+            {
+                transform.parent.gameObject.SetActive(false);
+                gameObject.SetActive(false);
+                OnCloseEvent.Invoke();
+            }else
+            { 
+            }
+        }else
+        {
+            Debug.Log(dialogType);
+            gameObject.SetActive(false);
+            OnCloseEvent.Invoke();
+        }
     }
 
-    public void SubButtonEvent(int buttonCnt)
+    public void SubButtonEvent(int buttonCnt,Button button)
     {
         Debug.Log(buttonCnt);
 
@@ -115,9 +171,10 @@ public class Dialogbox : MonoBehaviour
                 Close();
                 break;
             case 1:
-                UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+                //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
                 break;
-            case 3:
+            case 2:
+                OnSubWindowEvent.Invoke(DIALOG_TYPE.TYPE_OPTION, button);
                 break;
             default:
                 break;

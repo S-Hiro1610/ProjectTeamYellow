@@ -43,11 +43,19 @@ public class InputManager : MonoBehaviour
 
     #region private
     // プライベートなメンバー変数。
+    private bool initAtUpdate;
+
     private Button menuButton;
+
+    private Button optionMenuButton;
+
+    //private Dialogbox exitDialogOptionUI;//オプション(音量調整)
 
     private Button unitQuitButton;//退場ボタン
 
     private Dialogbox exitDialogUI;
+
+    private Dialogbox optionDialogUI;
 
     private List<GameObject> cardGameObjcetList;
 
@@ -86,15 +94,23 @@ public class InputManager : MonoBehaviour
 
     private void Start()
     {
+        initAtUpdate = false;
+
         menuButton = UIManager.Instance.MenuButton;
+        //optionMenuButton = UIManager.Instance.OptionMenuButton;
         exitDialogUI = UIManager.Instance.ExitDialogUI;
+        optionDialogUI = UIManager.Instance.ExitDialogOptionUI;
         unitQuitButton = UIManager.Instance.UnitQuitButton;
 
         menuButton.onClick.AddListener(() => OnClickMenuButton());
+        //optionMenuButton.onClick.AddListener(() => OnClickOptionMenuButton());
         exitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
         unitQuitButton.onClick.AddListener(() => OnClickUnitQuitButton());
         exitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        optionDialogUI.OnCloseEvent.AddListener(ExitOptionUIIsClose);
         cardGameObjcetList = UIManager.Instance.cardGameObjcetList;
+
+        //exitDialogOptionUI.OnSubWindowEvent.AddListener(OpenDialogOptionMenu);
 
         foreach (GameObject cardObj in cardGameObjcetList)
         {
@@ -107,6 +123,13 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         //Debug.Log("canPushUnitQuitButton=>" + canPushUnitQuitButton);
+
+        if (UIManager.Instance.OptionMenuButton != null && initAtUpdate == false)
+        {
+            initAtUpdate = true;
+            optionMenuButton = UIManager.Instance.OptionMenuButton;
+            optionMenuButton.onClick.AddListener(() => OnClickOptionMenuButton());
+        }
 
         if (InputManager.Instance != null && InputManager.Instance.Click())
         {
@@ -266,6 +289,12 @@ public class InputManager : MonoBehaviour
         exitDialogUI.SetActive(true);
     }
 
+    private void OnClickOptionMenuButton()
+    {
+        //exitDialogUI.SetActive(false);
+        //optionDialogUI.SetActive(true);
+    }
+
     private void OnClickUnitQuitButton()
     {
         if (canPushUnitQuitButton == false) return;
@@ -282,5 +311,16 @@ public class InputManager : MonoBehaviour
     {
         Debug.Log("InputManager:ExitDialogUIIsClose");
     }
+
+    private void ExitOptionUIIsClose()
+    {
+        Debug.Log("InputManager:ExitOptionUIIsClose");
+        exitDialogUI.SetActive(true);
+    }
+
+    //private void OpenDialogOptionMenu(Dialogbox.DIALOG_TYPE dialogType)
+    //{
+    //    Debug.Log(dialogType);
+    //}
     #endregion
 }

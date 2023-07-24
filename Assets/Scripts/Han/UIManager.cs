@@ -44,7 +44,11 @@ public class UIManager: MonoBehaviour
 
     public Button UnitQuitButton;//退場ボタン
 
+    public Button OptionMenuButton;
+
     public Dialogbox ExitDialogUI;//メインメニュー
+
+    public Dialogbox ExitDialogOptionUI;//オプション(音量調整)
 
     public CardInfo[] unitCardsInfoArray;
 
@@ -124,25 +128,25 @@ public class UIManager: MonoBehaviour
         // ここから タイトル画面とゲームオーバー画面のオン／オフ イベント購読
         // タイトル画面とゲームオーバー画面の Sort OrderをメインUIより大きくすることが必須。
         // メインUIより前に表示してタゲをとる方式！
-        if(_titleWindow == null)
-        {
-            Debug.Log("TitleWindow_Object is not set!");
-            return;
-        }
-        _titleWindow.SetActive(true);
-        GameManager.Instance.OnChangeInGame.Subscribe(_ => _titleWindow.SetActive(false));
-        GameManager.Instance.OnChangeTitle.Subscribe(_ => _titleWindow.SetActive(true));
+        //if(_titleWindow == null)
+        //{
+        //    Debug.Log("TitleWindow_Object is not set!");
+        //    return;
+        //}
+        //_titleWindow.SetActive(true);
+        //GameManager.Instance.OnChangeInGame.Subscribe(_ => _titleWindow.SetActive(false));
+        //GameManager.Instance.OnChangeTitle.Subscribe(_ => _titleWindow.SetActive(true));
 
-        if(_gameOverWindow == null)
-        {
-            Debug.Log("GameOverWindow_Object is not set!");
-            return;
-        }
-        _gameOverWindow.SetActive(false);
-        GameManager.Instance.OnChangeTitle.Subscribe(_ => _gameOverWindow.SetActive(false));
-        GameManager.Instance.OnChangeInGame.Subscribe(_ => _gameOverWindow.SetActive(false));
-        GameManager.Instance.OnChangeGameOver.Subscribe(_ => _gameOverWindow.SetActive(true));
-        // ここまで タイトル画面とゲームオーバー画面のオン／オフ イベント購読
+        //if(_gameOverWindow == null)
+        //{
+        //    Debug.Log("GameOverWindow_Object is not set!");
+        //    return;
+        //}
+        //_gameOverWindow.SetActive(false);
+        //GameManager.Instance.OnChangeTitle.Subscribe(_ => _gameOverWindow.SetActive(false));
+        //GameManager.Instance.OnChangeInGame.Subscribe(_ => _gameOverWindow.SetActive(false));
+        //GameManager.Instance.OnChangeGameOver.Subscribe(_ => _gameOverWindow.SetActive(true));
+        //// ここまで タイトル画面とゲームオーバー画面のオン／オフ イベント購読
 
         // ここから メインＵＩの作成なのでアンタッチャブル
         cardGameObjcetList = new List<GameObject>();
@@ -151,8 +155,10 @@ public class UIManager: MonoBehaviour
         _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
 
-        ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
-        ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        //ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
+        //ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+
+        ExitDialogUI.OnSubWindowEvent.AddListener(OpenDialogOptionMenu);
 
 
         _currentWaveString = WaveCnt + "/" + WaveMaxNum;
@@ -349,6 +355,13 @@ public class UIManager: MonoBehaviour
     {
         UpdateText(PauseMenuUIText, "▶");
         Debug.Log("UIManager:ExitDialogUIIsClose");
+    }
+
+    private void OpenDialogOptionMenu(Dialogbox.DIALOG_TYPE dialogType,Button button)
+    {
+        //Debug.Log(dialogType);
+        button.transform.parent.parent.gameObject.SetActive(false);
+        ExitDialogOptionUI.SetActive(true,false);
     }
 
 
