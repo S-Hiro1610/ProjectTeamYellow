@@ -38,6 +38,10 @@ public class WaveManager : MonoBehaviour
     private bool _waveActive;
     // エンドレスでの周回カウント用　初期値:0
     private int _weekCount;
+    // コルーチンのインスタンス保存用
+    private Coroutine _coroutine;
+    // 画面停止中のコルーチンフラグ
+    private bool _stopflag = false;
     #endregion
 
     #region Constant
@@ -67,7 +71,10 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
-
+        GameManager.Instance.OnChangeInitialize.Subscribe(_ => WaveInitilize());
+        GameManager.Instance.OnStop.Subscribe(_ => _stopflag = true);
+        GameManager.Instance.OnStart.Subscribe(_ => _stopflag = false);
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => SetWaveStart());
     }
 
     private void Update()
@@ -82,7 +89,7 @@ public class WaveManager : MonoBehaviour
             _waveStart = false;
             _waveActive = true;
             // Waveエネミーを生成
-            StartCoroutine(StartEnemySpawne(_currentwave));
+            _coroutine = StartCoroutine(StartEnemySpawne(_currentwave));
         }
     }
     #endregion
@@ -109,6 +116,7 @@ public class WaveManager : MonoBehaviour
         _waveCount.Value = 0;
         _weekCount = 0;
         _waveEnemyCount.Value = 0;
+        if (_coroutine != null) StopCoroutine(_coroutine);
     }
 
     /// <summary>
@@ -142,6 +150,13 @@ public class WaveManager : MonoBehaviour
             int spawnerCount = 0;
             for (int j = 0; j < waveEnemyUnits; j++)
             {
+                // 画面停止フラグ確認
+                while(true)
+                {
+                    if (!_stopflag) break;
+                    else yield return new WaitForSeconds(0.1f);
+                }
+
                 if (spawnerCount == Spawner.Count) spawnerCount = 0;
 
                 GameObject Enemy = WaveEnemys.Enemy;

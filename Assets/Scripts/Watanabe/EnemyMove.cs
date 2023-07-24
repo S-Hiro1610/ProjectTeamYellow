@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UniRx;
 public class EnemyMove : MonoBehaviour
 {
     #region property
@@ -45,6 +45,12 @@ public class EnemyMove : MonoBehaviour
         transform.position = _routeList[_routeIndex];
         // 向きの設定
         _routeIndex++;
+    }
+
+    private void Start()
+    {
+        GameManager.Instance.OnStop.Subscribe(_ => MoveSet(false));
+        GameManager.Instance.OnStart.Subscribe(_ => MoveSet(true));
     }
 
     private void Update()
