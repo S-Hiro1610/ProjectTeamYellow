@@ -26,10 +26,12 @@ public class GameOverWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.Instance.OnChangeTitle.Subscribe(_ => gameObject.SetActive(false));
-        GameManager.Instance.OnChangeInGame.Subscribe(_ => gameObject.SetActive(false));
-        GameManager.Instance.OnChangeGameOver.Subscribe(_ => gameObject.SetActive(true));
-        gameObject.SetActive(false);
+        var _panel = transform.Find("Panel");
+        _panel.GetComponent<GameOverPanel>().SeIndex = _seIndex;
+        GameManager.Instance.OnChangeTitle.Subscribe(_ => _panel.gameObject.SetActive(false));
+        GameManager.Instance.OnChangeInGame.Subscribe(_ => _panel.gameObject.SetActive(false));
+        GameManager.Instance.OnChangeGameOver.Subscribe(_ => _panel.gameObject.SetActive(true));
+        _panel.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -39,18 +41,18 @@ public class GameOverWindow : MonoBehaviour
     }
 
     //
-    private void OnEnable()
-    {
-        if (AudioPlayer.Instance == null)
-        {
-            Debug.Log("Audio Player is not found!");
-        }
-        else
-        {
-            // ゲームオーバージングルを一回流す
-            AudioPlayer.Instance.SEPlay(_seIndex);
-        }
-    }
+    //private void OnEnable()
+    //{
+    //    if (AudioPlayer.Instance == null)
+    //    {
+    //        Debug.Log("Audio Player is not found!");
+    //    }
+    //    else
+    //    {
+    //        // ゲームオーバージングルを一回流す
+    //        AudioPlayer.Instance.SEPlay(_seIndex);
+    //    }
+    //}
     #endregion
 
     #region public
