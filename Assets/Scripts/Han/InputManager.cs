@@ -88,7 +88,7 @@ public class InputManager : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.PowerUI.Subscribe(count => { playerPower = count; });//配置にかかるコストのリソース
+            GameManager.Instance.Resouce.Subscribe(count => { playerPower = count; });//配置にかかるコストのリソース
         }
     }
 
@@ -204,7 +204,7 @@ public class InputManager : MonoBehaviour
 
             if (cost > playerPower) goto ENDSELECT;
 
-            GameManager.Instance.PowerUI.Value -= cost;
+            GameManager.Instance.Resouce.Value -= cost;
 
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

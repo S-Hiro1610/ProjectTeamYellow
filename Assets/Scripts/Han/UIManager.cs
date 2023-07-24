@@ -117,7 +117,7 @@ public class UIManager: MonoBehaviour
         {
             GameManager.Instance.EnemyCount.Subscribe(count => { EnemyCnt = count; });//1wave倒した敵機数
             GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//全て敵の数
-            GameManager.Instance.PowerUI.Subscribe(count => { PowerUI = count; });//配置にかかるコストのリソース
+            GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
             GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
         }
     }
@@ -271,12 +271,12 @@ public class UIManager: MonoBehaviour
             //    UpdateText(EnemyCntUIText, _currentEnemyCntUIString);
             //}
 
-            string newPowerUIString = PowerUI.ToString();
-            if (newPowerUIString != _currentPowerUIString)
-            {
-                _currentPowerUIString = newPowerUIString;
-                UpdateText(PowerUIText, _currentPowerUIString);
-            }
+            //string newPowerUIString = PowerUI.ToString();
+            //if (newPowerUIString != _currentPowerUIString)
+            //{
+            //    _currentPowerUIString = newPowerUIString;
+            //    UpdateText(PowerUIText, _currentPowerUIString);
+            //}
 
             yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
         }
