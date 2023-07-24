@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     private ReactiveProperty<int> _enemyALLCount = new ReactiveProperty<int>(0);
 
-    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(100);
+    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(0);
 
     private ReactiveProperty<CardInfo[]> _unitCardsInfoArray = new ReactiveProperty<CardInfo[]>();
 
@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     private GameState _currentState = GameState.Title;
     private bool _isPlay = false;
     private static GameManager _instance;
+    private Coroutine _addResouceCoroutine;
     #endregion
 
     #region Constant
@@ -96,6 +97,7 @@ public class GameManager : MonoBehaviour
             TimerStop();
             WaitTrail();
             TimerStart();
+            _addResouceCoroutine = StartCoroutine(AddResouce());
         });
         _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
     }
@@ -164,10 +166,12 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
+        StopCoroutine(_addResouceCoroutine);
         _changeGameOverEvent.OnNext(Unit.Default);
     }
     public void ReturnTitle()
     {
+        _changeInitializeEvent.OnNext(Unit.Default);
         _changeTitleEvent.OnNext(Unit.Default);
     }
     #endregion
