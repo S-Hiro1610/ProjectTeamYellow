@@ -26,6 +26,7 @@ public class TitleWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // タイトル画面のＢＧＭ処理
         _isBGMPlayable = false;
         if (AudioPlayer.Instance == null)
         {
@@ -48,7 +49,8 @@ public class TitleWindow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.anyKeyDown && !Input.GetMouseButton(0))
+            StartButton();
     }
 
     //
