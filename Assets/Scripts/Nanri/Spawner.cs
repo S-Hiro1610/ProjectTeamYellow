@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using UniRx;
 
 /// <summary>
@@ -13,12 +13,13 @@ public class Spawner : MonoBehaviour
 {
     #region property
     // プロパティを入れる。
+    public GameObject _trailerPath;
     #endregion
 
     #region serialize
     // unity inspectorに表示したいものを記述。
-    [SerializeField]
-    private string _trailerPath = "Assets/Prefabs/Nanri/EnemyRouteTrailer.prefab";
+    //[SerializeField]
+    //private string _trailerPath = "Assets/Prefabs/Nanri/EnemyRouteTrailer.prefab";
     [SerializeField]
     private List<Vector3> _enemyRoute;
     #endregion
@@ -56,7 +57,8 @@ public class Spawner : MonoBehaviour
     private void Trail()
     {
         _spawnPoint = _enemyRoute[0];
-        var origin = AssetDatabase.LoadAssetAtPath<GameObject>(_trailerPath);
+        //var origin = AssetDatabase.LoadAssetAtPath<GameObject>(_trailerPath);
+        var origin = _trailerPath;
         if (origin != null)
         {
             _enemyTrailer = (GameObject)Instantiate(origin, _spawnPoint, transform.rotation);
