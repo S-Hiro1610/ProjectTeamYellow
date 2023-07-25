@@ -109,46 +109,30 @@ public class UIManager: MonoBehaviour
 
         if(WaveManager.Instance != null)
         {
-            WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+            //WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
+            WaveManager.Instance.WaveEnemyCount.Subscribe(_ => { WaveMaxNum = _;    // 現在のWaveの敵の総数の購読★
+                UpdateEnemyKillBar((float)WaveMaxNum != 0?(float)EnemyCnt/(float)WaveMaxNum:0);});  // ゲージの更新も連動★
         }
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.EnemyCount.Subscribe(count => { EnemyCnt = count; });//1wave倒した敵機数
-            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });//全て敵の数
+            GameManager.Instance.EnemyCount.Subscribe(_ => { EnemyCnt = _;              // 現在のWaveで倒した敵の数★
+                UpdateEnemyKillBar((float)WaveMaxNum != 0 ? (float)EnemyCnt / (float)WaveMaxNum : 0);});    // ゲージの更新も連動★
+
             GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
+
             GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
+            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });
+
         }
     }
     
 
     private void Start()
     {
-        // ここから タイトル画面とゲームオーバー画面のオン／オフ イベント購読
-        // タイトル画面とゲームオーバー画面の Sort OrderをメインUIより大きくすることが必須。
-        // メインUIより前に表示してタゲをとる方式！
-        //if(_titleWindow == null)
-        //{
-        //    Debug.Log("TitleWindow_Object is not set!");
-        //    return;
-        //}
-        //_titleWindow.SetActive(true);
-        //GameManager.Instance.OnChangeInGame.Subscribe(_ => _titleWindow.SetActive(false));
-        //GameManager.Instance.OnChangeTitle.Subscribe(_ => _titleWindow.SetActive(true));
-
-        //if(_gameOverWindow == null)
-        //{
-        //    Debug.Log("GameOverWindow_Object is not set!");
-        //    return;
-        //}
-        //_gameOverWindow.SetActive(false);
-        //GameManager.Instance.OnChangeTitle.Subscribe(_ => _gameOverWindow.SetActive(false));
-        //GameManager.Instance.OnChangeInGame.Subscribe(_ => _gameOverWindow.SetActive(false));
-        //GameManager.Instance.OnChangeGameOver.Subscribe(_ => _gameOverWindow.SetActive(true));
-        //// ここまで タイトル画面とゲームオーバー画面のオン／オフ イベント購読
-
-        // ここから メインＵＩの作成なのでアンタッチャブル
+        WaveMaxNum = 0; // Wave の敵の総数 ★
+        EnemyCnt = 0;   // 撃破した敵の数 ★
+        
         cardGameObjcetList = new List<GameObject>();
 
         PauseMenuUIString = "▶";
@@ -171,8 +155,6 @@ public class UIManager: MonoBehaviour
         UpdateText(PowerUIText, PowerUI.ToString());
 
         unitCardsNum = unitCardsInfoArray.Length;
-
-        UpdateEnemyKillBar();
 
         GridLayoutGroup cardsGrop = UnitCardsPanel.GetComponent<GridLayoutGroup>();
 
@@ -217,7 +199,7 @@ public class UIManager: MonoBehaviour
         StartCoroutine(CheckSceneUIValuesChanged());
         StartCoroutine(CheckCardValuesChanged());
 
-        StartCoroutine(CheckEnemyKillBarChanged());
+        //StartCoroutine(CheckEnemyKillBarChanged());
 
         StartCoroutine(CheckUnitCardSelectMode());
 
@@ -295,15 +277,15 @@ public class UIManager: MonoBehaviour
         }
     }
 
-    private IEnumerator CheckEnemyKillBarChanged()
-    {
-        while (true)
-        {
-            UpdateEnemyKillBar();
+    //private IEnumerator CheckEnemyKillBarChanged()
+    //{
+    //    while (true)
+    //    {
+    //        UpdateEnemyKillBar();
 
-            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
-        }
-    }
+    //        yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
+    //    }
+    //}
 
     private IEnumerator CheckUnitCardSelectMode()
     {
@@ -337,12 +319,12 @@ public class UIManager: MonoBehaviour
         text.text = (string)str;
     }
 
-    private void UpdateEnemyKillBar()
+    private void UpdateEnemyKillBar(float percent)
     {
-        float percent = (float)EnemyCnt / EnemyMaxNum;
+        //float percent = (float)EnemyCnt / EnemyMaxNum;
         
-        if (EnemyMaxNum == 0) percent = 0;
-        Mathf.Clamp01(percent);
+        //if (EnemyMaxNum == 0) percent = 0;
+        //Mathf.Clamp01(percent);
 
         EnemyCntUIImage.fillAmount = percent;
     }
