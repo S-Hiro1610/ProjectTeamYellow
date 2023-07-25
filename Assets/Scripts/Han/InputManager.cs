@@ -204,9 +204,6 @@ public class InputManager : MonoBehaviour
 
             if (cost > playerPower) goto ENDSELECT;
 
-            GameManager.Instance.Resouce.Value -= cost;
-
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray);
 
@@ -215,6 +212,10 @@ public class InputManager : MonoBehaviour
 
             foreach (var hit in hits)
             {
+                if(hit.transform.tag == "Player")
+                {
+                    goto ENDSELECT;     // 二重配置禁止処理
+                }
                 StageBlock groundBlock = null;
                 if (!hit.transform.TryGetComponent(out groundBlock)) continue;
                 if (hit.distance < minDistance)
@@ -227,7 +228,7 @@ public class InputManager : MonoBehaviour
             if (closestHit != null)
             {
                 StageBlock groundBlock = null;
-                Debug.Log(closestHit.Value.transform.name);
+                //Debug.Log(closestHit.Value.transform.name);
                 closestHit.Value.transform.TryGetComponent(out groundBlock);
                 //Debug.Log("OK1");
                 if (groundBlock == null) goto ENDSELECT;
@@ -237,6 +238,7 @@ public class InputManager : MonoBehaviour
 
 
                 UnitManager.Instance.UnitCreate(selectCard.type, new Vector3(closestHit.Value.transform.position.x, 0, closestHit.Value.transform.position.z));
+                GameManager.Instance.Resouce.Value -= cost;
 
                 //Debug.Log("Hit " + closestHit.Value.transform.name);
             }
