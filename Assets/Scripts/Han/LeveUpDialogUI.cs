@@ -10,6 +10,8 @@ public class LeveUpDialogUI : MonoBehaviour
 
     #region property
     // プロパティを入れる。
+    public Button[] unitButton;
+
     public Text[] NearLVText;
     public Text[] NearHPText;
     public Text[] NearAtkText;
@@ -24,6 +26,8 @@ public class LeveUpDialogUI : MonoBehaviour
     public Text[] RangeHPText;
     public Text[] RangeAtkText;
     public Text[] RangeCostText;
+
+    
 
 
     #endregion
@@ -61,7 +65,13 @@ public class LeveUpDialogUI : MonoBehaviour
     {
         
         //GameManager.OnLeveUp.Subscribe(_ => ShowLevelUpDialog());
-        Debug.Log("LeveUpDialogUI::Awake");
+
+        for(int buttonCnt = 0;buttonCnt<unitButton.Length;buttonCnt++)
+        {
+            int n = buttonCnt;
+            Button button = unitButton[buttonCnt];
+            button.onClick.AddListener(() => SubButtonEvent(n, button));
+        }
         
     }
 
@@ -178,12 +188,6 @@ public class LeveUpDialogUI : MonoBehaviour
     {
         
     }
-
-    private void ShowLevelUpDialog()
-    {
-
-        //gameObject.SetActive(true);
-    }
     #endregion
 
     private void UpdateText(Text[] text, string beforeStr,string afterStr)
@@ -198,5 +202,30 @@ public class LeveUpDialogUI : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    public void SubButtonEvent(int buttonCnt, Button button)
+    {
+        Debug.Log(buttonCnt);
+
+        switch (buttonCnt)
+        {
+            case 0:
+                Debug.Log("0");
+                UnitManager.Instance.LevelUp(UnitType.Wall);
+                gameObject.SetActive(false);
+                break;
+            case 1:
+                UnitManager.Instance.LevelUp(UnitType.Area);
+                gameObject.SetActive(false);
+                break;
+            case 2:
+                UnitManager.Instance.LevelUp(UnitType.Range);
+                gameObject.SetActive(false);
+                break;
+            default:
+                break;
+        }
+
+        GameManager.Instance.TimerStart();
+    }
     #endregion
 }
