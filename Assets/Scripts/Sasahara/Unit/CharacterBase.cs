@@ -132,7 +132,7 @@ public abstract class CharactorBase : MonoBehaviour
         _hp -= target.Power;
         _hpSlider.value = (float)_hp / (float)(_baseHp + (_lv * 5));
         Debug.Log($"Damaged:{_hp}");
-        if (_hp <= 0)
+        if (_hp <= 0 && gameObject.activeSelf)
         {
             Debug.Log($"Dead{gameObject}");
             // エネミーが倒された時、カウントするためにGameManagerからAddEnemyCountを呼ぶ
