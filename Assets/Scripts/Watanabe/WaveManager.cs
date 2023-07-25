@@ -13,6 +13,7 @@ public class WaveManager : MonoBehaviour
     public ReactiveProperty<int> WaveEnemyCount => _waveEnemyCount;
     public bool WaveStart => _waveStart;
     public float WaveDelayTime => _waveDelayTime;
+
     #endregion
 
     #region serialize
@@ -42,6 +43,8 @@ public class WaveManager : MonoBehaviour
     private Coroutine _coroutine;
     // 画面停止中のコルーチンフラグ
     private bool _stopflag = false;
+    // Wave中の残敵数
+    private int _remainingEnemies;
     #endregion
 
     #region Constant
@@ -75,6 +78,11 @@ public class WaveManager : MonoBehaviour
         GameManager.Instance.OnStop.Subscribe(_ => _stopflag = true);
         GameManager.Instance.OnStart.Subscribe(_ => _stopflag = false);
         GameManager.Instance.OnChangeInGame.Subscribe(_ => SetWaveStart());
+        GameManager.Instance.RemainingEnemies.Subscribe(cnt =>
+        {
+            _remainingEnemies = cnt;
+            if (_remainingEnemies == 0) SetWaveStart();
+        });
     }
 
     private void Update()
