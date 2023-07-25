@@ -10,6 +10,8 @@ public class LeveUpDialogUI : MonoBehaviour
 
     #region property
     // プロパティを入れる。
+    public Button[] unitButton;
+
     public Text[] NearLVText;
     public Text[] NearHPText;
     public Text[] NearAtkText;
@@ -19,13 +21,13 @@ public class LeveUpDialogUI : MonoBehaviour
     public Text[] FarHPText;
     public Text[] FarAtkText;
     public Text[] FarCostText;
-    public Text[] FarText;
 
     public Text[] RangeLVText;
     public Text[] RangeHPText;
     public Text[] RangeAtkText;
     public Text[] RangeCostText;
-    public Text[] RangeText;
+
+    
 
 
     #endregion
@@ -63,7 +65,13 @@ public class LeveUpDialogUI : MonoBehaviour
     {
         
         //GameManager.OnLeveUp.Subscribe(_ => ShowLevelUpDialog());
-        Debug.Log("LeveUpDialogUI::Awake");
+
+        for(int buttonCnt = 0;buttonCnt<unitButton.Length;buttonCnt++)
+        {
+            int n = buttonCnt;
+            Button button = unitButton[buttonCnt];
+            button.onClick.AddListener(() => SubButtonEvent(n, button));
+        }
         
     }
 
@@ -84,7 +92,7 @@ public class LeveUpDialogUI : MonoBehaviour
             PlayerRangeUnitController pr = obj.GetComponent<PlayerRangeUnitController>();
             PlayerAreaUnitController pa = obj.GetComponent<PlayerAreaUnitController>();
 
-            int lv, hp,atk, cost,far,range;
+            int lv, hp, atk, cost;
             
             if (pu != null)
             {
@@ -122,7 +130,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 hp = pr.BaseHp + (lv * 5);
                 cost = (int)(unitInfo.Cost * (lv * 1.5f));
                 atk = pr.BasePower;
-                range = 0;
 
 
                 int nextLV = lv + 1;
@@ -144,11 +151,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 string nowCostStr = "Cost:" + Convert.ToString(cost);
                 string nextCostStr = Convert.ToString(nextCost);
                 UpdateText(RangeCostText, nowCostStr, nextCostStr);
-
-                int nextRange = range;
-                string nowRangeStr = "Range:" + Convert.ToString(range);
-                string nextRangeStr = Convert.ToString(nextRange);
-                UpdateText(RangeText, nowRangeStr, nextRangeStr);
             }
             else if(pa != null)
             {
@@ -157,7 +159,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 hp = pa.BaseHp + (lv * 5);
                 cost = (int)(unitInfo.Cost * (lv * 1.5f));
                 atk = pa.BasePower;
-                far = 0;
 
                 int nextLV = lv + 1;
                 string nowLVStr = "LV." + Convert.ToString(lv);
@@ -178,11 +179,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 string nowCostStr = "Cost:" + Convert.ToString(cost);
                 string nextCostStr = Convert.ToString(nextCost);
                 UpdateText(FarCostText, nowCostStr, nextCostStr);
-
-                int nextFar = far;
-                string nowFarStr = "Far:" + Convert.ToString(far);
-                string nextFarStr = Convert.ToString(nextFar);
-                UpdateText(FarText, nowFarStr, nextFarStr);
             }
 
         }
@@ -191,12 +187,6 @@ public class LeveUpDialogUI : MonoBehaviour
     private void Update()
     {
         
-    }
-
-    private void ShowLevelUpDialog()
-    {
-
-        //gameObject.SetActive(true);
     }
     #endregion
 
@@ -212,5 +202,30 @@ public class LeveUpDialogUI : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
+    public void SubButtonEvent(int buttonCnt, Button button)
+    {
+        Debug.Log(buttonCnt);
+
+        switch (buttonCnt)
+        {
+            case 0:
+                Debug.Log("0");
+                UnitManager.Instance.LevelUp(UnitType.Wall);
+                gameObject.SetActive(false);
+                break;
+            case 1:
+                UnitManager.Instance.LevelUp(UnitType.Area);
+                gameObject.SetActive(false);
+                break;
+            case 2:
+                UnitManager.Instance.LevelUp(UnitType.Range);
+                gameObject.SetActive(false);
+                break;
+            default:
+                break;
+        }
+
+        GameManager.Instance.TimerStart();
+    }
     #endregion
 }
