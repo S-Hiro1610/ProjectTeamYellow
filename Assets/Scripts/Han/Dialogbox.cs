@@ -188,7 +188,9 @@ public class Dialogbox : MonoBehaviour
                 break;
             case 1:
                 //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
-                Close();
+                transform.parent.gameObject.SetActive(false);
+                gameObject.SetActive(false);
+                OnCloseEvent.Invoke();
                 GameManager.Instance.ReturnTitle();
                 break;
             case 2:

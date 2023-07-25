@@ -177,6 +177,7 @@ public class GameManager : MonoBehaviour
     }
     public void ReturnTitle()
     {
+        StopCoroutine(_addResouceCoroutine);
         _changeInitializeEvent.OnNext(Unit.Default);
         _changeTitleEvent.OnNext(Unit.Default);
     }
