@@ -307,7 +307,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -570,7 +570,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -706,7 +706,7 @@ MonoBehaviour:
   SubButtonPlane: {fileID: 0}
   SubButtonObjcet: {fileID: 0}
   dialogType: 1
-  WaveCnt: 0
+  WaveEnemyCnt: 0
   WaveMaxNum: 0
   WaveUIText: {fileID: 0}
   SubButtonTextList: []
@@ -719,6 +719,7 @@ MonoBehaviour:
   OnSubWindowEvent:
     m_PersistentCalls:
       m_Calls: []
+  VolumeSlider: {fileID: 0}
 --- !u!1 &2760167821948869361
 GameObject:
   m_ObjectHideFlags: 0

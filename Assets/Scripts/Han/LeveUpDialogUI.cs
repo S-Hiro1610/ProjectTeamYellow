@@ -12,6 +12,8 @@ public class LeveUpDialogUI : MonoBehaviour
     // プロパティを入れる。
     public Button[] unitButton;
 
+    public Image[] unitIcon;
+
     public Text[] NearLVText;
     public Text[] NearHPText;
     public Text[] NearAtkText;
