@@ -19,13 +19,11 @@ public class LeveUpDialogUI : MonoBehaviour
     public Text[] FarHPText;
     public Text[] FarAtkText;
     public Text[] FarCostText;
-    public Text[] FarText;
 
     public Text[] RangeLVText;
     public Text[] RangeHPText;
     public Text[] RangeAtkText;
     public Text[] RangeCostText;
-    public Text[] RangeText;
 
 
     #endregion
@@ -84,7 +82,7 @@ public class LeveUpDialogUI : MonoBehaviour
             PlayerRangeUnitController pr = obj.GetComponent<PlayerRangeUnitController>();
             PlayerAreaUnitController pa = obj.GetComponent<PlayerAreaUnitController>();
 
-            int lv, hp,atk, cost,far,range;
+            int lv, hp, atk, cost;
             
             if (pu != null)
             {
@@ -122,7 +120,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 hp = pr.BaseHp + (lv * 5);
                 cost = (int)(unitInfo.Cost * (lv * 1.5f));
                 atk = pr.BasePower;
-                range = 0;
 
 
                 int nextLV = lv + 1;
@@ -144,11 +141,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 string nowCostStr = "Cost:" + Convert.ToString(cost);
                 string nextCostStr = Convert.ToString(nextCost);
                 UpdateText(RangeCostText, nowCostStr, nextCostStr);
-
-                int nextRange = range;
-                string nowRangeStr = "Range:" + Convert.ToString(range);
-                string nextRangeStr = Convert.ToString(nextRange);
-                UpdateText(RangeText, nowRangeStr, nextRangeStr);
             }
             else if(pa != null)
             {
@@ -157,7 +149,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 hp = pa.BaseHp + (lv * 5);
                 cost = (int)(unitInfo.Cost * (lv * 1.5f));
                 atk = pa.BasePower;
-                far = 0;
 
                 int nextLV = lv + 1;
                 string nowLVStr = "LV." + Convert.ToString(lv);
@@ -178,11 +169,6 @@ public class LeveUpDialogUI : MonoBehaviour
                 string nowCostStr = "Cost:" + Convert.ToString(cost);
                 string nextCostStr = Convert.ToString(nextCost);
                 UpdateText(FarCostText, nowCostStr, nextCostStr);
-
-                int nextFar = far;
-                string nowFarStr = "Far:" + Convert.ToString(far);
-                string nextFarStr = Convert.ToString(nextFar);
-                UpdateText(FarText, nowFarStr, nextFarStr);
             }
 
         }
