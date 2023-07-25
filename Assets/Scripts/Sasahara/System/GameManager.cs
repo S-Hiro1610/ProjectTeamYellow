@@ -10,8 +10,9 @@ public class GameManager : MonoBehaviour
     // プロパティを入れる。
     public static GameManager Instance => _instance;
     public ReactiveProperty<int> Resouce => _resouce;
-    public ReactiveProperty<int> EnemyCount => _enemyCount;
+    public ReactiveProperty<int> EnemyCount => _levelUpEnemyCount;
     public ReactiveProperty<int> RemainingEnemies => _remainingEnemies;
+    public ReactiveProperty<int> RemainingEnemyCount => _remainingEnemyCount;
     public IObservable<Unit> OnStop => _stopEvent;
     public IObservable<Unit> OnStart => _startEvent;
     public IObservable<Unit> OnLevelUp => _levelUpEvent;
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     private List<int> _levelUpList = new List<int>();
     private int _levelUpIndex = 0;
     /// <summary>倒した敵のカウント</summary>
-    private ReactiveProperty<int> _enemyCount = new ReactiveProperty<int>(0);
+    private ReactiveProperty<int> _levelUpEnemyCount = new ReactiveProperty<int>(0);
 
     private Subject<Unit> _stopEvent = new Subject<Unit>();
     private Subject<Unit> _startEvent = new Subject<Unit>();
@@ -56,8 +57,9 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     private Coroutine _addResouceCoroutine;
     private ReactiveProperty<int> _remainingEnemies = new ReactiveProperty<int>(0);
+    private ReactiveProperty<int> _remainingEnemyCount = new ReactiveProperty<int>(0);
     private int _waveEnemyCount = 0;
-    private int _remainingEnemyCount = 0;
+
     #endregion
 
     #region Constant
@@ -114,16 +116,16 @@ public class GameManager : MonoBehaviour
         testCardInfo[2].LVUIString = "1";
         testCardInfo[2].costUIString = "100";
 
-        EnemyCount.Subscribe(count =>
+        RemainingEnemyCount.Subscribe(_=>
         {
-            _remainingEnemyCount = count; 
-            CalcRemainingEnemies(_remainingEnemyCount, _waveEnemyCount);
+            CalcRemainingEnemies(_remainingEnemyCount.Value, _waveEnemyCount);
         });
 
         WaveManager.Instance.WaveEnemyCount.Subscribe(waveEnemy =>
         {
             _waveEnemyCount = waveEnemy;
-            CalcRemainingEnemies(_remainingEnemyCount, _waveEnemyCount);
+            _remainingEnemyCount.Value = 0;
+            CalcRemainingEnemies(_remainingEnemyCount.Value, _waveEnemyCount);
         });
     }
 
@@ -138,11 +140,12 @@ public class GameManager : MonoBehaviour
     /// <summary>倒した敵をカウントする</summary>
     public void AddEnemyCount()
     {
-        _enemyCount.Value++;
-        if (_enemyCount.Value >= _levelUpList[_levelUpIndex])
+        _levelUpEnemyCount.Value++;
+        _remainingEnemyCount.Value++;
+        if (_levelUpEnemyCount.Value >= _levelUpList[_levelUpIndex])
         {
             LevelUp();
-            _enemyCount.Value = 0;
+            _levelUpEnemyCount.Value = 0;
             if (_levelUpIndex < _levelUpList.Count)
             {
                 _levelUpIndex++;
@@ -206,7 +209,7 @@ public class GameManager : MonoBehaviour
     private void Initialize()
     {
         _resouce.Value = 0;
-        _enemyCount.Value = 0;
+        _levelUpEnemyCount.Value = 0;
         _levelUpIndex = 0;
     }
 
