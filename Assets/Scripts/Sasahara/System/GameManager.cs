@@ -11,12 +11,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
     public ReactiveProperty<int> Resouce => _resouce;
     public ReactiveProperty<int> EnemyCount => _enemyCount;
-    public ReactiveProperty<int> EnemyALLCount => _enemyALLCount;
-    public ReactiveProperty<int> PowerUI => _powerUI;
-    public ReactiveProperty<CardInfo[]> UnitCardsInfoArray => _unitCardsInfoArray;
-    public GameState CurrentState => _currentState;
+    public ReactiveProperty<int> RemainingEnemies => _remainingEnemies;
     public IObservable<Unit> OnStop => _stopEvent;
     public IObservable<Unit> OnStart => _startEvent;
+    public IObservable<Unit> OnLevelUp => _levelUpEvent;
     public IObservable<Unit> OnChangeTitle => _changeTitleEvent;
     public IObservable<Unit> OnChangeInitialize => _changeInitializeEvent;
     public IObservable<Unit> OnChangeInGame => _changeInGameEvent;
@@ -41,14 +39,9 @@ public class GameManager : MonoBehaviour
     /// <summary>レベルアップの基準となる敵を倒す要求値のリスト</summary>
     [SerializeField]
     private List<int> _levelUpList = new List<int>();
+    private int _levelUpIndex = 0;
     /// <summary>倒した敵のカウント</summary>
     private ReactiveProperty<int> _enemyCount = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<int> _enemyALLCount = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<int> _powerUI = new ReactiveProperty<int>(0);
-
-    private ReactiveProperty<CardInfo[]> _unitCardsInfoArray = new ReactiveProperty<CardInfo[]>();
 
     private Subject<Unit> _stopEvent = new Subject<Unit>();
     private Subject<Unit> _startEvent = new Subject<Unit>();
@@ -59,12 +52,11 @@ public class GameManager : MonoBehaviour
     private Subject<Unit> _changeInGameEvent = new Subject<Unit>();
     private Subject<Unit> _changeGameOverEvent = new Subject<Unit>();
 
-    private int _levelUpIndex = 0;
-    [SerializeField]
-    private GameState _currentState = GameState.Title;
     private bool _isPlay = false;
     private static GameManager _instance;
     private Coroutine _addResouceCoroutine;
+    private ReactiveProperty<int> _remainingEnemies = new ReactiveProperty<int>(0);
+    private int _waveEnemyCount = 0;
     #endregion
 
     #region Constant
@@ -92,17 +84,15 @@ public class GameManager : MonoBehaviour
         _startEvent.Subscribe(_ => ChangePlayStart());
         _stopEvent.Subscribe(_ => ChangePlayStop());
 
-        _changeTitleEvent.Subscribe(_ => SetCurrentState(GameState.Title));
         _changeInitializeEvent.Subscribe(_ => Initialize());
         _changeInGameEvent.Subscribe(_ =>
         {
-            SetCurrentState(GameState.InGame);
             TimerStop();
             WaitTrail();
             TimerStart();
             _addResouceCoroutine = StartCoroutine(AddResouce());
         });
-        _changeGameOverEvent.Subscribe(_ => SetCurrentState(GameState.GameOver));
+
     }
 
     private void Start()
@@ -122,8 +112,17 @@ public class GameManager : MonoBehaviour
         testCardInfo[2].coolTime = 0;
         testCardInfo[2].LVUIString = "1";
         testCardInfo[2].costUIString = "100";
-        _unitCardsInfoArray.Value = new CardInfo[testCardInfo.Length];
-        Array.Copy(testCardInfo, _unitCardsInfoArray.Value,testCardInfo.Length);
+
+        EnemyCount.Subscribe(_ =>
+        {
+            CalcRemainingEnemies(_enemyCount.Value, _waveEnemyCount);
+        });
+
+        WaveManager.Instance.WaveEnemyCount.Subscribe(waveEnemy =>
+        {
+            _waveEnemyCount = waveEnemy;
+            CalcRemainingEnemies(_enemyCount.Value, _waveEnemyCount);
+        });
     }
 
     private void Update()
@@ -152,14 +151,12 @@ public class GameManager : MonoBehaviour
     public void TimerStop()
     {
         _stopEvent.OnNext(Unit.Default);
-        //Debug.Log("Timer Stop!");
 
     }
 
     public void TimerStart()
     {
         _startEvent.OnNext(Unit.Default);
-        //Debug.Log("Timer Start!");
     }
 
     public void StartGame()
@@ -202,15 +199,10 @@ public class GameManager : MonoBehaviour
     {
         _isPlay = false;
     }
-    private void SetCurrentState(GameState state)
-    {
-        _currentState = state;
-    }
 
     /// <summary>初期化処理</summary>
     private void Initialize()
     {
-        _currentState = GameState.Initialize;
         _resouce.Value = 0;
         _enemyCount.Value = 0;
         _levelUpIndex = 0;
@@ -219,7 +211,7 @@ public class GameManager : MonoBehaviour
     private void LevelUp()
     {
         TimerStop();
-        //UIの表示
+        _levelUpEvent.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -230,13 +222,10 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
     }
-    #endregion
-}
 
-public enum GameState
-{
-    Title,
-    Initialize,
-    InGame,
-    GameOver
+    private void CalcRemainingEnemies(int enemyCount, int waveEnemyCount)
+    {
+        _remainingEnemies.Value = waveEnemyCount - enemyCount;
+    }
+    #endregion
 }
