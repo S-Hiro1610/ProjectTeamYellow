@@ -83,107 +83,7 @@ public class LeveUpDialogUI : MonoBehaviour
         //PlayerRangeUnitController.UnitInitilize(level);
         //PlayerAreaUnitController.UnitInitilize(level);
 
-        const int unitNum = 3;
-
-        for (int unitCnt = 0; unitCnt < unitNum; unitCnt++)
-        {
-            UnitProperty unitInfo = UnitManager.Instance.PlayerPrefab[unitCnt];
-
-            GameObject obj = unitInfo.Unit;
-            PlayerUnitController pu = obj.GetComponent<PlayerUnitController>();
-            PlayerRangeUnitController pr = obj.GetComponent<PlayerRangeUnitController>();
-            PlayerAreaUnitController pa = obj.GetComponent<PlayerAreaUnitController>();
-
-            int lv, hp, atk, cost;
-            
-            if (pu != null)
-            {
-                //PlayerUnitController
-                lv = unitInfo.Level;
-                hp = pu.BaseHp + (lv * 5);
-                cost = (int)(unitInfo.Cost * (lv*1.5f));
-                atk = lv+ pu.BasePower;
-
-                int nextLV = lv + 1;
-                string nowLVStr = "LV." + Convert.ToString(lv);
-                string nextLVStr = "LV." + Convert.ToString(nextLV);
-                UpdateText(NearLVText, nowLVStr, nextLVStr);
-
-                int nextHP = pu.BaseHp + ((lv+1) * 5);
-                string nowHPStr = "HP:"+ Convert.ToString(hp);
-                string nextHPStr = Convert.ToString(nextHP);
-                UpdateText(NearHPText, nowHPStr, nextHPStr);
-
-                int nextAtk = lv+1 + pu.BasePower;//LV+atk
-                string nowAtkStr = "Atk:" + Convert.ToString(atk);
-                string nextAtkStr = Convert.ToString(nextAtk);
-                UpdateText(NearAtkText, nowAtkStr, nextAtkStr);
-
-                int nextCost = (int)(unitInfo.Cost * ((lv+1) * 1.5f));
-                string nowCostStr = "Cost:" + Convert.ToString(cost);
-                string nextCostStr = Convert.ToString(nextCost);
-                UpdateText(NearCostText, nowCostStr, nextCostStr);
-
-            }
-            else if(pr != null)
-            {
-                //PlayerRangeUnitController
-                lv = unitInfo.Level;
-                hp = pr.BaseHp + (lv * 5);
-                cost = (int)(unitInfo.Cost * (lv * 1.5f));
-                atk = pr.BasePower;
-
-
-                int nextLV = lv + 1;
-                string nowLVStr = "LV." + Convert.ToString(lv);
-                string nextLVStr = "LV." + Convert.ToString(nextLV);
-                UpdateText(RangeLVText, nowLVStr, nextLVStr);
-
-                int nextHP = pr.BaseHp + ((lv + 1) * 5);//Lv*5
-                string nowHPStr = "HP:" + Convert.ToString(hp);
-                string nextHPStr = Convert.ToString(nextHP);
-                UpdateText(RangeHPText, nowHPStr, nextHPStr);
-
-                int nextAtk = lv + 1 + pr.BasePower; ;//LV+atk
-                string nowAtkStr = "Atk:" + Convert.ToString(atk);
-                string nextAtkStr = Convert.ToString(nextAtk);
-                UpdateText(RangeAtkText, nowAtkStr, nextAtkStr);
-
-                int nextCost = (int)(unitInfo.Cost * ((lv + 1) * 1.5f));
-                string nowCostStr = "Cost:" + Convert.ToString(cost);
-                string nextCostStr = Convert.ToString(nextCost);
-                UpdateText(RangeCostText, nowCostStr, nextCostStr);
-            }
-            else if(pa != null)
-            {
-                //PlayerAreaUnitController
-                lv = unitInfo.Level;
-                hp = pa.BaseHp + (lv * 5);
-                cost = (int)(unitInfo.Cost * (lv * 1.5f));
-                atk = pa.BasePower;
-
-                int nextLV = lv + 1;
-                string nowLVStr = "LV." + Convert.ToString(lv);
-                string nextLVStr = "LV." + Convert.ToString(nextLV);
-                UpdateText(FarLVText, nowLVStr, nextLVStr);
-
-                int nextHP = pa.BaseHp + ((lv + 1) * 5);//Lv*5
-                string nowHPStr = "HP:" + Convert.ToString(hp);
-                string nextHPStr = Convert.ToString(nextHP);
-                UpdateText(FarHPText, nowHPStr, nextHPStr);
-
-                int nextAtk = lv + 1 + pa.BasePower; ;//LV+atk
-                string nowAtkStr = "Atk:" + Convert.ToString(atk);
-                string nextAtkStr = Convert.ToString(nextAtk);
-                UpdateText(FarAtkText, nowAtkStr, nextAtkStr);
-
-                int nextCost = (int)(unitInfo.Cost * ((lv + 1) * 1.5f));
-                string nowCostStr = "Cost:" + Convert.ToString(cost);
-                string nextCostStr = Convert.ToString(nextCost);
-                UpdateText(FarCostText, nowCostStr, nextCostStr);
-            }
-
-        }
+        SetLevelupStatus();
     }
 
     private void Update()
@@ -191,6 +91,11 @@ public class LeveUpDialogUI : MonoBehaviour
         
     }
     #endregion
+
+    private void OnEnable()
+    {
+        SetLevelupStatus();
+    }
 
     private void UpdateText(Text[] text, string beforeStr,string afterStr)
     {
@@ -213,14 +118,17 @@ public class LeveUpDialogUI : MonoBehaviour
             case 0:
                 Debug.Log("0");
                 UnitManager.Instance.LevelUp(UnitType.Wall);
+                UIManager.Instance.UpdateCardsText(UIManager.Instance.unitCardsInfoArray[0], UnitManager.Instance.PlayerPrefab[0].Level.ToString(), UnitManager.Instance.PlayerPrefab[0].Cost.ToString());
                 gameObject.SetActive(false);
                 break;
             case 1:
-                UnitManager.Instance.LevelUp(UnitType.Area);
+                UnitManager.Instance.LevelUp(UnitType.Range);
+                UIManager.Instance.UpdateCardsText(UIManager.Instance.unitCardsInfoArray[1], UnitManager.Instance.PlayerPrefab[1].Level.ToString(), UnitManager.Instance.PlayerPrefab[1].Cost.ToString());
                 gameObject.SetActive(false);
                 break;
             case 2:
-                UnitManager.Instance.LevelUp(UnitType.Range);
+                UnitManager.Instance.LevelUp(UnitType.Area);
+                UIManager.Instance.UpdateCardsText(UIManager.Instance.unitCardsInfoArray[2], UnitManager.Instance.PlayerPrefab[2].Level.ToString(), UnitManager.Instance.PlayerPrefab[2].Cost.ToString());
                 gameObject.SetActive(false);
                 break;
             default:
@@ -229,5 +137,125 @@ public class LeveUpDialogUI : MonoBehaviour
 
         GameManager.Instance.TimerStart();
     }
+
+    private void SetLevelupStatus()
+    {
+        const int unitNum = 3;
+
+        for (int unitCnt = 0; unitCnt < unitNum; unitCnt++)
+        {
+            UnitProperty unitInfo = UnitManager.Instance.PlayerPrefab[unitCnt];
+
+            GameObject obj = unitInfo.Unit;
+            PlayerUnitController pu = obj.GetComponent<PlayerUnitController>();
+            PlayerRangeUnitController pr = obj.GetComponent<PlayerRangeUnitController>();
+            PlayerAreaUnitController pa = obj.GetComponent<PlayerAreaUnitController>();
+
+            int lv, hp, atk, cost;
+
+            if (pu != null)
+            {
+                //PlayerUnitController
+                lv = unitInfo.Level;
+                hp = pu.BaseHp;
+                cost = unitInfo.Cost;
+                atk = pu.BasePower;
+                if (lv > 1)
+                {
+                    hp = pu.BaseHp + (lv * 5);
+                    atk = lv + pu.BasePower;
+                }
+
+                int nextLV = lv + 1;
+                string nowLVStr = "LV." + Convert.ToString(lv);
+                string nextLVStr = "LV." + Convert.ToString(nextLV);
+                UpdateText(NearLVText, nowLVStr, nextLVStr);
+
+                int nextHP = pu.BaseHp + ((lv + 1) * 5);
+                string nowHPStr = "HP:" + Convert.ToString(hp);
+                string nextHPStr = Convert.ToString(nextHP);
+                UpdateText(NearHPText, nowHPStr, nextHPStr);
+
+                int nextAtk = lv + 1 + pu.BasePower;//LV+atk
+                string nowAtkStr = "Atk:" + Convert.ToString(atk);
+                string nextAtkStr = Convert.ToString(nextAtk);
+                UpdateText(NearAtkText, nowAtkStr, nextAtkStr);
+
+                int nextCost = (int)(unitInfo.Cost * 1.5f);
+                string nowCostStr = "Cost:" + Convert.ToString(cost);
+                string nextCostStr = Convert.ToString(nextCost);
+                UpdateText(NearCostText, nowCostStr, nextCostStr);
+
+            }
+            else if (pr != null)
+            {
+                //PlayerRangeUnitController
+                lv = unitInfo.Level;
+                hp = pr.BaseHp;
+                cost = unitInfo.Cost;
+                atk = pr.BasePower;
+                if (lv > 1)
+                {
+                    hp = pr.BaseHp + (lv * 5);
+                    atk = lv + pr.BasePower;
+                }
+
+                int nextLV = lv + 1;
+                string nowLVStr = "LV." + Convert.ToString(lv);
+                string nextLVStr = "LV." + Convert.ToString(nextLV);
+                UpdateText(RangeLVText, nowLVStr, nextLVStr);
+
+                int nextHP = pr.BaseHp + ((lv + 1) * 5);//Lv*5
+                string nowHPStr = "HP:" + Convert.ToString(hp);
+                string nextHPStr = Convert.ToString(nextHP);
+                UpdateText(RangeHPText, nowHPStr, nextHPStr);
+
+                int nextAtk = lv + 1 + pr.BasePower; ;//LV+atk
+                string nowAtkStr = "Atk:" + Convert.ToString(atk);
+                string nextAtkStr = Convert.ToString(nextAtk);
+                UpdateText(RangeAtkText, nowAtkStr, nextAtkStr);
+
+                int nextCost = (int)(unitInfo.Cost * 1.5f);
+                string nowCostStr = "Cost:" + Convert.ToString(cost);
+                string nextCostStr = Convert.ToString(nextCost);
+                UpdateText(RangeCostText, nowCostStr, nextCostStr);
+            }
+            else if (pa != null)
+            {
+                //PlayerAreaUnitController
+                lv = unitInfo.Level;
+                hp = pa.BaseHp + (lv * 5);
+                cost = unitInfo.Cost;
+                atk = pa.BasePower;
+                if (lv > 1)
+                {
+                    hp = pa.BaseHp + (lv * 5);
+                    atk = lv + pa.BasePower;
+                }
+
+                int nextLV = lv + 1;
+                string nowLVStr = "LV." + Convert.ToString(lv);
+                string nextLVStr = "LV." + Convert.ToString(nextLV);
+                UpdateText(FarLVText, nowLVStr, nextLVStr);
+
+                int nextHP = pa.BaseHp + ((lv + 1) * 5);//Lv*5
+                string nowHPStr = "HP:" + Convert.ToString(hp);
+                string nextHPStr = Convert.ToString(nextHP);
+                UpdateText(FarHPText, nowHPStr, nextHPStr);
+
+                int nextAtk = lv + 1 + pa.BasePower; ;//LV+atk
+                string nowAtkStr = "Atk:" + Convert.ToString(atk);
+                string nextAtkStr = Convert.ToString(nextAtk);
+                UpdateText(FarAtkText, nowAtkStr, nextAtkStr);
+
+                int nextCost = (int)(unitInfo.Cost * 1.5f);
+                string nowCostStr = "Cost:" + Convert.ToString(cost);
+                string nextCostStr = Convert.ToString(nextCost);
+                UpdateText(FarCostText, nowCostStr, nextCostStr);
+            }
+
+        }
+    }
+
     #endregion
 }

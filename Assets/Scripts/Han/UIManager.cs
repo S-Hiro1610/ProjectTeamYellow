@@ -200,6 +200,11 @@ public class UIManager: MonoBehaviour
 
     #region public method
     // 自身で作成したPublicな関数を入れる。
+    public void UpdateCardsText(CardInfo info, string LVStr, string costStr)
+    {
+        info.cardContext.LVUIText.text = LVStr;
+        info.cardContext.costUIText.text = costStr;
+    }
     #endregion
 
     #region private method
@@ -222,11 +227,6 @@ public class UIManager: MonoBehaviour
         }
     }
 
-    private void UpdateCardsText(CardInfo info,string LVStr,string costStr)
-    {
-        info.cardContext.LVUIText.text = LVStr;
-        info.cardContext.costUIText.text = costStr;
-    }
     private void UpdateText(Text text,object str)
     {
         text.text = (string)str;
