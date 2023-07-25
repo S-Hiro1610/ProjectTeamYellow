@@ -426,7 +426,7 @@ MonoBehaviour:
   SubButtonObjcet: {fileID: 6534616274608709948, guid: d4670873827a5114f82d807d1689efb1,
     type: 3}
   dialogType: 0
-  WaveCnt: 0
+  WaveEnemyCnt: 0
   WaveMaxNum: 0
   WaveUIText: {fileID: 416270741}
   SubButtonTextList:
@@ -442,6 +442,7 @@ MonoBehaviour:
   OnSubWindowEvent:
     m_PersistentCalls:
       m_Calls: []
+  VolumeSlider: {fileID: 0}
 --- !u!1 &6577110140372400825
 GameObject:
   m_ObjectHideFlags: 0

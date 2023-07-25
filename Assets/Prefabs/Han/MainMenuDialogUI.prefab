@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 0.78431374}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1241,7 +1241,7 @@ MonoBehaviour:
   SubButtonPlane: {fileID: 0}
   SubButtonObjcet: {fileID: 0}
   dialogType: 1
-  WaveCnt: 0
+  WaveEnemyCnt: 0
   WaveMaxNum: 0
   WaveUIText: {fileID: 0}
   SubButtonTextList: []
@@ -1877,7 +1877,7 @@ MonoBehaviour:
   SubButtonObjcet: {fileID: 6534616274608709948, guid: d4670873827a5114f82d807d1689efb1,
     type: 3}
   dialogType: 0
-  WaveCnt: 0
+  WaveEnemyCnt: 0
   WaveMaxNum: 0
   WaveUIText: {fileID: 3462347642987126257}
   SubButtonTextList:
