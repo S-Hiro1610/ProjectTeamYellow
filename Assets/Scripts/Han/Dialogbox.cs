@@ -16,7 +16,7 @@ public class Dialogbox : MonoBehaviour
 
     public DIALOG_TYPE dialogType;
 
-    public int WaveCnt = 0; //現在のwave index
+    public int WaveEnemyCnt = 0; //1waveの敵残機数
     public int WaveMaxNum = 0;//総wave数
     public Text WaveUIText;
 
@@ -66,11 +66,15 @@ public class Dialogbox : MonoBehaviour
             ExitButton.onClick.AddListener(() => { SetActive(false); });
             if (WaveManager.Instance != null)
             {
-                WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
-                WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => { WaveMaxNum = allCnt; });//総wave数
+                //WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
+                WaveManager.Instance.WaveEnemyCount.Subscribe(allCnt => 
+                { 
+                    WaveMaxNum = allCnt;
+                    UpdateText(WaveUIText, WaveEnemyCnt + "/" + WaveMaxNum);
+                });//総wave数
             }
 
-            StartCoroutine(UpdateWaveInfo());
+            //StartCoroutine(UpdateWaveInfo());
         }else
         {
             SubExitButton.onClick.AddListener(() => { SetActive(false); });
@@ -99,12 +103,20 @@ public class Dialogbox : MonoBehaviour
                 }
             }
         }
+        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
+        {
+            GameManager.Instance.RemainingEnemies.Subscribe(_ =>
+            {
+                WaveEnemyCnt = _;
+                UpdateText(WaveUIText, WaveEnemyCnt + "/" + WaveMaxNum);
+            });
+        }
     }
 
     private void Update()
     {
-        if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
-            UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
+        //if (dialogType == DIALOG_TYPE.TYPE_MAIN_MENU)
+        //    UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
     }
     #endregion
 
@@ -196,15 +208,15 @@ public class Dialogbox : MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
-    IEnumerator UpdateWaveInfo()
-    {
-        while (true)
-        {
-            UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
+    //IEnumerator UpdateWaveInfo()
+    //{
+    //    while (true)
+    //    {
+    //        UpdateText(WaveUIText, WaveEnemyCnt + "/" + WaveMaxNum);
 
-            yield return new WaitForSeconds(.1f);
-        }
-    }
+    //        yield return new WaitForSeconds(.1f);
+    //    }
+    //}
 
 
     private void UpdateText(Text text, object str)
