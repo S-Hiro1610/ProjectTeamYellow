@@ -15,7 +15,6 @@ public class UIManager: MonoBehaviour
 
     public ReactiveProperty<SELSCT_MODE> SelectMode => selectMode;
     public int EnemyCnt = 0;//1wave残機数
-    //public int EnemyMaxNum = 0;//１Waveの敵ユニットの総数
 
     //Unit_Cards_Panel
     public GameObject UnitCardsPanel;
@@ -33,13 +32,8 @@ public class UIManager: MonoBehaviour
 
     //TopPanelText
     
-    //public string WaveCnt;
-    public int WaveCnt = 0; //現在のwave index
-    public int WaveMaxNum = 0;//総wave数
-    //public string EnemyCntUICnt;
-    //BottomPlaneText
-    //public string PowerUICnt;
-    public int PowerUI;
+    public int WaveMaxNum = 0;          // 現在の wave の敵総数
+    public int RemainingEnemies = 0;    // 現在の wave の敵残数
 
     public Button MenuButton;
 
@@ -110,16 +104,22 @@ public class UIManager: MonoBehaviour
 
         if(WaveManager.Instance != null)
         {
-            WaveManager.Instance.WaveEnemyCount.Subscribe(_ => { WaveMaxNum = _;        // 現在のWaveの敵の総数の購読★
-                UpdateText(WaveUIText, $"{WaveMaxNum - EnemyCnt} / {WaveMaxNum}");});   // 残敵数表示の更新★
+            WaveManager.Instance.WaveEnemyCount.Subscribe(_ => { 
+                WaveMaxNum = _;   // 現在のWaveの敵の総数の購読★
+                UpdateText(WaveUIText, $"{RemainingEnemies} / {WaveMaxNum}");});   // 残敵数表示の更新★
         }
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.EnemyCount.Subscribe(_ => { EnemyCnt = _;              // 現在のWaveで倒した敵の数★
-                UpdateText(WaveUIText, $"{WaveMaxNum-EnemyCnt} / {WaveMaxNum}");        // 残敵数表示の更新★
+            GameManager.Instance.EnemyCount.Subscribe(_ => { 
+                EnemyCnt = _;              // 現在のWaveで倒した敵の数★
                 UpdateEnemyKillBar((float)EnemyCnt / (float)GameManager.Instance.LevelUpList[GameManager.Instance.LevelUpIndex]);    // ゲージの更新も連動★
             });
+
+            GameManager.Instance.RemainingEnemies.Subscribe(_ => {
+                RemainingEnemies = _;
+                UpdateText(WaveUIText, $"{RemainingEnemies} / {WaveMaxNum}");        // 残敵数表示の更新★
+            });  // 残敵数の更新
 
             GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
 
@@ -132,9 +132,9 @@ public class UIManager: MonoBehaviour
 
     private void Start()
     {
-        WaveMaxNum = 0; // Wave の敵の総数 ★
-        EnemyCnt = 0;   // 撃破した敵の数 ★
-        
+        WaveMaxNum = 0;         // 現在の wave の敵総数★
+        RemainingEnemies = 0;   // 現在の wave の敵残数★
+
         cardGameObjcetList = new List<GameObject>();
 
         PauseMenuUIString = "▶";

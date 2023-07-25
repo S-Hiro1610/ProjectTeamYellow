@@ -212,14 +212,14 @@ public class InputManager : MonoBehaviour
 
             foreach (var hit in hits)
             {
-                if(hit.transform.tag == "Player")
-                {
-                    goto ENDSELECT;     // 二重配置禁止処理
-                }
                 StageBlock groundBlock = null;
                 if (!hit.transform.TryGetComponent(out groundBlock)) continue;
                 if (hit.distance < minDistance)
                 {
+                    if (hit.transform.tag == "Player")
+                    {
+                        goto ENDSELECT; // 二重配置禁止処理
+                    }
                     minDistance = hit.distance;
                     closestHit = hit;
                 }
