@@ -1771,11 +1771,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3256843910375368652, guid: 15fb000bd1c76ff409dc6e8f95e8c7aa,
+        type: 3}
+      propertyPath: _trailerPath
+      value: 
+      objectReference: {fileID: 302965778164461124, guid: d00a8052058d4a34fad4ad8de047bec7,
+        type: 3}
     - target: {fileID: 7721524121557366840, guid: 15fb000bd1c76ff409dc6e8f95e8c7aa,
         type: 3}
       propertyPath: m_Name
       value: Stage
       objectReference: {fileID: 0}
+    - target: {fileID: 8424763614102016367, guid: 15fb000bd1c76ff409dc6e8f95e8c7aa,
+        type: 3}
+      propertyPath: _trailerPath
+      value: 
+      objectReference: {fileID: 302965778164461124, guid: d00a8052058d4a34fad4ad8de047bec7,
+        type: 3}
+    - target: {fileID: 8978021915652994181, guid: 15fb000bd1c76ff409dc6e8f95e8c7aa,
+        type: 3}
+      propertyPath: _trailerPath
+      value: 
+      objectReference: {fileID: 302965778164461124, guid: d00a8052058d4a34fad4ad8de047bec7,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15fb000bd1c76ff409dc6e8f95e8c7aa, type: 3}
 --- !u!1001 &1256448720
