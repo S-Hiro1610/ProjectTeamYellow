@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public IObservable<Unit> OnChangeInitialize => _changeInitializeEvent;
     public IObservable<Unit> OnChangeInGame => _changeInGameEvent;
     public IObservable<Unit> OnChangeGameOver => _changeGameOverEvent;
+    public int LevelUpIndex => _levelUpIndex;
+    public List<int> LevelUpList => _levelUpList;
+ 
     #endregion
 
     #region serialize
@@ -138,6 +141,7 @@ public class GameManager : MonoBehaviour
         if (_enemyCount.Value >= _levelUpList[_levelUpIndex])
         {
             LevelUp();
+            _enemyCount.Value = 0;
             if (_levelUpIndex < _levelUpList.Count)
             {
                 _levelUpIndex++;

@@ -109,17 +109,15 @@ public class UIManager: MonoBehaviour
 
         if(WaveManager.Instance != null)
         {
-            //WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
-            WaveManager.Instance.WaveEnemyCount.Subscribe(_ => { WaveMaxNum = _;    // 現在のWaveの敵の総数の購読★
-                UpdateText(WaveUIText, $"{WaveMaxNum - EnemyCnt} / {WaveMaxNum}");        // 残敵数表示の更新★
-                UpdateEnemyKillBar((float)WaveMaxNum != 0?(float)EnemyCnt/(float)WaveMaxNum:0);});  // ゲージの更新も連動★
+            WaveManager.Instance.WaveEnemyCount.Subscribe(_ => { WaveMaxNum = _;        // 現在のWaveの敵の総数の購読★
+                UpdateText(WaveUIText, $"{WaveMaxNum - EnemyCnt} / {WaveMaxNum}");});   // 残敵数表示の更新★
         }
 
         if (GameManager.Instance != null)
         {
             GameManager.Instance.EnemyCount.Subscribe(_ => { EnemyCnt = _;              // 現在のWaveで倒した敵の数★
                 UpdateText(WaveUIText, $"{WaveMaxNum-EnemyCnt} / {WaveMaxNum}");        // 残敵数表示の更新★
-                UpdateEnemyKillBar((float)WaveMaxNum != 0 ? (float)EnemyCnt / (float)WaveMaxNum : 0);    // ゲージの更新も連動★
+                UpdateEnemyKillBar((float)EnemyCnt / (float)GameManager.Instance.LevelUpList[GameManager.Instance.LevelUpIndex]);    // ゲージの更新も連動★
             });
 
             GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
