@@ -274,7 +274,7 @@ MonoBehaviour:
   _hp: 10
   _basePower: 3
   _power: 3
-  _seIndex: 0
+  _seIndex: 1
   _attackCoolTime: 1.5
   _isCanAttack: 1
   _attackCollider: {fileID: 5804058463781623564}

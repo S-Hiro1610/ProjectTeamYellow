@@ -62,7 +62,7 @@ public class PlayerAreaUnitController : CharactorBase
         // HPバーの向きをカメラ方向に固定
         SetRotationHPBarUI();
 
-        if(_stopflag)
+        if(!_stopflag)
         {
             // ターゲットが非アクティブである場合は初期化を行う
             if (_attackCollider.Target != null)
