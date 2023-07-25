@@ -45,6 +45,8 @@ public class UIManager: MonoBehaviour
 
     public Dialogbox ExitDialogOptionUI;//オプション(音量調整)
 
+    public GameObject LeveUpDialogUI;
+
     public CardInfo[] unitCardsInfoArray;
 
     public List<GameObject> cardGameObjcetList;
@@ -123,6 +125,7 @@ public class UIManager: MonoBehaviour
 
             GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
 
+            GameManager.Instance.OnLevelUp.Subscribe(_ => LeveUpDialogUI.SetActive(true));
             //GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
             //GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });
 

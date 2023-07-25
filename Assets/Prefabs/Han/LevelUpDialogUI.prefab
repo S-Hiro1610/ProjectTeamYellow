@@ -8548,13 +8548,14 @@ GameObject:
   - component: {fileID: 1574129647900078202}
   - component: {fileID: 1574129647900078201}
   - component: {fileID: 1574129647900078200}
+  - component: {fileID: 2700490262056168757}
   m_Layer: 5
   m_Name: LevelUpDialogUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1574129647900078203
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8636,6 +8637,60 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2700490262056168757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574129647900078207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87df96764632aaa42be64b953c174d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NearLVText:
+  - {fileID: 654462881}
+  - {fileID: 370084530}
+  NearHPText:
+  - {fileID: 1714894483}
+  - {fileID: 1643509493}
+  NearAtkText:
+  - {fileID: 2136472026}
+  - {fileID: 342287337}
+  NearCostText:
+  - {fileID: 1134816031}
+  - {fileID: 489461498}
+  FarLVText:
+  - {fileID: 1911548823}
+  - {fileID: 1549556042}
+  FarHPText:
+  - {fileID: 1677316760}
+  - {fileID: 1443926212}
+  FarAtkText:
+  - {fileID: 504416509}
+  - {fileID: 231527166}
+  FarCostText:
+  - {fileID: 836449350}
+  - {fileID: 233408231}
+  FarText:
+  - {fileID: 428644645}
+  - {fileID: 1575366155}
+  RangeLVText:
+  - {fileID: 176774636}
+  - {fileID: 1908200700}
+  RangeHPText:
+  - {fileID: 1088865623}
+  - {fileID: 658213722}
+  RangeAtkText:
+  - {fileID: 1577026664}
+  - {fileID: 2037065484}
+  RangeCostText:
+  - {fileID: 89418436}
+  - {fileID: 1617630878}
+  RangeText:
+  - {fileID: 146777967}
+  - {fileID: 787437756}
 --- !u!1 &1574129648490818300
 GameObject:
   m_ObjectHideFlags: 0
