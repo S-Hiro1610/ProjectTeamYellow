@@ -3006,8 +3006,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _addResouce: 100
-  _levelUpList: 640000000f00000014000000190000001e00000023000000280000002d0000003200000037000000
-  _currentState: 0
+  _levelUpList: 0a0000000f00000014000000190000001e00000023000000280000002d0000003200000037000000
 --- !u!4 &1602951496
 Transform:
   m_ObjectHideFlags: 0
@@ -3578,10 +3577,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyCnt: 4
-  EnemyMaxNum: 100
   UnitCardsPanel: {fileID: 1577103045}
   UnitCardPanel: {fileID: 4848619671085707753, guid: 1cd869b869ad54a49bffea97ed032b4c,
     type: 3}
+  UnitCardPrefab:
+  - {fileID: 4848619671085707753, guid: 7e94ba43a175659429b5bf5545c99c3d, type: 3}
+  - {fileID: 9148974944237653434, guid: ed70f360c3567f042aaec19594470cbb, type: 3}
+  - {fileID: 9175824498515462450, guid: cb6bdf1d39e4679499a9cc98a9261be3, type: 3}
   PauseMenuUIText: {fileID: 599268955}
   WaveUIText: {fileID: 1462540531}
   PowerUIText: {fileID: 2123198103}
