@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     private Coroutine _addResouceCoroutine;
     private ReactiveProperty<int> _remainingEnemies = new ReactiveProperty<int>(0);
     private int _waveEnemyCount = 0;
+    private int _remainingEnemyCount = 0;
     #endregion
 
     #region Constant
@@ -113,15 +114,16 @@ public class GameManager : MonoBehaviour
         testCardInfo[2].LVUIString = "1";
         testCardInfo[2].costUIString = "100";
 
-        EnemyCount.Subscribe(_ =>
+        EnemyCount.Subscribe(count =>
         {
-            CalcRemainingEnemies(_enemyCount.Value, _waveEnemyCount);
+            _remainingEnemyCount = count; 
+            CalcRemainingEnemies(_remainingEnemyCount, _waveEnemyCount);
         });
 
         WaveManager.Instance.WaveEnemyCount.Subscribe(waveEnemy =>
         {
             _waveEnemyCount = waveEnemy;
-            CalcRemainingEnemies(_enemyCount.Value, _waveEnemyCount);
+            CalcRemainingEnemies(_remainingEnemyCount, _waveEnemyCount);
         });
     }
 
