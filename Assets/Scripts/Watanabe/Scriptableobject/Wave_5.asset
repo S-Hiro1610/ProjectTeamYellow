@@ -10,11 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62ca4e8f1e4b1274297d5eacf4b57bc9, type: 3}
-  m_Name: Wave_2
+  m_Name: Wave_5
   m_EditorClassIdentifier: 
   waveEnemy:
   - _enemy: {fileID: 7382396218170803432, guid: b86bb5e13a0f20545a29069988cdf625,
       type: 3}
     _level: 1
     _spawneDelay: 1
-    _spawnUnits: 5
+    _spawnUnits: 3
+  - _enemy: {fileID: 7382396218170803432, guid: b86bb5e13a0f20545a29069988cdf625,
+      type: 3}
+    _level: 1
+    _spawneDelay: 1
+    _spawnUnits: 3
+  - _enemy: {fileID: 8038653124326244109, guid: 284a411612a8b9745b3209e3f2434bfa,
+      type: 3}
+    _level: 1
+    _spawneDelay: 1
+    _spawnUnits: 1

@@ -17,4 +17,4 @@ MonoBehaviour:
       type: 3}
     _level: 1
     _spawneDelay: 1
-    _spawnUnits: 10
+    _spawnUnits: 5

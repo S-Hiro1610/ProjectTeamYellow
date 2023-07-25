@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: Wave_3
   m_EditorClassIdentifier: 
   waveEnemy:
+  - _enemy: {fileID: 8288612535190040219, guid: ad245480fda252746b413a35929269a8,
+      type: 3}
+    _level: 1
+    _spawneDelay: 1
+    _spawnUnits: 3
   - _enemy: {fileID: 7382396218170803432, guid: b86bb5e13a0f20545a29069988cdf625,
       type: 3}
-    _level: 2
+    _level: 1
     _spawneDelay: 1
-    _spawnUnits: 5
+    _spawnUnits: 2
