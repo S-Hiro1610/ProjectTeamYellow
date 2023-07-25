@@ -15,11 +15,12 @@ public class UIManager: MonoBehaviour
 
     public ReactiveProperty<SELSCT_MODE> SelectMode => selectMode;
     public int EnemyCnt = 0;//1wave残機数
-    public int EnemyMaxNum = 0;//１Waveの敵ユニットの総数
+    //public int EnemyMaxNum = 0;//１Waveの敵ユニットの総数
 
     //Unit_Cards_Panel
     public GameObject UnitCardsPanel;
     public GameObject UnitCardPanel;
+    public List<GameObject> UnitCardPrefab;
 
     //TopPanelText
     public Text PauseMenuUIText;//一時停止ボタン
@@ -123,7 +124,7 @@ public class UIManager: MonoBehaviour
             GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
 
             //GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
-            GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });
+            //GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });
 
         }
     }
@@ -150,7 +151,8 @@ public class UIManager: MonoBehaviour
 
         for (int cardCnt = 0; cardCnt < unitCardsNum; cardCnt++)
         {
-            GameObject cardObj = Instantiate(UnitCardPanel, cardsGrop.transform);
+            //GameObject cardObj = Instantiate(UnitCardPanel, cardsGrop.transform);
+            GameObject cardObj = Instantiate(UnitCardPrefab[cardCnt], cardsGrop.transform);
             cardObj.name = "Card_" + cardCnt;
             unitCardsInfoArray[cardCnt].thisGameObjcet = cardObj;       // 未使用？
             unitCardsInfoArray[cardCnt].cardContext = cardObj.GetComponent<Card>();
