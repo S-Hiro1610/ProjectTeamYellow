@@ -111,17 +111,20 @@ public class UIManager: MonoBehaviour
         {
             //WaveManager.Instance.WaveCount.Subscribe(count => { WaveCnt = count; });//現在のwave index
             WaveManager.Instance.WaveEnemyCount.Subscribe(_ => { WaveMaxNum = _;    // 現在のWaveの敵の総数の購読★
+                UpdateText(WaveUIText, $"{WaveMaxNum - EnemyCnt} / {WaveMaxNum}");        // 残敵数表示の更新★
                 UpdateEnemyKillBar((float)WaveMaxNum != 0?(float)EnemyCnt/(float)WaveMaxNum:0);});  // ゲージの更新も連動★
         }
 
         if (GameManager.Instance != null)
         {
             GameManager.Instance.EnemyCount.Subscribe(_ => { EnemyCnt = _;              // 現在のWaveで倒した敵の数★
-                UpdateEnemyKillBar((float)WaveMaxNum != 0 ? (float)EnemyCnt / (float)WaveMaxNum : 0);});    // ゲージの更新も連動★
+                UpdateText(WaveUIText, $"{WaveMaxNum-EnemyCnt} / {WaveMaxNum}");        // 残敵数表示の更新★
+                UpdateEnemyKillBar((float)WaveMaxNum != 0 ? (float)EnemyCnt / (float)WaveMaxNum : 0);    // ゲージの更新も連動★
+            });
 
             GameManager.Instance.Resouce.Subscribe(_ => UpdateText(PowerUIText, _.ToString()));//配置にかかるコストのリソース★
 
-            GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
+            //GameManager.Instance.UnitCardsInfoArray.Subscribe(array => { unitCardsInfoArray = array; });
             GameManager.Instance.EnemyALLCount.Subscribe(allCnt => { EnemyMaxNum = allCnt; });
 
         }
@@ -136,25 +139,14 @@ public class UIManager: MonoBehaviour
         cardGameObjcetList = new List<GameObject>();
 
         PauseMenuUIString = "▶";
-        _currentPauseMenuUIString = PauseMenuUIText.text;
         UpdateText(PauseMenuUIText, PauseMenuUIString);
-
-        //ExitDialogUI.OnOpenEvent.AddListener(ExitDialogUIIsOpen);
-        //ExitDialogUI.OnCloseEvent.AddListener(ExitDialogUIIsClose);
+        UpdateText(WaveUIText, $"{WaveMaxNum - EnemyCnt} / {WaveMaxNum}");
 
         ExitDialogUI.OnSubWindowEvent.AddListener(OpenDialogOptionMenu);
 
+        // UnitManager から Playerユニットの種類数を読み出して、UI 下部のCard欄に表示する
 
-        _currentWaveString = WaveCnt + "/" + WaveMaxNum;
-        UpdateText(WaveUIText, WaveCnt + "/" + WaveMaxNum);
-
-        //_currentEnemyCntUIString = EnemyCntUIText.text;
-        //UpdateText(EnemyCntUIText, EnemyCntUICnt);
-
-        _currentPowerUIString = PowerUI.ToString();
-        UpdateText(PowerUIText, PowerUI.ToString());
-
-        unitCardsNum = unitCardsInfoArray.Length;
+        unitCardsNum = UnitManager.Instance.PlayerPrefab.Count;
 
         GridLayoutGroup cardsGrop = UnitCardsPanel.GetComponent<GridLayoutGroup>();
 
@@ -162,15 +154,15 @@ public class UIManager: MonoBehaviour
         {
             GameObject cardObj = Instantiate(UnitCardPanel, cardsGrop.transform);
             cardObj.name = "Card_" + cardCnt;
-            unitCardsInfoArray[cardCnt].thisGameObjcet = cardObj;
+            unitCardsInfoArray[cardCnt].thisGameObjcet = cardObj;       // 未使用？
             unitCardsInfoArray[cardCnt].cardContext = cardObj.GetComponent<Card>();
             cardObj.GetComponent<Card>().type = (UnitType)cardCnt;
 
+            unitCardsInfoArray[cardCnt].LVUIString = UnitManager.Instance.PlayerPrefab[cardCnt].Level.ToString();   // UnitManagerのレベル値をカードに表示
+            unitCardsInfoArray[cardCnt].costUIString = UnitManager.Instance.PlayerPrefab[cardCnt].Cost.ToString();  // UnitManagerのコスト値をカードに表示
+
             UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
             
-            UpdateCardsCoolTime(unitCardsInfoArray[cardCnt].cardContext.coolTimePlane, unitCardsInfoArray[cardCnt].coolTime);
-            //int index = cardCnt;
-            //cardObj.GetComponent<Button>().onClick.AddListener(() => unitCardsInfoArray[cardCnt].cardContext.OnClick());
             int index = cardCnt;
             cardObj.GetComponent<Button>().onClick.AddListener(() => {
                 unitCardsInfoArray[index].cardContext.OnClick();
@@ -186,20 +178,12 @@ public class UIManager: MonoBehaviour
             cardGameObjcetList.Add(cardObj);
         }
 
-        //System.Array.Copy(unitCardsInfoArray, _currentUnitCardsInfoArray, unitCardsInfoArray.Length);
-
-
         RectTransform cardRectTransform = UnitCardPanel.GetComponent<RectTransform>();
         cardsGrop.cellSize = cardRectTransform.sizeDelta;
 
         cardsGrop.spacing = new Vector2(UnitCardsPanelSpacingW, cardsGrop.spacing.y);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(UnitCardsPanel.transform as RectTransform);
-
-        StartCoroutine(CheckSceneUIValuesChanged());
-        StartCoroutine(CheckCardValuesChanged());
-
-        //StartCoroutine(CheckEnemyKillBarChanged());
 
         StartCoroutine(CheckUnitCardSelectMode());
 
@@ -208,16 +192,6 @@ public class UIManager: MonoBehaviour
 
     private void Update()
     {
-        //string[] str = new string[3];
-        //int scnt = 0;
-        //foreach (var item in cardGameObjcetList)
-        //{
-        //    str[scnt] = item.GetComponent<Card>().SelectMode.Value.ToString();
-        //    scnt++;
-        //}
-
-        //Debug.Log("b1=>" + str[0] + ",b2=>" + str[1] + ",b2=>" + str[2]);
-        //Debug.Log("selectMode=>"+selectMode.Value);
     }
     #endregion
 
@@ -227,65 +201,6 @@ public class UIManager: MonoBehaviour
 
     #region private method
     // 自身で作成したPrivateな関数を入れる。
-
-    private IEnumerator CheckSceneUIValuesChanged()
-    {
-        while(true)
-        {
-            string newPauseMenuUIString = PauseMenuUIString;
-            if (newPauseMenuUIString != _currentPauseMenuUIString)
-            {
-                _currentPauseMenuUIString = newPauseMenuUIString;
-                UpdateText(PauseMenuUIText, _currentPauseMenuUIString);
-            }
-
-            string newWaveString = WaveCnt + "/" + WaveMaxNum;
-            if (newWaveString != _currentWaveString)
-            {
-                _currentWaveString = newWaveString;
-                UpdateText(WaveUIText, _currentWaveString);
-            }
-
-            //string newEnemyCntUIString = EnemyCntUICnt;
-            //if (newEnemyCntUIString != _currentEnemyCntUIString)
-            //{
-            //    _currentEnemyCntUIString = newEnemyCntUIString;
-            //    UpdateText(EnemyCntUIText, _currentEnemyCntUIString);
-            //}
-
-            //string newPowerUIString = PowerUI.ToString();
-            //if (newPowerUIString != _currentPowerUIString)
-            //{
-            //    _currentPowerUIString = newPowerUIString;
-            //    UpdateText(PowerUIText, _currentPowerUIString);
-            //}
-
-            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
-        }
-    }
-
-    private IEnumerator CheckCardValuesChanged()
-    {
-        while (true)
-        {
-            for (int cardCnt = 0; cardCnt < unitCardsInfoArray.Length; cardCnt++)
-            {
-                UpdateCardsText(unitCardsInfoArray[cardCnt], unitCardsInfoArray[cardCnt].LVUIString, unitCardsInfoArray[cardCnt].costUIString);
-            }
-
-            yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
-        }
-    }
-
-    //private IEnumerator CheckEnemyKillBarChanged()
-    //{
-    //    while (true)
-    //    {
-    //        UpdateEnemyKillBar();
-
-    //        yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
-    //    }
-    //}
 
     private IEnumerator CheckUnitCardSelectMode()
     {
@@ -302,11 +217,6 @@ public class UIManager: MonoBehaviour
             }
             yield return new WaitForSeconds(.1f);//呼び出しを頻繁し過ぎないように
         }
-    }
-
-    private void UpdateCardsCoolTime(Image image, float coolTime)
-    {
-        image.fillAmount = coolTime;
     }
 
     private void UpdateCardsText(CardInfo info,string LVStr,string costStr)
@@ -347,8 +257,5 @@ public class UIManager: MonoBehaviour
         button.transform.parent.parent.gameObject.SetActive(false);
         ExitDialogOptionUI.SetActive(true,false);
     }
-
-
-
     #endregion
 }
